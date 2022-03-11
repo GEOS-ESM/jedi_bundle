@@ -13,13 +13,20 @@ Bundle containing all the repositories that are needed to compile the JEDI repos
 
 If building on NASA's Discover the provided build scripts are a convenient way of building:
 
-    git clone https://github.com/GEOS-ESM/jedi-bundle
-    cd jedi-bundle
+```
+git clone https://github.com/danholdaway/jedi-bundle
+cd jedi-bundle
+```
 
-Then to see the compiler options available on that machine do:
+To build with the default options do:
 
-    cd jedi-bundle
-    ./buildscripts/build_discover.sh -h
+```
+cd jedi-bundle
+./buildscripts/build_discover.sh -h
+```
 
-The first option listed is the default that would be chosen if no arguments are provided. Typically,
-the only options needed are `-c` for the compiler choice and `-b` for release or debug build mode.
+Then to see the available options for use with the build script you can issue:
+
+```
+./buildscripts/build_discover.sh -h
+```
