@@ -40,8 +40,8 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.27.
 
 # GSW for SOCA
 # ------------
-if (DEFINED BUILD_SOCA)
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda/GSW-Fortran.git" BRANCH master UPDATE )
+if (BUILD_SOCA MATCHES "ON")
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" BRANCH develop UPDATE )
 endif()
 
 # External (required) observation operators
@@ -84,7 +84,7 @@ ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda/fv3-jedi.git" BRA
 
 # Soca
 # ----
-if (DEFINED BUILD_SOCA)
+if (BUILD_SOCA MATCHES "ON")
   ecbuild_bundle( PROJECT mom6 GIT "https://github.com/jcsda/MOM6.git" UPDATE BRANCH main-ecbuild RECURSIVE )
   ecbuild_bundle( PROJECT soca GIT "https://github.com/jcsda/soca.git" UPDATE BRANCH develop RECURSIVE )
 endif()
@@ -149,6 +149,3 @@ if(BUILD_FV3_BUNDLE_DOC)
 endif(BUILD_FV3_BUNDLE_DOC)
 
 ecbuild_bundle_finalize()
-
-include(cmake/cdash-integration.cmake)
-include(CTest)

@@ -18,6 +18,6 @@ module use $OPT/modulefiles/apps
 module load MODLOAD
 module list
 
-cd fv3-jedi
+cd $1
 
 make -j12

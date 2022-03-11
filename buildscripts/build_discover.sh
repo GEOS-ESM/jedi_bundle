@@ -115,13 +115,15 @@ sed -i "s,BUILDDIR,$JEDI_BUILD,g" $file
 
 # Build soca
 # ----------
-[[ $build_soca == "ON" ]] && SOCA="-DBUILD_SOCA"
+[[ $build_soca == "ON" ]] && SOCA="-DBUILD_SOCA=ON"
 
 # Build
 # -----
-BUILDCOMMAND="ecbuild --build=$build -DMPIEXEC=$MPIEXEC $SOCA -DSKIP_LARGE_TESTS=OFF $FV3JEDI_SRC"
-echo "Ecbuild command:"
-echo $BUILDCOMMAND
+BUILDCOMMAND="ecbuild --build=$build -DMPIEXEC=$MPIEXEC $SOCA $FV3JEDI_SRC"
+echo "ecbuild command: " $BUILDCOMMAND
+echo " "
+echo " "
+echo " Building... "
 echo " "
 
 FV3JEDI_TEST_TIER=2
@@ -133,16 +135,16 @@ make update
 
 # Build fv3-jedi
 # --------------
-sbatch --wait make_slurm.sh
+sbatch --wait make_slurm.sh fv3-jedi
+
+# Build soca
+# ----------
+[[ $build_soca == "ON" ]] && sbatch --wait make_slurm.sh soca
 
 # Get CRTM data before ctest_slurm
-# ---------------
+# --------------------------------
 cd $JEDI_BUILD/fv3-jedi
 ctest -R fv3jedi_get_crtm_test_data
 cd $JEDI_BUILD
-
-# Run ctests
-# ----------
-[[ $run_ctest == "ON" ]] && sbatch ctest_slurm.sh
 
 exit 0
