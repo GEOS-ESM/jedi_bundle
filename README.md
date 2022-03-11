@@ -9,13 +9,12 @@ Aeronautics and Space Administration. All Rights Reserved.
 
 Bundle containing all the repositories that are needed to compile the JEDI repos needed by the GMAO.
 
-### Installation:
+### Installation on Discover:
 
-If building on NASA's Discover the provided build scripts are a convenient way of building:
+First clone the repo:
 
 ```
 git clone https://github.com/danholdaway/jedi-bundle
-cd jedi-bundle
 ```
 
 To build with the default options do:
