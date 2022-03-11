@@ -7,7 +7,7 @@ Aeronautics and Space Administration. All Rights Reserved.
 
 ### Description:
 
-Bundle containing all the repositories that are needed to compile the JEDI repos needed by the GMAO.
+Bundle containing all the repositories that are needed to compile JEDI at the GMAO.
 
 ### Installation on Discover:
 
@@ -24,7 +24,7 @@ cd jedi-bundle
 ./buildscripts/build_discover.sh -h
 ```
 
-Then to see the available options for use with the build script you can issue:
+To see the available options for use with the build script you can issue:
 
 ```
 ./buildscripts/build_discover.sh -h
