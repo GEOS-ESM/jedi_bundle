@@ -21,7 +21,7 @@ To build with the default options do:
 
 ```
 cd jedi-bundle
-./buildscripts/build_discover.sh -h
+./buildscripts/build_discover.sh
 ```
 
 To see the available options for use with the build script you can issue:
