@@ -14,7 +14,7 @@ Bundle containing all the repositories that are needed to compile JEDI at the GM
 First clone the repo:
 
 ```
-git clone https://github.com/danholdaway/jedi-bundle
+git clone https://github.com/geos-esm/jedi-bundle
 ```
 
 To build with the default options do:
