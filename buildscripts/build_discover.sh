@@ -125,13 +125,16 @@ echo " "
 echo " "
 echo " Building... "
 echo " "
-
 FV3JEDI_TEST_TIER=2
 $BUILDCOMMAND
 
 # Update the repos
 # ----------------
 make update
+
+# Build ioda converters
+# ---------------------
+sbatch --wait make_slurm.sh iodaconv
 
 # Build fv3-jedi
 # --------------
