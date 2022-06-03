@@ -11,7 +11,7 @@ build="release"
 jcsda="jcsda"
 account="g0613"
 queue="debug"
-build_ooo="ON"
+build_ooo="OFF"
 build_soca="OFF"
 
 # Parse input arguments.
