@@ -56,6 +56,10 @@ option("BUNDLE_SKIP_ROPP-UFO"  "Don't build ROPP-UFO"  "ON")
 ecbuild_bundle( PROJECT geos-aero GIT "https://github.com/jcsda-internal/geos-aero.git" BRANCH develop UPDATE )
 ecbuild_bundle( PROJECT ropp-ufo GIT "https://github.com/jcsda-internal/ropp-test.git"  BRANCH develop UPDATE )
 
+# GSI Static (climatological) B
+# -----------------------------
+ecbuild_bundle( PROJECT gsibclim GIT "https://github.com/GEOS-ESM/gsibclim.git" BRANCH develop UPDATE )
+
 # Core JEDI repositories
 # ----------------------
 ecbuild_bundle( PROJECT oops  GIT "https://github.com/JCSDAORG/oops.git"  BRANCH develop UPDATE )
@@ -81,8 +85,8 @@ ecbuild_info("Building with FV3-based model: ${FV3_FORECAST_MODEL}")
 # -------------------------------------------------------
 if (FV3_FORECAST_MODEL MATCHES "FV3CORE")
   option("BUNDLE_SKIP_FMS" "Don't build FMS" "OFF")
-  ecbuild_bundle( PROJECT fms GIT "https://github.com/JCSDAORG/FMS.git" BRANCH release-stable UPDATE )
-  ecbuild_bundle( PROJECT fv3 GIT "https://github.com/JCSDAORG/GFDL_atmos_cubed_sphere.git" BRANCH release-stable UPDATE )
+  ecbuild_bundle( PROJECT fms GIT "https://github.com/jcsda/FMS.git" BRANCH release-stable UPDATE )
+  ecbuild_bundle( PROJECT fv3 GIT "https://github.com/jcsda/GFDL_atmos_cubed_sphere.git" BRANCH release-stable UPDATE )
 endif()
 
 # fv3-jedi linear model
