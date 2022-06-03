@@ -25,7 +25,7 @@ set( ENABLE_MPI ON CACHE BOOL "Compile with MPI")
 
 # Initialize
 ecbuild_bundle_initialize()
-ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda-internal/jedi-cmake.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT jedicmake GIT "https://github.com/jcsda/jedi-cmake.git" BRANCH develop UPDATE )
 include( jedicmake/cmake/Functions/git_functions.cmake  )
 
 # ECMWF libs
@@ -41,32 +41,32 @@ ecbuild_bundle( PROJECT atlas GIT "https://github.com/ecmwf/atlas.git" TAG 0.27.
 # GSW for SOCA
 # ------------
 if (BUILD_SOCA MATCHES "ON")
-  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda-internal/GSW-Fortran.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT gsw GIT "https://github.com/jcsda/GSW-Fortran.git" BRANCH develop UPDATE )
 endif()
 
 # Required observation operators
 # ------------------------------
 option("BUNDLE_SKIP_CRTM" "Don't build CRTM" "OFF") # Build crtm unless user passes -DBUNDLE_SKIP_CRTM=ON
-ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BRANCH release/crtm_jedi UPDATE )
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda/crtm.git" BRANCH release/crtm_jedi UPDATE )
 
 # Optional observation operators
 # ------------------------------
 option("BUNDLE_SKIP_GEOS-AERO" "Don't build GEOS-AERO" "ON")
 option("BUNDLE_SKIP_ROPP-UFO"  "Don't build ROPP-UFO"  "ON")
-ecbuild_bundle( PROJECT geos-aero GIT "https://github.com/jcsda-internal/geos-aero.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ropp-ufo GIT "https://github.com/jcsda-internal/ropp-test.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT geos-aero GIT "https://github.com/jcsda/geos-aero.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ropp-ufo GIT "https://github.com/jcsda/ropp-test.git"  BRANCH develop UPDATE )
 
 # Core JEDI repositories
 # ----------------------
-ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda-internal/oops.git"  BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda-internal/saber.git" BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda-internal/ioda.git"  BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda-internal/ufo.git"   BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda-internal/vader.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT oops  GIT "https://github.com/jcsda/oops.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT saber GIT "https://github.com/jcsda/saber.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ioda  GIT "https://github.com/jcsda/ioda.git"  BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT ufo   GIT "https://github.com/jcsda/ufo.git"   BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT vader GIT "https://github.com/jcsda/vader.git" BRANCH develop UPDATE )
 
 # Ioda converters
 # ---------------
-ecbuild_bundle( PROJECT iodaconv GIT "https://github.com/JCSDA-internal/ioda-converters.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT iodaconv GIT "https://github.com/jcsda/ioda-converters.git" BRANCH develop UPDATE )
 
 # Options for building with certain models
 # ----------------------------------------
@@ -81,24 +81,24 @@ ecbuild_info("Building with FV3-based model: ${FV3_FORECAST_MODEL}")
 # -------------------------------------------------------
 if (FV3_FORECAST_MODEL MATCHES "FV3CORE")
   option("BUNDLE_SKIP_FMS" "Don't build FMS" "OFF")
-  ecbuild_bundle( PROJECT fms GIT "https://github.com/jcsda-internal/FMS.git" BRANCH release-stable UPDATE )
-  ecbuild_bundle( PROJECT fv3 GIT "https://github.com/jcsda-internal/GFDL_atmos_cubed_sphere.git" BRANCH release-stable UPDATE )
+  ecbuild_bundle( PROJECT fms GIT "https://github.com/jcsda/FMS.git" BRANCH release-stable UPDATE )
+  ecbuild_bundle( PROJECT fv3 GIT "https://github.com/jcsda/GFDL_atmos_cubed_sphere.git" BRANCH release-stable UPDATE )
 endif()
 
 # fv3-jedi linear model
 # ---------------------
-ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda-internal/fv3-jedi-linearmodel.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT fv3-jedi-lm GIT "https://github.com/jcsda/fv3-jedi-linearmodel.git" BRANCH develop UPDATE )
 
 # fv3-jedi and associated repositories
 # ------------------------------------
-ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda-internal/femps.git"    BRANCH develop UPDATE )
-ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda-internal/fv3-jedi.git" BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT femps    GIT "https://github.com/jcsda/femps.git"    BRANCH develop UPDATE )
+ecbuild_bundle( PROJECT fv3-jedi GIT "https://github.com/jcsda/fv3-jedi.git" BRANCH develop UPDATE )
 
 # Soca
 # ----
 if (BUILD_SOCA MATCHES "ON")
-  ecbuild_bundle( PROJECT mom6 GIT "https://github.com/jcsda-internal/MOM6.git" UPDATE BRANCH main-ecbuild RECURSIVE )
-  ecbuild_bundle( PROJECT soca GIT "https://github.com/jcsda-internal/soca.git" UPDATE BRANCH develop RECURSIVE )
+  ecbuild_bundle( PROJECT mom6 GIT "https://github.com/jcsda/MOM6.git" UPDATE BRANCH main-ecbuild RECURSIVE )
+  ecbuild_bundle( PROJECT soca GIT "https://github.com/jcsda/soca.git" UPDATE BRANCH develop RECURSIVE )
 endif()
 
 
@@ -116,7 +116,7 @@ find_branch_name(REPO_DIR_NAME ioda)
 # When LOCAL_PATH_JEDI_TESTFILES is set to the directory of IODA test files stored
 # in a local directory, ioda-data repo will not be cloned
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/JCSDA-internal/ioda-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT ioda-data GIT "https://github.com/jcsda/ioda-data.git" BRANCH develop UPDATE )
 endif()
 
 # If IODA's current branch is available in ioda-data repo, that branch will be checked out
@@ -126,7 +126,7 @@ branch_checkout (REPO_DIR_NAME ioda-data
 # same procedure for ufo-data
 find_branch_name(REPO_DIR_NAME ufo)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/JCSDA-internal/ufo-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT ufo-data GIT "https://github.com/jcsda/ufo-data.git" BRANCH develop UPDATE )
 endif()
 
 # If UFO's current branch is available in ufo-data repo, that branch will be checked out
@@ -136,7 +136,7 @@ branch_checkout (REPO_DIR_NAME ufo-data
 # same procedure for fv3-jedi-data
 find_branch_name(REPO_DIR_NAME fv3-jedi)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/JCSDA-internal/fv3-jedi-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT fv3-jedi-data GIT "https://github.com/jcsda/fv3-jedi-data.git" BRANCH develop UPDATE )
 endif()
 
 # If fv3-jedi's current branch is available in fv3-jedi-data repo, that branch will be checked out
@@ -146,7 +146,7 @@ branch_checkout (REPO_DIR_NAME fv3-jedi-data
 # same procedure for saber-data
 find_branch_name(REPO_DIR_NAME saber)
 if( NOT DEFINED ENV{LOCAL_PATH_JEDI_TESTFILES} AND NOT DEFINED ${GIT_TAG_FUNC} )
-  ecbuild_bundle( PROJECT saber-data GIT "https://github.com/JCSDA-internal/saber-data.git" BRANCH develop UPDATE )
+  ecbuild_bundle( PROJECT saber-data GIT "https://github.com/jcsda/saber-data.git" BRANCH develop UPDATE )
 endif()
 
 # If saber's current branch is available in saber-data repo, that branch will be checked out
