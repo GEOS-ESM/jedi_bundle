@@ -30,6 +30,9 @@ oops/
 ufo/
 vader/
 
+# gsi bclim
+gsibclim/
+
 # model repos
 fms/
 fv3/
