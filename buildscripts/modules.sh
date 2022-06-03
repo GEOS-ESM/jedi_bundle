@@ -1,9 +1,6 @@
-#!/bin/sh
-set myshell=`echo $shell | rev | cut -d"/" -f1 | rev`
-source $MODULESHOME/init/$myshell
-module purge
-set OPT=OPTPATH
+export OPT=/discover/swdev/jcsda/modules
 module use $OPT/modulefiles/apps
 module use $OPT/modulefiles/core
+module purge
 module load MODLOAD
 module list
