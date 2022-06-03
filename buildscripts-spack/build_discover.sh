@@ -113,7 +113,7 @@ source ./modules
 BUILDCOMMAND="ecbuild --build=$build -DMPIEXEC=$MPIEXEC $OOO $SOCA ../"
 echo "ecbuild command: " $BUILDCOMMAND
 echo " "
-#$BUILDCOMMAND
+$BUILDCOMMAND
 
 # Build ioda converters
 # ---------------------
