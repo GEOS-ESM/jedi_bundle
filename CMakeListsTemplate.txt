@@ -58,7 +58,7 @@ ecbuild_bundle( PROJECT ropp-ufo GIT "https://github.com/jcsda-internal/ropp-tes
 
 # GSI Static (climatological) B
 # -----------------------------
-ecbuild_bundle( PROJECT gsibclim GIT "https://github.com/GEOS-ESM/gsibclim.git" BRANCH develop UPDATE )
+#ecbuild_bundle( PROJECT gsibclim GIT "https://github.com/GEOS-ESM/gsibclim.git" BRANCH develop UPDATE )
 
 # Core JEDI repositories
 # ----------------------
