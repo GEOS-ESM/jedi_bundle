@@ -3,7 +3,7 @@
 set -e
 
 # Usage of this script.
-usage() { echo "Usage: $(basename $0) [-c intel] [-b debug|relwithdebinfo|release|bit|production] [-j jcsda|jcsda-internal] [-q debug|advda|...] [-a g0613|...] [-o ON|OFF] [-s ON|OFF] [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $(basename $0) [-c intel|gnu] [-b debug|relwithdebinfo|release|bit|production] [-j jcsda|jcsda-internal] [-q debug|advda|...] [-a g0613|...] [-o ON|OFF] [-s ON|OFF] [-h]" 1>&2; exit 1; }
 
 # Set input argument defaults.
 compiler="intel"
@@ -88,6 +88,7 @@ mkdir -p $JEDI_BUILD
 # Copy modules file
 # -----------------
 cp buildscripts-spack/modules-$compiler $JEDI_BUILD/modules
+cp buildscripts-spack/modules-$compiler-csh $JEDI_BUILD/modules-csh 2>/dev/null
 
 # Copy make file
 # --------------
