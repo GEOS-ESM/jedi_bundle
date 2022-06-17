@@ -1,0 +1,9 @@
+module purge
+export OPT=/discover/swdev/jcsda/modules
+module use $OPT/modulefiles/apps
+module use $OPT/modulefiles/core
+module load jedi/gnu-impi
+module load fckit/ecmwf-0.9.5
+module load eckit/ecmwf-1.18.2
+module load atlas/ecmwf-0.27.0
+module list
