@@ -88,12 +88,12 @@ mkdir -p $JEDI_BUILD
 
 # Copy modules file
 # -----------------
-cp buildscripts-spack/modules-$compiler $JEDI_BUILD/modules
-cp buildscripts-spack/modules-$compiler-csh $JEDI_BUILD/modules-csh 2>/dev/null
+cp buildscripts/modules-$compiler $JEDI_BUILD/modules
+cp buildscripts/modules-$compiler-csh $JEDI_BUILD/modules-csh 2>/dev/null
 
 # Copy make file
 # --------------
-cp buildscripts-spack/make_slurm.sh $JEDI_BUILD/make_slurm.sh
+cp buildscripts/make_slurm.sh $JEDI_BUILD/make_slurm.sh
 sed -i -e 's/ACCOUNT/'"$account"'/g' $JEDI_BUILD/make_slurm.sh
 sed -i -e 's/QUEUE/'"$queue"'/g' $JEDI_BUILD/make_slurm.sh
 
