@@ -3,7 +3,7 @@
 set -e
 
 # Usage of this script.
-usage() { echo "Usage: $(basename $0) [-c intel|gnu] [-b debug|relwithdebinfo|release|bit|production] [-j jcsda|jcsda-internal] [-q debug|advda|...] [-a g0613|...] [-o ON|OFF] [-s ON|OFF] [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $(basename $0) [-c intel|gnu|oldint] [-b debug|relwithdebinfo|release|bit|production] [-j jcsda|jcsda-internal] [-q debug|advda|...] [-a g0613|...] [-o ON|OFF] [-s ON|OFF] [-h]" 1>&2; exit 1; }
 
 # Set input argument defaults.
 compiler="intel"
@@ -28,6 +28,7 @@ while getopts 'c:b:j:q:a:o:s:h:' OPTION; do
     c)
         compiler="$OPTARG"
         [[ "$compiler" == "gnu" || \
+           "$compiler" == "oldint" || \
            "$compiler" == "intel" ]] || usage
         ;;
     j)
@@ -116,14 +117,6 @@ echo "ecbuild command: " $BUILDCOMMAND
 echo " "
 $BUILDCOMMAND
 
-# Build ioda converters
-# ---------------------
-sbatch --wait make_slurm.sh $JEDI_BUILD iodaconv
-
-# Build fv3-jedi
-# --------------
-sbatch --wait make_slurm.sh $JEDI_BUILD fv3-jedi
-
-# Build soca
-# ----------
-[[ $build_soca == "ON" ]] && sbatch --wait make_slurm.sh $JEDI_BUILD soca
+# Perform make
+# ------------
+make -j4
