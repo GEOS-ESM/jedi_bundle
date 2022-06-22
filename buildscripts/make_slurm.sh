@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#SBATCH -A ACCOUNT
+#SBATCH --account ACCOUNT
 #SBATCH --qos=QUEUE
 #SBATCH --job-name=jedimake
 #SBATCH --output=jedimake.o%j
@@ -8,16 +8,11 @@
 #SBATCH --nodes=1
 #SBATCH --time=00:30:00
 
-cd BUILDDIR
-
-source $MODULESHOME/init/sh
-module purge
-OPT=OPTPATH
-module use $OPT/modulefiles/core
-module use $OPT/modulefiles/apps
-module load MODLOAD
-module list
-
 cd $1
 
-make -j12
+source $MODULESHOME/init/sh
+source ./modules
+
+cd $2
+
+make -j24

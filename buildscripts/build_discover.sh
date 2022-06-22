@@ -3,17 +3,19 @@
 set -e
 
 # Usage of this script.
-usage() { echo "Usage: $(basename $0) [-c intel-impi|gnu-impi] [-b debug|relwithdebinfo|release|bit|production] [-q debug|advda|...] [-a g0613|...]  [-s ON|OFF] [-h]" 1>&2; exit 1; }
+usage() { echo "Usage: $(basename $0) [-c intel|gnu|oldint] [-b debug|relwithdebinfo|release|bit|production] [-j jcsda|jcsda-internal] [-q debug|advda|...] [-a g0613|...] [-o ON|OFF] [-s ON|OFF] [-h]" 1>&2; exit 1; }
 
 # Set input argument defaults.
-compiler="intel-impi"
+compiler="intel"
 build="release"
+jcsda="jcsda"
 account="g0613"
 queue="debug"
+build_ooo="OFF"
 build_soca="OFF"
 
 # Parse input arguments.
-while getopts 'b:c:a:q:s:h:' OPTION; do
+while getopts 'c:b:j:q:a:o:s:h:' OPTION; do
   case "$OPTION" in
     b)
         build="$OPTARG"
@@ -25,14 +27,25 @@ while getopts 'b:c:a:q:s:h:' OPTION; do
         ;;
     c)
         compiler="$OPTARG"
-        [[ "$compiler" == "gnu-impi" || \
-           "$compiler" == "intel-impi" ]] || usage
+        [[ "$compiler" == "gnu" || \
+           "$compiler" == "oldint" || \
+           "$compiler" == "intel" ]] || usage
+        ;;
+    j)
+        jcsda="$OPTARG"
+        [[ "$jcsda" == "jcsda" || \
+           "$jcsda" == "jcsda-internal" ]] || usage
         ;;
     a)
         account="$OPTARG"
         ;;
     q)
         queue="$OPTARG"
+        ;;
+    o)
+        build_ooo="$OPTARG"
+        [[ "$build_ooo" == "ON" || \
+            "$build_ooo" == "OFF" ]] || usage
         ;;
     s)
         build_soca="$OPTARG"
@@ -47,107 +60,63 @@ done
 shift "$(($OPTIND -1))"
 
 echo "Summary of input arguments:"
-echo "         build = $build"
-echo "      compiler = $compiler"
-echo "       account = $account"
-echo "         queue = $queue"
-echo "         soca  = $build_soca"
+echo "            build = $build"
+echo "         compiler = $compiler"
+echo "            jcsda = $jcsda"
+echo "          account = $account"
+echo "            queue = $queue"
+echo "            soca  = $build_soca"
+echo "optioanal ob ops  = $build_ooo"
 echo
-
-# Load JEDI modules
-# -----------------
-OPTPATH=/discover/swdev/jcsda/modules
-MODLOAD=jedi/$compiler
-
-source $MODULESHOME/init/sh
-module purge
-export OPT=$OPTPATH
-module use $OPT/modulefiles/core
-module use $OPT/modulefiles/apps
-module load $MODLOAD
-module list
-
-
-# Set up paths (build and src)
-# ----------------------------
-compiler_build=`echo $compiler | tr / -`
-JEDI_BUILD="$PWD/build-$compiler_build-$build"
-cd $(dirname $0)/..
-FV3JEDI_SRC=$(pwd)
-
-
-mkdir -p $JEDI_BUILD && cd $JEDI_BUILD
-
-# Create bash module file for future sourcing
-# -------------------------------------------
-file=modules.sh
-cp ../buildscripts/$file ./
-sed -i "s,OPTPATH,$OPTPATH,g" $file
-sed -i "s,MODLOAD,$MODLOAD,g" $file
-
-# Create csh/tsh module file for future sourcing
-# ----------------------------------------------
-file=modules.csh
-cp ../buildscripts/$file ./
-sed -i "s,OPTPATH,$OPTPATH,g" $file
-sed -i "s,MODLOAD,$MODLOAD,g" $file
-
-# Slurm job for running make
-# --------------------------
-file=make_slurm.sh
-cp ../buildscripts/$file ./
-sed -i "s,OPTPATH,$OPTPATH,g" $file
-sed -i "s,MODLOAD,$MODLOAD,g" $file
-sed -i "s,ACCOUNT,$account,g" $file
-sed -i "s,QUEUE,$queue,g" $file
-sed -i "s,BUILDDIR,$JEDI_BUILD,g" $file
-
-# Slurm job for running tests
-# ---------------------------
-file=ctest_slurm.sh
-cp ../buildscripts/$file ./
-sed -i "s,OPTPATH,$OPTPATH,g" $file
-sed -i "s,MODLOAD,$MODLOAD,g" $file
-sed -i "s,ACCOUNT,$account,g" $file
-sed -i "s,QUEUE,$queue,g" $file
-sed -i "s,BUILDDIR,$JEDI_BUILD,g" $file
-
 
 # Build soca
 # ----------
 [[ $build_soca == "ON" ]] && SOCA="-DBUILD_SOCA=ON"
 
-# Build
-# -----
-BUILDCOMMAND="ecbuild --build=$build -DMPIEXEC=$MPIEXEC $SOCA $FV3JEDI_SRC"
-echo "ecbuild command: " $BUILDCOMMAND
-echo " "
-echo " "
-echo " Building... "
-echo " "
+# Optional obs operators
+# ----------------------
+[[ $build_ooo == "ON" ]] && OOO="-DBUNDLE_SKIP_GEOS-AERO=OFF -DBUNDLE_SKIP_ROPP-UFO=OFF"
+
+# Enable tier 2 tests with fv3-jedi
+# ---------------------------------
 FV3JEDI_TEST_TIER=2
-$BUILDCOMMAND
 
-# Update the repos
-# ----------------
-make update
+# Build directory
+# ---------------
+JEDI_BUILD="$PWD/build-$compiler-$build"
+mkdir -p $JEDI_BUILD
 
-# Build ioda converters
-# ---------------------
-sbatch --wait make_slurm.sh iodaconv
+# Copy modules file
+# -----------------
+cp buildscripts-spack/modules-$compiler $JEDI_BUILD/modules
+cp buildscripts-spack/modules-$compiler-csh $JEDI_BUILD/modules-csh 2>/dev/null
 
-# Build fv3-jedi
+# Copy make file
 # --------------
-sbatch --wait make_slurm.sh fv3-jedi
+cp buildscripts-spack/make_slurm.sh $JEDI_BUILD/make_slurm.sh
+sed -i -e 's/ACCOUNT/'"$account"'/g' $JEDI_BUILD/make_slurm.sh
+sed -i -e 's/QUEUE/'"$queue"'/g' $JEDI_BUILD/make_slurm.sh
 
-# Build soca
-# ----------
-[[ $build_soca == "ON" ]] && sbatch --wait make_slurm.sh soca
+# Update the CMakeLists with chosen JCSDA org
+# -------------------------------------------
+cp CMakeListsTemplate.txt CMakeLists.txt
+sed -i -e 's/JCSDAORG/'"$jcsda"'/g' CMakeLists.txt
 
-# Get CRTM data before ctest_slurm
-# --------------------------------
-cd $JEDI_BUILD/fv3-jedi
-ctest -R fv3jedi_get_crtm_test_data
+# Move to build directory
+# -----------------------
 cd $JEDI_BUILD
 
-exit 0
+# Load JEDI modules
+# -----------------
+source ./modules
+
+# Build
+# -----
+BUILDCOMMAND="ecbuild --build=$build -DMPIEXEC=$MPIEXEC $OOO $SOCA ../"
+echo "ecbuild command: " $BUILDCOMMAND
+echo " "
+$BUILDCOMMAND
+
+# Perform make
+# ------------
+make -j4
