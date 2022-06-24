@@ -1,0 +1,14 @@
+header:
+ - '# Preamble'
+ - '# --------'
+ - 'cmake_minimum_required( VERSION 3.12 )'
+ - 'project( jedi VERSION 0.0.0 LANGUAGES C CXX Fortran )'
+ - 'find_package( ecbuild 3.3.2 REQUIRED)'
+ - 'include( ecbuild_bundle )'
+ - ''
+ - '# Packages'
+ - '# --------'
+ - 'ecbuild_bundle_initialize()'
+
+footer:
+ - 'ecbuild_bundle_finalize()'

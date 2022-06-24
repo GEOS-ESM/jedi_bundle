@@ -1,0 +1,14 @@
+optional repos:
+  - crtm
+
+required repos:
+  - jedicmake
+  - gsw
+  - oops
+  - saber
+  - ioda
+  - ufo
+  - vader
+  - fms
+  - mom6
+  - soca

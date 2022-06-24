@@ -1,0 +1,62 @@
+# Jedi cmake
+- jedicmake:
+    repo url name: jedi-cmake
+
+# Obs ops
+- crtm:
+    default branch: release/crtm_jedi
+- geos-aero:
+    default branch: develop
+- ropp-ufo:
+    default branch: develop
+- gsw:
+    repo url name: GSW-Fortran
+
+# Core
+- oops:
+    default branch: develop
+- ufo:
+    default branch: develop
+- saber:
+    default branch: develop
+- ioda:
+    default branch: develop
+- vader:
+    default branch: develop
+
+# Model dependencies
+- fms:
+    repo url name: FMS
+    default branch: release-stable
+- fv3:
+    repo url name: GFDL_atmos_cubed_sphere
+    default branch: release-stable
+- mom6:
+    repo url name: MOM6
+    default branch: main-ecbuild
+- fv3-jedi-lm:
+    repo url name: fv3-jedi-linearmodel
+    default branch: develop
+- femps:
+    default branch: develop
+
+# Models
+- fv3-jedi:
+    default branch: develop
+- soca:
+    default branch: develop
+
+# Ioda converters
+- iodaconv:
+    repo url name: ioda-converters
+    default branch: develop
+
+# Test data
+- fv3-jedi-data:
+    default branch: develop
+- ufo-data:
+    default branch: develop
+- ioda-data:
+    default branch: develop
+- saber-data:
+    default branch: develop

@@ -1,0 +1,18 @@
+optional repos:
+  - ropp-ufo
+  - geos-aero
+
+required repos:
+  - jedicmake
+  - crtm
+  - oops
+  - saber
+  - ioda
+  - ufo
+  - vader
+  - fms
+  - fv3
+  - fv3-jedi-lm
+  - femps
+  - fv3-jedi
+  - fv3-jedi-data

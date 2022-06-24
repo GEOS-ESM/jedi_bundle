@@ -1,0 +1,5 @@
+required repos:
+  - jedicmake
+  - oops
+  - ioda
+  - iodaconv

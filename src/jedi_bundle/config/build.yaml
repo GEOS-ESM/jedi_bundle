@@ -1,0 +1,20 @@
+build options:
+
+  platform: discover
+  modules: intel
+  build: release
+  configure: ecbuild
+  path to build: &path_to_build ./
+
+source code options:
+
+  path to source: *path_to_build
+  user branch: develop
+  github orgs:
+    - JCSDA-internal
+    - JCSDA
+
+  bundles:
+    #- fv3-jedi
+    #- soca
+    - iodaconv
