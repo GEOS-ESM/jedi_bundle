@@ -73,7 +73,7 @@ def repo_has_branch(logger, url, branch):
     # Run command
     process = subprocess.run(git_ls_cmd, stdout=devnull)
 
-    # Print the exit code.
+    # Return flag based on exit code.
     if process.returncode == 0:
         return True
     else:

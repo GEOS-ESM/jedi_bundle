@@ -63,12 +63,20 @@ def jedi_bundle():
 
     # If config not passed, copy to current directory
     if not config_passed:
+        cwd = os.getcwd()
+
         internal_config_file = os.path.join(return_config_path(), 'build.yaml')
-        config_file = os.path.join(os.getcwd(), 'build.yaml')
+        internal_config_dict = load_yaml(logger, internal_config_file)
+
+        internal_config_dict['build options']['path to build'] = cwd
+        internal_config_dict['source code options']['path to source'] = cwd
+
+        config_file = os.path.join(cwd, 'build.yaml')
         prompt_and_remove_file(logger, config_file)
 
-        # Copy file
-        shutil.copyfile(internal_config_file, config_file)
+        # Write dictionary to user directory
+        with open(config_file, 'w') as config_file_handle:
+            yaml.dump(internal_config_dict, config_file_handle, default_flow_style=False)
 
         # Tell user to update the file
         logger.input(f'Since no configuration file was provided, the default file will be used. ' +
@@ -83,7 +91,6 @@ def jedi_bundle():
     source_dir = config_dict['source code options']['path to source']
     if source_dir == './':
         source_dir = os.getcwd()
-    print(source_dir, config_file_path)
     if source_dir != config_file_path:
         os.makedirs(source_dir, mode=0o755, exist_ok=True)
         shutil.copyfile(config_file, os.path.join(source_dir, 'build.yaml'))

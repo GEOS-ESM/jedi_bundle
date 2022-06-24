@@ -1,6 +1,7 @@
 # Jedi cmake
 - jedicmake:
     repo url name: jedi-cmake
+    cmakelists: 'include( jedicmake/cmake/Functions/git_functions.cmake )'
 
 # Obs ops
 - crtm:
