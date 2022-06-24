@@ -8,11 +8,16 @@
 
 # --------------------------------------------------------------------------------------------------
 
+
 import os
 import requests
 import subprocess
 
+from jedi_bundle.utils.file_system import devnull
+
+
 # --------------------------------------------------------------------------------------------------
+
 
 def get_github_username_token(logger):
 
@@ -32,7 +37,9 @@ def get_github_username_token(logger):
 
     return username, token
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def repo_is_reachable(logger, url, username, token):
 
@@ -40,7 +47,7 @@ def repo_is_reachable(logger, url, username, token):
     is_reachable = False
 
     try:
-        get = requests.get(url, auth=(username,token))
+        get = requests.get(url, auth=(username, token))
         if get.status_code == 200:
             # Check that the full name provided by API is expected path.
             # Sometimes this value is inconsistent with the repo path.
@@ -49,12 +56,14 @@ def repo_is_reachable(logger, url, username, token):
                 full_name = gh_api_dict['full_name']
                 if full_name in url:
                     is_reachable = True
-    except:
+    except Exception:
         is_reachable = False
 
     return is_reachable
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def repo_has_branch(logger, url, branch):
 
@@ -62,7 +71,7 @@ def repo_has_branch(logger, url, branch):
     git_ls_cmd = ['git', 'ls-remote', '--heads', '--exit-code', url, branch]
 
     # Run command
-    process = subprocess.run(git_ls_cmd, stdout=subprocess.DEVNULL)
+    process = subprocess.run(git_ls_cmd, stdout=devnull)
 
     # Print the exit code.
     if process.returncode == 0:
@@ -70,7 +79,9 @@ def repo_has_branch(logger, url, branch):
     else:
         return False
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def get_url_and_branch(logger, repo, repo_dict, github_orgs, special_branch):
 
@@ -141,7 +152,9 @@ def get_url_and_branch(logger, repo, repo_dict, github_orgs, special_branch):
 
     return repo_url_to_use, repo_branch_to_use
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def clone_git_repo(logger, url, branch, target):
 
@@ -155,8 +168,7 @@ def clone_git_repo(logger, url, branch, target):
         git_clone_cmd = ['git', 'clone', '-b', branch, url, target]
 
         # Run command
-        process = subprocess.run(git_clone_cmd)#, stdout=subprocess.DEVNULL,
-                                 #stderr=subprocess.DEVNULL)
+        process = subprocess.run(git_clone_cmd)
 
         # Assert that clone was successful
         if process.returncode != 0:
@@ -173,17 +185,18 @@ def clone_git_repo(logger, url, branch, target):
 
         # Fetch
         cmd = ['git', 'fetch']
-        process = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
 
         # Switch to branch
         cmd = ['git', 'checkout', branch]
-        process = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
 
         # Pull latest
         cmd = ['git', 'pull', 'origin', branch]
-        process = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
 
         # Switch back to other directory
         os.chdir(cwd)
+
 
 # --------------------------------------------------------------------------------------------------

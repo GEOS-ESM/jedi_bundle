@@ -8,6 +8,7 @@
 
 # --------------------------------------------------------------------------------------------------
 
+
 import argparse
 import os
 import requests
@@ -20,10 +21,12 @@ from jedi_bundle.make_jedi_bundle import make_jedi
 
 from jedi_bundle.config.config import return_config_path
 from jedi_bundle.utils.file_system import prompt_and_remove_file
-from jedi_bundle.utils.logger import Logger
+from jedi_bundle.utils.logger import Logger, colors
 from jedi_bundle.utils.yaml import load_yaml
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def jedi_bundle():
 
@@ -68,8 +71,9 @@ def jedi_bundle():
         shutil.copyfile(internal_config_file, config_file)
 
         # Tell user to update the file
-        logger.input(f'Since no configuration file was provided the default file has been ' +
-                     f'staged here: {config_file}. You can edit this file before continuing')
+        logger.input(f'Since no configuration file was provided, the default file will be used. ' +
+                     f'This can be edited ', f'at the below location before continuing',
+                     f'  {config_file}')
 
     # Read the config_file and convert to dictionary
     config_dict = load_yaml(logger, config_file)
@@ -113,4 +117,4 @@ def jedi_bundle():
     if run_make:
         make_jedi(logger, config_dict)
 
- # -------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------

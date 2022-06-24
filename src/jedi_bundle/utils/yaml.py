@@ -8,9 +8,12 @@
 
 # --------------------------------------------------------------------------------------------------
 
+
 import yaml
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def load_yaml(logger, pathfile):
 
@@ -19,9 +22,10 @@ def load_yaml(logger, pathfile):
         with open(pathfile, 'r') as pathfile_opened:
             dict = yaml.safe_load(pathfile_opened)
     except Exception as e:
-            logger.abort('Jedi build code f is expecting a valid yaml file, but it encountered ' +
-                         f'errors when attempting to load: {pathfile}, error: {e}')
+        logger.abort(f'Jedi build code f is expecting a valid yaml file, but it encountered ' +
+                     f'errors when attempting to load: {pathfile}, error: {e}')
 
     return dict
+
 
 # --------------------------------------------------------------------------------------------------

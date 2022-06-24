@@ -8,13 +8,17 @@
 
 # --------------------------------------------------------------------------------------------------
 
+
 import os
 
 from jedi_bundle.config.config import return_config_path
+from jedi_bundle.utils.file_system import check_for_executable
 from jedi_bundle.utils.git import get_url_and_branch, clone_git_repo
 from jedi_bundle.utils.yaml import load_yaml
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def create_cmakelist_for_bundle(logger, path_to_source, repo_list, url_list, branch_list):
 
@@ -51,7 +55,9 @@ def create_cmakelist_for_bundle(logger, path_to_source, repo_list, url_list, bra
         for cmake_footer_line in cmake_footer_lines:
             output_file_open.write(cmake_footer_line + '\n')
 
+
 # --------------------------------------------------------------------------------------------------
+
 
 def clone_jedi(logger, config):
 
@@ -61,6 +67,11 @@ def clone_jedi(logger, config):
     github_orgs = config['source code options']['github orgs']
     bundles = config['source code options']['bundles']
     path_to_source = config['source code options']['path to source']
+
+    # Check for needed executables
+    # ----------------------------
+    check_for_executable(logger, 'git')
+    check_for_executable(logger, 'git-lfs')
 
     # Compile list of repos that need to be built
     # -------------------------------------------
@@ -116,3 +127,6 @@ def clone_jedi(logger, config):
     # Create the CMakeLists.txt
     # -------------------------
     create_cmakelist_for_bundle(logger, path_to_source, repo_list, url_list, branch_list)
+
+
+# --------------------------------------------------------------------------------------------------

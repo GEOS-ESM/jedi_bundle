@@ -18,6 +18,16 @@ import sys
 #
 # --------------------------------------------------------------------------------------------------
 
+
+class colors:
+    norm = '\033[0m'
+    abort = '\033[91m'
+    warning = '\033[93m'
+
+
+# --------------------------------------------------------------------------------------------------
+
+
 class Logger:
 
     def __init__(self, task_name):
@@ -50,31 +60,36 @@ class Logger:
 
     def info(self, message):
 
-        self.send_message('INFO', message)
+        self.send_message('INFO', f'{message}')
 
     # ----------------------------------------------------------------------------------------------
 
     def trace(self, message):
 
-        self.send_message('TRACE', message)
+        self.send_message('TRACE', f'{message}')
 
     # ----------------------------------------------------------------------------------------------
 
     def debug(self, message):
 
-        self.send_message('DEBUG', message)
+        self.send_message('DEBUG', f'{message}')
 
     # ----------------------------------------------------------------------------------------------
 
     def abort(self, message):
 
-        self.send_message('ABORT', message)
-        sys.exit('ABORTING\n')
+        self.send_message(f'ABORT', f'{colors.abort}{message} ABORTING... {colors.norm}')
+        sys.exit()
 
     # ----------------------------------------------------------------------------------------------
 
-    def input(self, message):
+    def input(self, *messages):
 
-        input('INPUT '+self.task_name+': '+message + ". Press any key to continue...")
+        # Print messages
+        for message in messages:
+            self.send_message('INFO', f'{colors.warning}{message}{colors.norm}')
+
+        # Print continuation message
+        input(f'INFO {self.task_name}: {colors.warning}Press any key to continue...{colors.norm}\n')
 
     # ----------------------------------------------------------------------------------------------
