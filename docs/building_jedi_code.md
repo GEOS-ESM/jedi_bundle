@@ -1,6 +1,6 @@
 # Building the JEDI code
 
-The JEDI-bundle has a single entry point called `jedi_bundle`. The arguments that are passed to the entry point are as follows:
+The jedi_bundle system has a single entry point called `jedi_bundle`. The arguments that are passed to the entry point are as follows:
 
 ``` shell
 jedi_bundle [Tasks] build.yaml

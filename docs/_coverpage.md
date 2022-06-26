@@ -2,7 +2,7 @@
 
 > Build system for JEDI source code
 
-[GitHub](https://github.com/GEOS-ESM/jedi-bundle)
+[GitHub](https://github.com/GEOS-ESM/jedi_bundle)
 [Documentation](#introduction)
 
 ![](_media/hpc.jpeg)
