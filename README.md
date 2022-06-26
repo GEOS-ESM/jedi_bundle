@@ -15,4 +15,4 @@ Aeronautics and Space Administration. All Rights Reserved.
 
 ### Description, installation and usage:
 
-For installation and usage of this JEDI Bundle system see the documentation at https://geos-esm.github.io/jedi-bundle/
+For installation and usage of this JEDI Bundle system see the documentation at https://geos-esm.github.io/jedi_bundle/

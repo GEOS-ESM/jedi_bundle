@@ -68,8 +68,8 @@ def jedi_bundle():
         internal_config_file = os.path.join(return_config_path(), 'build.yaml')
         internal_config_dict = load_yaml(logger, internal_config_file)
 
-        internal_config_dict['build options']['path to build'] = cwd
-        internal_config_dict['source code options']['path to source'] = cwd
+        internal_config_dict['build_options']['path_to_build'] = cwd
+        internal_config_dict['source_code_options']['path_to_source'] = cwd
 
         config_file = os.path.join(cwd, 'build.yaml')
         prompt_and_remove_file(logger, config_file)
@@ -88,12 +88,13 @@ def jedi_bundle():
 
     # Copy the config to the source directory
     config_file_path = os.path.dirname(config_file)
-    source_dir = config_dict['source code options']['path to source']
-    if source_dir == './':
-        source_dir = os.getcwd()
-    if source_dir != config_file_path:
-        os.makedirs(source_dir, mode=0o755, exist_ok=True)
-        shutil.copyfile(config_file, os.path.join(source_dir, 'build.yaml'))
+    path_to_source = config_dict['source_code_options']['path_to_source']
+    if path_to_source == './':
+        path_to_source = os.getcwd()
+    if path_to_source != config_file_path:
+        os.makedirs(path_to_source, exist_ok=True)
+        os.chmod(path_to_source, mode=0o755)
+        shutil.copyfile(config_file, os.path.join(path_to_source, 'build.yaml'))
 
     # Prepare the Tasks
     # -----------------

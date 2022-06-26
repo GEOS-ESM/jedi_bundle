@@ -15,11 +15,11 @@
 import setuptools
 
 setuptools.setup(
-    name='jedi-bundle',
+    name='jedi_bundle',
     version='0.0.1',
     author='NASA Global Modeling and Assimilation Office',
     description='Tools for installing JEDI code',
-    url='https://github.com/geos-esm/jedi-bundle',
+    url='https://github.com/geos-esm/jedi_bundle',
     package_dir={'': 'src'},
     packages=setuptools.find_packages(where='src'),
     classifiers=[
@@ -39,6 +39,7 @@ setuptools.setup(
     package_data={
         '': [
                'config/*',
+               'config/bundles/*',
                'config/platforms/*',
              ],
     },

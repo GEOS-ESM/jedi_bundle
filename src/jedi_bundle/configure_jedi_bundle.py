@@ -23,14 +23,14 @@ from jedi_bundle.utils.yaml import load_yaml
 def configure_jedi(logger, config):
 
     # Parse the config
-    platform = config['build options']['platform']
-    modules = config['build options']['modules']
-    build = config['build options']['build']
-    path_to_build = config['build options']['path to build']
-    path_to_source = config['source code options']['path to source']
+    platform = config['build_options']['platform']
+    modules = config['build_options']['modules']
+    cmake_build_type = config['build_options']['cmake_build_type']
+    path_to_build = config['build_options']['path_to_build']
+    path_to_source = config['source_code_options']['path_to_source']
 
     # Create build directory
-    build_dir = os.path.join(path_to_build, f'build-{modules}-{build}')
+    build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
     os.makedirs(build_dir, exist_ok=True)
     os.chmod(build_dir, 0o755)
 
@@ -53,7 +53,7 @@ def configure_jedi(logger, config):
     remove_file(logger, configure_file)
 
     # ecbuild command
-    ecbuild = f'ecbuild --build={build} -DMPIEXEC=$MPIEXEC {path_to_source}'
+    ecbuild = f'ecbuild --build={cmake_build_type} -DMPIEXEC=$MPIEXEC {path_to_source}'
     logger.info(f'Running configure with \'{ecbuild}\'')
 
     # Write steps to file

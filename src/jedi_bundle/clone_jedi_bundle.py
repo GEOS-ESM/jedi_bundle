@@ -24,10 +24,10 @@ def clone_jedi(logger, config):
 
     # Parse config
     # ------------
-    user_branch = config['source code options']['user branch']
-    github_orgs = config['source code options']['github orgs']
-    bundles = config['source code options']['bundles']
-    path_to_source = config['source code options']['path to source']
+    user_branch = config['source_code_options']['user_branch']
+    github_orgs = config['source_code_options']['github_orgs']
+    bundles = config['source_code_options']['bundles']
+    path_to_source = config['source_code_options']['path_to_source']
 
     # Check for needed executables
     # ----------------------------
@@ -40,7 +40,7 @@ def clone_jedi(logger, config):
     for bundle in bundles:
 
         # Get dictionary for the bundle
-        bundle_pathfile = os.path.join(return_config_path(), bundle + '.yaml')
+        bundle_pathfile = os.path.join(return_config_path(), 'bundles', bundle + '.yaml')
         bundle_dict = load_yaml(logger, bundle_pathfile)
 
         # Build order for this bundle
@@ -51,7 +51,7 @@ def clone_jedi(logger, config):
 
     # Remove repos from build order if not needed
     # -------------------------------------------
-    build_order_pathfile = os.path.join(return_config_path(), 'build-order.yaml')
+    build_order_pathfile = os.path.join(return_config_path(), 'bundles', 'build-order.yaml')
     build_order_dicts = load_yaml(logger, build_order_pathfile)
     indices_to_remove = []
     for index, build_order_dict in enumerate(build_order_dicts):

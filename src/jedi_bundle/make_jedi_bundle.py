@@ -21,15 +21,15 @@ from jedi_bundle.utils.file_system import remove_file
 def make_jedi(logger, config):
 
     # Parse the config
-    modules = config['build options']['modules']
-    build = config['build options']['build']
-    path_to_build = config['build options']['path to build']
-    cores_to_use_for_make = config['build options']['cores to use for make']
+    modules = config['build_options']['modules']
+    cmake_build_type = config['build_options']['cmake_build_type']
+    path_to_build = config['build_options']['path_to_build']
+    cores_to_use_for_make = config['build_options']['cores_to_use_for_make']
 
-    bundles = config['source code options']['bundles']
+    bundles = config['source_code_options']['bundles']
 
     # Create build directory
-    build_dir = os.path.join(path_to_build, f'build-{modules}-{build}')
+    build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
 
     # File to hold configure steps
     for bundle in bundles:
