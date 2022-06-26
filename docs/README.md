@@ -1,10 +1,13 @@
 # Introduction
 
-Welcome to the system for installing JEDI source code bundles. Bundles are a make system that uses ECMWF's ecbuild software. It allows various CMake-based software packages to be concurrently built  with seamless handling of dependencies between them.
+Welcome to the "jedi_bundle" system for installing JEDI source code bundles. The JEDI source code utilizes bundles, which are a make system based on ECMWF's ecbuild software. It is convenient in that multiple CMake-based software packages can be concurrently built with seamless handling of dependencies between them. This software provides highly flexible configuration of the bundles for different applications of the JEDI source code and an end-to-end build process.
 
-This software is useful for:
+In particular this software is useful for:
 
-- Coordinating branch names across multiple repositories.
-- Searching across repos with the same name across different GitHub organisations. This can be used, for example, to search forks for branches.
+- Building several JEDI bundles in one go. Without having to clone and maintain several bundle repositories, each with single use.
+- Application-focused building of multiple bundles by using select make steps, rather than building the entire bundle
+- Providing a single build system for teams working with public, private and forked versions of repositories.
+- Coordinating development across multiple repos by searching for a particular branch name across all included repos and across multiple organisations.
+- Having YAML configuration to control the build system.
 - Embedding the building of the source code within a workflow system.
 
