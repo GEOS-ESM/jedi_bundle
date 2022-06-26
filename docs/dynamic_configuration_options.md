@@ -3,20 +3,19 @@
 The default configuration file is shown below. The configuration is split into build options and source code options.
 
 ``` YAML
-build options:
+build_options:
 
   platform: discover
   modules: intelclassic
   cmake_build_type: release
-  configure: ecbuild
-  path to build: &path_to_build ./
-  cores to use for make: 6
+  path_to_build: &path_to_build ./
+  cores_to_use_for_make: 6
 
-source code options:
+source_code_options:
 
-  path to source: *path_to_build
-  user branch: develop
-  github orgs:
+  path_to_source: *path_to_build
+  user_branch: develop
+  github_orgs:
     - JCSDA-internal
     - JCSDA
 
