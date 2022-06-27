@@ -1,6 +1,6 @@
 # Dynamic configuration options
 
-The default configuration file is shown below. The configuration is split into sections corresponding to the first task that references that part of the configuration.
+The default configuration file is shown below. The configuration is split into sections corresponding to the first task that references that part of the configuration. Each subsequent task receives the config for the proceeding tasks.
 
 ``` YAML
 clone_options:
