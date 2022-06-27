@@ -2,6 +2,8 @@
 
 Some useful links for users of JEDI bundles:
 
-- [JEDI documentation](https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/)
+- Source code for [jedi_bundle](https://github.com/GEOS-ESM/jedi_bundle/)
 
-- [JCSDA forums](https://forums.jcsda.org/)
+- JEDI [documentation](https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/)
+
+- JCSDA [forums](https://forums.jcsda.org/)

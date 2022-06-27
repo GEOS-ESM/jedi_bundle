@@ -10,4 +10,5 @@ In particular this software is designed to be useful for:
 - Coordinating development across multiple repos by searching for a particular branch name across all included repos and across multiple organisations.
 - Having YAML configuration to control the build system.
 - Embedding the building of the source code within a workflow system, where it is likely necessary to clone code in one workflow task and build within another task that uses a scheduler.
+- Unification of the build system across multiple repos that have CI build systems.
 

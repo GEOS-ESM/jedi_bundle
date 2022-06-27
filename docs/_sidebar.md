@@ -1,6 +1,8 @@
-- [Introduction](README.md)
+- Introduction
 
-- Getting started
+  - [Introduction](README.md)
+
+- Installing `jedi_bundle`
 
   - [Installation instructions](installation_instructions.md)
 
@@ -10,4 +12,6 @@
   - [Dynamic configuration options](dynamic_configuration_options.md)
   - [Fixed configuration options](fixed_configuration_options.md)
 
-- [Useful links](useful_links.md)
+- Miscellaneous
+
+  - [Useful links](useful_links.md)

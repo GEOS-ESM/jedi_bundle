@@ -5,4 +5,4 @@
 [GitHub](https://github.com/GEOS-ESM/jedi_bundle)
 [Documentation](#introduction)
 
-![](_media/hpc.jpeg)
+![](_media/cogs.jpeg)
