@@ -37,6 +37,10 @@ def make_jedi(logger, make_config):
     # File to hold configure steps
     for bundle in bundles:
 
+        logger.info(f'')
+        logger.info(f'Building the {bundle} bundle using {cores_to_use_for_make} cores')
+        logger.info(f'')
+
         bundle_dir = os.path.join(build_dir, bundle)
 
         make_file = os.path.join(bundle_dir, 'jedi_bundle_make.sh')
