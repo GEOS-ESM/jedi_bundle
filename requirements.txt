@@ -1,0 +1,3 @@
+PyYAML>=5.4
+pycodestyle>=2.8.0
+requests>=2.23.0
