@@ -15,7 +15,7 @@
 import setuptools
 
 setuptools.setup(
-    name='jedi_bundle',
+    name='jedibundle',
     version='0.0.1',
     author='NASA Global Modeling and Assimilation Office',
     description='Tools for installing JEDI code',
