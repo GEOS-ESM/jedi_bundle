@@ -6,7 +6,7 @@ on:
 
 jobs:
   pycodestyle:
-    name: Check Python Coding Norms
+    name: pycodestyle
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

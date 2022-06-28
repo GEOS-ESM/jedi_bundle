@@ -1,4 +1,4 @@
-name: YAML Style Norms (Lint)
+name: YAML Style Checker
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   validate-YAML:
-    name: Check YAML Lint
+    name: yamllint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
