@@ -4,7 +4,8 @@
 
 | Test      | Status  |
 | --------- | --------|
-| Python coding norms | ![Status](https://github.com/GEOS-ESM/jedi_bundle/actions/workflows/codestyle.yml/badge.svg) |
+| Python coding norms | ![Status](https://github.com/GEOS-ESM/jedi_bundle/actions/workflows/coding_norms.yaml/badge.svg) |
+| YAML Style | ![Status](https://github.com/GEOS-ESM/jedi_bundle/actions/workflows/yaml_norms.yaml/badge.svg) |
 
 ### License:
 
