@@ -13,6 +13,7 @@ import os
 import subprocess
 
 from jedi_bundle.config.config import return_config_path
+from jedi_bundle.utils.config import config_get
 from jedi_bundle.utils.file_system import remove_file
 from jedi_bundle.utils.yaml import load_yaml
 
@@ -20,14 +21,14 @@ from jedi_bundle.utils.yaml import load_yaml
 # --------------------------------------------------------------------------------------------------
 
 
-def configure_jedi(logger, config):
+def configure_jedi(logger, configure_config):
 
     # Parse the config
-    platform = config['build_options']['platform']
-    modules = config['build_options']['modules']
-    cmake_build_type = config['build_options']['cmake_build_type']
-    path_to_build = config['build_options']['path_to_build']
-    path_to_source = config['source_code_options']['path_to_source']
+    path_to_source = config_get(logger, configure_config, 'path_to_source')
+    platform = config_get(logger, configure_config, 'platform')
+    modules = config_get(logger, configure_config, 'modules')
+    cmake_build_type = config_get(logger, configure_config, 'cmake_build_type')
+    path_to_build = config_get(logger, configure_config, 'path_to_build')
 
     # Create build directory
     build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
@@ -49,7 +50,7 @@ def configure_jedi(logger, config):
             modules_file_open.write(module_directive + '\n')
 
     # File to hold configure steps
-    configure_file = os.path.join(build_dir, 'run_configure.sh')
+    configure_file = os.path.join(build_dir, 'jedi_bundle_configure.sh')
     remove_file(logger, configure_file)
 
     # ecbuild command
@@ -68,15 +69,13 @@ def configure_jedi(logger, config):
     os.chmod(configure_file, 0o755)
 
     # Configure command
-    configure = [f'./run_configure.sh']
+    configure = [f'./jedi_bundle_configure.sh']
 
     # Run command
     cwd = os.getcwd()
     os.chdir(build_dir)
     process = subprocess.run(configure)
     os.chdir(cwd)
-
-
 
 
 # --------------------------------------------------------------------------------------------------

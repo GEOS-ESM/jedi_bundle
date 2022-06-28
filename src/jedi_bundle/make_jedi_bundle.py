@@ -12,21 +12,21 @@
 import os
 import subprocess
 
+from jedi_bundle.utils.config import config_get
 from jedi_bundle.utils.file_system import remove_file
 
 
 # --------------------------------------------------------------------------------------------------
 
 
-def make_jedi(logger, config):
+def make_jedi(logger, make_config):
 
     # Parse the config
-    modules = config['build_options']['modules']
-    cmake_build_type = config['build_options']['cmake_build_type']
-    path_to_build = config['build_options']['path_to_build']
-    cores_to_use_for_make = config['build_options']['cores_to_use_for_make']
-
-    bundles = config['source_code_options']['bundles']
+    bundles = config_get(logger, make_config, 'bundles')
+    modules = config_get(logger, make_config, 'modules')
+    cmake_build_type = config_get(logger, make_config, 'cmake_build_type')
+    path_to_build = config_get(logger, make_config, 'path_to_build')
+    cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
 
     # Create build directory
     build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
@@ -36,7 +36,7 @@ def make_jedi(logger, config):
 
         bundle_dir = os.path.join(build_dir, bundle)
 
-        make_file = os.path.join(bundle_dir, 'run_make.sh')
+        make_file = os.path.join(bundle_dir, 'jedi_bundle_make.sh')
         remove_file(logger, make_file)
 
         # Write steps to file
@@ -51,7 +51,7 @@ def make_jedi(logger, config):
         os.chmod(make_file, 0o755)
 
         # Configure command
-        configure = [f'./run_make.sh']
+        configure = [f'./jedi_bundle_make.sh']
 
         # Run command
         cwd = os.getcwd()

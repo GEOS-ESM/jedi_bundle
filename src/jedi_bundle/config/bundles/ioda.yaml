@@ -3,3 +3,4 @@ required repos:
   - oops
   - ioda
   - iodaconv
+  - ioda-data

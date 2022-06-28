@@ -12,7 +12,6 @@
 import argparse
 import os
 import requests
-import shutil
 import yaml
 
 from jedi_bundle.clone_jedi_bundle import clone_jedi
@@ -33,7 +32,7 @@ def jedi_bundle():
     # Arguments
     # ---------
     parser = argparse.ArgumentParser()
-    parser.add_argument('task_and_config', type=str, nargs='+', default='All',
+    parser.add_argument('task_and_config', type=str, nargs='+',
                         help='Task to run followed by configuration ' +
                         'YAML. Task to run should be one of, or a combination of Clone, ' +
                         'Configure and Build. If task to run is omitted then all three steps ' +
@@ -42,7 +41,7 @@ def jedi_bundle():
     # Create the logger
     logger = Logger('JediBundle')
 
-    # Get the configuration file
+    # Parse inputs
     args = parser.parse_args()
     task_and_config = args.task_and_config
 
@@ -63,15 +62,15 @@ def jedi_bundle():
 
     # If config not passed, copy to current directory
     if not config_passed:
-        cwd = os.getcwd()
-
         internal_config_file = os.path.join(return_config_path(), 'build.yaml')
         internal_config_dict = load_yaml(logger, internal_config_file)
 
-        internal_config_dict['build_options']['path_to_build'] = cwd
-        internal_config_dict['source_code_options']['path_to_source'] = cwd
+        default_paths = os.path.join(os.getcwd(), 'jedi_bundle')
 
-        config_file = os.path.join(cwd, 'build.yaml')
+        internal_config_dict['configure_options']['path_to_build'] = default_paths
+        internal_config_dict['clone_options']['path_to_source'] = default_paths
+
+        config_file = os.path.join(os.getcwd(), 'build.yaml')
         prompt_and_remove_file(logger, config_file)
 
         # Write dictionary to user directory
@@ -88,13 +87,13 @@ def jedi_bundle():
 
     # Copy the config to the source directory
     config_file_path = os.path.dirname(config_file)
-    path_to_source = config_dict['source_code_options']['path_to_source']
+    path_to_source = config_dict['clone_options']['path_to_source']
     if path_to_source == './':
         path_to_source = os.getcwd()
     if path_to_source != config_file_path:
         os.makedirs(path_to_source, exist_ok=True)
         os.chmod(path_to_source, mode=0o755)
-        shutil.copyfile(config_file, os.path.join(path_to_source, 'build.yaml'))
+        os.rename(config_file, os.path.join(path_to_source, 'build.yaml'))
 
     # Prepare the Tasks
     # -----------------
@@ -106,23 +105,17 @@ def jedi_bundle():
             logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
                          f'configuration is passed as the last argument.')
 
-    # Set flags for the different phases of the build
-    run_clone = False
-    run_configure = False
-    run_make = False
-    if 'All' in tasks or 'Clone' in tasks:
-        run_clone = True
-    if 'All' in tasks or 'Configure' in tasks:
-        run_configure = True
-    if 'All' in tasks or 'Make' in tasks:
-        run_make = True
+    # Dictionaries
+    clone_dict = config_dict['clone_options']
+    configure_dict = {**clone_dict, **config_dict['configure_options']}
+    make_dict = {**configure_dict, **config_dict['make_options']}
 
     # Run the build stages
-    if run_clone:
-        clone_jedi(logger, config_dict)
-    if run_configure:
-        configure_jedi(logger, config_dict)
-    if run_make:
-        make_jedi(logger, config_dict)
+    if 'All' in tasks or 'Clone' in tasks:
+        clone_jedi(logger, clone_dict)
+    if 'All' in tasks or 'Configure' in tasks:
+        configure_jedi(logger, configure_dict)
+    if 'All' in tasks or 'Make' in tasks:
+        make_jedi(logger, make_dict)
 
 # --------------------------------------------------------------------------------------------------

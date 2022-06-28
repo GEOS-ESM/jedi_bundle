@@ -12,6 +12,7 @@
 import os
 
 from jedi_bundle.config.config import return_config_path
+from jedi_bundle.utils.config import config_get
 from jedi_bundle.utils.file_system import check_for_executable
 from jedi_bundle.utils.git import get_url_and_branch, clone_git_repo
 from jedi_bundle.utils.yaml import load_yaml
@@ -20,14 +21,14 @@ from jedi_bundle.utils.yaml import load_yaml
 # --------------------------------------------------------------------------------------------------
 
 
-def clone_jedi(logger, config):
+def clone_jedi(logger, clone_config):
 
     # Parse config
     # ------------
-    user_branch = config['source_code_options']['user_branch']
-    github_orgs = config['source_code_options']['github_orgs']
-    bundles = config['source_code_options']['bundles']
-    path_to_source = config['source_code_options']['path_to_source']
+    user_branch = config_get(logger, clone_config, 'user_branch', '')
+    github_orgs = config_get(logger, clone_config, 'github_orgs')
+    bundles = config_get(logger, clone_config, 'bundles')
+    path_to_source = config_get(logger, clone_config, 'path_to_source')
 
     # Check for needed executables
     # ----------------------------
@@ -36,18 +37,21 @@ def clone_jedi(logger, config):
 
     # Compile list of repos that need to be built
     # -------------------------------------------
-    repos_all = []
+    req_repos_all = []
+    opt_repos_all = []
     for bundle in bundles:
 
         # Get dictionary for the bundle
         bundle_pathfile = os.path.join(return_config_path(), 'bundles', bundle + '.yaml')
         bundle_dict = load_yaml(logger, bundle_pathfile)
 
-        # Build order for this bundle
-        repos_bun = bundle_dict['required repos']
+        # Repos that need to (can be) be built for this repo
+        req_repos_bun = config_get(logger, bundle_dict, 'required repos')
+        opt_repos_bun = config_get(logger, bundle_dict, 'optional repos', [])
 
         # Append complete list removing duplicates
-        repos_all = list(set(repos_bun + repos_all))
+        req_repos_all = list(set(req_repos_bun + req_repos_all))
+        opt_repos_all = list(set(opt_repos_bun + opt_repos_all))
 
     # Remove repos from build order if not needed
     # -------------------------------------------
@@ -56,7 +60,7 @@ def clone_jedi(logger, config):
     indices_to_remove = []
     for index, build_order_dict in enumerate(build_order_dicts):
         repo = list(build_order_dict.keys())[0]
-        if repo not in repos_all:
+        if repo not in req_repos_all and repo not in opt_repos_all:
             indices_to_remove.append(index)
 
     indices_to_remove.reverse()
@@ -68,29 +72,68 @@ def clone_jedi(logger, config):
     repo_list = []
     url_list = []
     branch_list = []
-    cmake_list = []
+    cmakelists_list = []
+
+    optional_repos_not_found = []
+
     for index, build_order_dict in enumerate(build_order_dicts):
 
         repo = list(build_order_dict.keys())[0]
+
+        # Extract repo information
         repo_dict = build_order_dict[repo]
+        repo_url_name = config_get(logger, repo_dict, 'repo url name', repo)
+        default_branch = config_get(logger, repo_dict, 'default branch')
+        cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
 
-        # Identify repo and branch to clone
-        url, branch = get_url_and_branch(logger, repo, repo_dict, github_orgs, user_branch)
+        found, url, branch = get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
+                                                user_branch)
 
-        # List for writing CMakeLists.txt
-        repo_list.append(repo)
-        url_list.append(url)
-        branch_list.append(branch)
+        if found:
 
-        # Extra things needed in the CMakeLists
-        cmake_list.append(repo_dict.get('cmakelists', ''))
+            # List for writing CMakeLists.txt
+            repo_list.append(repo)
+            url_list.append(url)
+            branch_list.append(branch)
+            cmakelists_list.append(cmakelists)
 
-        # Clone the repos to the target directory
-        target = os.path.join(path_to_source, repo)
-        clone_git_repo(logger, url, branch, target)
+        else:
 
-    # Create the CMakeLists.txt
-    # -------------------------
+            if repo in req_repos_all:
+                logger.abort(f'No matching branch for repo \'{repo}\' was found in any ' +
+                             f'organisations.')
+            else:
+                optional_repos_not_found.append(repo)
+
+    # Print out information about clone
+    # ---------------------------------
+    repo_len = len(max(repo_list, key=len))
+    url_len = len(max(url_list, key=len))
+    branch_len = len(max(branch_list, key=len))
+
+    logger.info(f'Repository clone summary:')
+    logger.info(f'-------------------------')
+
+    for repo, url, branch in zip(repo_list, url_list, branch_list):
+        logger.info(f'Branch {branch.ljust(branch_len)} of {repo.ljust(repo_len)} ' +
+                    f'will be cloned from {url.ljust(url_len)}')
+
+    if optional_repos_not_found:
+        logger.info(f' ')
+        logger.info(f'The following optional repos are not being built:')
+        for optional_repo_not_found in optional_repos_not_found:
+            logger.info(f' {optional_repo_not_found}')
+    logger.info(f'-------------------------')
+
+    # Do the cloning
+    # --------------
+    for repo, url, branch in zip(repo_list, url_list, branch_list):
+
+        logger.info(f'Cloning \'{repo}\'.')
+        clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo))
+
+    # Create CMakeLists.txt file
+    # --------------------------
     cmake_pathfile = os.path.join(return_config_path(), 'cmake.yaml')
     cmake_dict = load_yaml(logger, cmake_pathfile)
 
@@ -101,7 +144,7 @@ def clone_jedi(logger, config):
 
     # Max length of lists
     repo_len = len(max(repo_list, key=len))
-    url_len = len(max(url_list, key=len))+2
+    url_len = len(max(url_list, key=len))+2  # Plus 2 because of the quotes
     branch_len = len(max(branch_list, key=len))
 
     # Remove file if it exists
@@ -112,7 +155,7 @@ def clone_jedi(logger, config):
         for cmake_header_line in cmake_header_lines:
             output_file_open.write(cmake_header_line + '\n')
 
-        for repo, url, branch, cmake in zip(repo_list, url_list, branch_list, cmake_list):
+        for repo, url, branch, cmake in zip(repo_list, url_list, branch_list, cmakelists_list):
 
             urlq = f'\"{url}\"'
 

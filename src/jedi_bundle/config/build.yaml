@@ -1,20 +1,20 @@
-build_options:
-
-  platform: discover
-  modules: intelclassic
-  cmake_build_type: release
-  path_to_build: &path_to_build ./
-  cores_to_use_for_make: 6
-
-source_code_options:
-
-  pat_to_source: *path_to_build
-  user_branch: develop
+clone_options:
+  path_to_source: &code_path jedi_bundle
+  user_branch: ''
   github_orgs:
     - JCSDA-internal
     - JCSDA
-
   bundles:
-    #- fv3-jedi
-    #- soca
-    - iodaconv
+    - fv3-jedi
+    - ioda
+    - ufo
+
+configure_options:
+  platform: discover
+  modules: intelclassic
+  cmake_build_type: release
+  path_to_build: *code_path
+  custom_configure: ''
+
+make_options:
+  cores_to_use_for_make: 6

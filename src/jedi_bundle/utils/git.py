@@ -13,7 +13,8 @@ import os
 import requests
 import subprocess
 
-from jedi_bundle.utils.file_system import devnull
+from jedi_bundle.utils.config import config_get
+from jedi_bundle.utils.file_system import devnull, subprocess_run
 
 
 # --------------------------------------------------------------------------------------------------
@@ -83,28 +84,18 @@ def repo_has_branch(logger, url, branch):
 # --------------------------------------------------------------------------------------------------
 
 
-def get_url_and_branch(logger, repo, repo_dict, github_orgs, special_branch):
+def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_branch):
 
     # Get GitHub username and token if .git-credentials file available
     username, token = get_github_username_token(logger)
 
-    # Name of repo in the url
-    repo_url_name = repo_dict.get('repo url name', repo)
-
-    # Name of default branch for repo
-    default_branch = repo_dict.get('default branch', 'develop')
-
-    # Check the repo is found at at least one url
-    repo_url_found = False
-
-    # Track urls where repo was found
-    repo_found_at = []
-
     # Track finding of the user branch and the default branch
-    found_special_branch = False
     found_default_branch = False
 
     # Loop over URLs
+    repo_url_found = False
+    repo_url_to_use = ''
+    repo_branch_to_use = ''
     for github_org in github_orgs:
 
         # Full path of the repo url
@@ -115,42 +106,23 @@ def get_url_and_branch(logger, repo, repo_dict, github_orgs, special_branch):
         if repo_is_reachable(logger, github_api_url, username, token):
 
             # Assert that the repo was found somewhere
-            repo_found_at.append(github_url)
             repo_url_found = True
 
-            # Look for the branches
-            has_special_branch = repo_has_branch(logger, github_url, special_branch)
-            has_default_branch = repo_has_branch(logger, github_url, default_branch)
+            # Check for user branch and return right away if found
+            if user_branch != '':
+                if repo_has_branch(logger, github_url, user_branch):
+                    return repo_url_found, github_url, user_branch
 
-            # Update the flags if the branch is found
-            if not found_special_branch and has_special_branch:
-                found_special_branch = True
-                repo_url_to_use = github_url
-                repo_branch_to_use = special_branch
-            if not found_default_branch and has_default_branch:
-                found_default_branch = True
-                default_repo_url_to_use = github_url
-                default_repo_branch_to_use = default_branch
+            # Track first instance of finding the default branch. But do not exit when it's first
+            # found so that other organizations can be checked for the user branch.
+            if not found_default_branch:
+                if repo_has_branch(logger, github_url, default_branch):
+                    found_default_branch = True
+                    repo_url_found = True
+                    repo_url_to_use = github_url
+                    repo_branch_to_use = default_branch
 
-    # Assert that the repo is found somewhere
-    if not repo_url_found:
-        logger.abort(f'ABORT: Repo {repo} not found at any of the URLs')
-
-    # Update the
-    if not found_special_branch:
-        if found_default_branch:
-            repo_url_to_use = default_repo_url_to_use
-            repo_branch_to_use = default_repo_branch_to_use
-        else:
-            logger.abort(f'ABORT: neither the user branch \'{special_branch}\' or default branch '
-                         f'\'{default_branch}\' was found anywhere for {repo_url_name}. Searched ' +
-                         f'in {repo_found_at}')
-
-    # Display information for the repo
-    logger.info(f'For {repo.ljust(15)} branch {repo_branch_to_use.ljust(20)} will be cloned ' +
-                f'from \'{repo_url_to_use}\'')
-
-    return repo_url_to_use, repo_branch_to_use
+    return repo_url_found, repo_url_to_use, repo_branch_to_use
 
 
 # --------------------------------------------------------------------------------------------------
@@ -161,18 +133,11 @@ def clone_git_repo(logger, url, branch, target):
     # Check if directory already exists
     if not os.path.exists(target):
 
-        # Write info
-        logger.info(f'Cloning branch {branch} of {url} to {target}...')
-
         # Command to check if branch exists and pass exit code back
         git_clone_cmd = ['git', 'clone', '-b', branch, url, target]
 
         # Run command
-        process = subprocess.run(git_clone_cmd)
-
-        # Assert that clone was successful
-        if process.returncode != 0:
-            logger.abort(f'ABORT: Git clone of branch {branch} from {url} failed.')
+        subprocess_run(logger, git_clone_cmd, True)
 
     else:
 
@@ -185,15 +150,15 @@ def clone_git_repo(logger, url, branch, target):
 
         # Fetch
         cmd = ['git', 'fetch']
-        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
+        subprocess_run(logger, cmd, True)
 
         # Switch to branch
         cmd = ['git', 'checkout', branch]
-        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
+        subprocess_run(logger, cmd, True)
 
         # Pull latest
         cmd = ['git', 'pull', 'origin', branch]
-        process = subprocess.run(cmd, stdout=devnull, stderr=devnull)
+        subprocess_run(logger, cmd, True)
 
         # Switch back to other directory
         os.chdir(cwd)
