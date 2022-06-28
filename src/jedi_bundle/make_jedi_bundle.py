@@ -31,6 +31,9 @@ def make_jedi(logger, make_config):
     # Create build directory
     build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
 
+    # Modules file
+    modules_file = os.path.join(build_dir, 'modules')
+
     # File to hold configure steps
     for bundle in bundles:
 
@@ -43,7 +46,8 @@ def make_jedi(logger, make_config):
         with open(make_file, 'a') as make_file_open:
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
-            make_file_open.write(f'source modules \n')
+            make_file_open.write(f'module purge \n')
+            make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
 

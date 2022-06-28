@@ -63,11 +63,12 @@ def configure_jedi(logger, configure_config):
 
     # Write steps to file
     with open(configure_file, 'a') as configure_file_open:
-        configure_file_open.write('#!/usr/bin/env bash' + '\n')
-        configure_file_open.write('\n')
-        configure_file_open.write('source modules' + '\n')
-        configure_file_open.write('\n')
-        configure_file_open.write(ecbuild + '\n')
+        configure_file_open.write(f'#!/usr/bin/env bash \n')
+        configure_file_open.write(f'\n')
+        configure_file_open.write(f'module purge \n')
+        configure_file_open.write(f'source {modules_file}\n')
+        configure_file_open.write(f'\n')
+        configure_file_open.write(f'{ecbuild} \n')
 
     # Make file executable
     os.chmod(configure_file, 0o755)
