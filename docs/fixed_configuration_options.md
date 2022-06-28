@@ -7,11 +7,11 @@ So-called fixed configuration options represent the YAML files in the repo that 
 The directory `src/jedi_bundle/config/bundles` contains the configuration files associated with the bundles. There is a file `bundle.yaml` for each bundle that can be built. As an example the `ufo.yaml` is shown below:
 
 ``` yaml
-optional repos:
+optional_repos:
   - ropp-ufo
   - geos-aero
 
-required repos:
+required_repos:
   - jedicmake
   - oops
   - saber
@@ -54,15 +54,21 @@ The directory `src/jedi_bundle/config/platforms` contains YAML files for each su
 ``` yaml
 modules:
   intel:
-    - export OPT=/path/to/some/modules
-    - module use $OPT/modulefiles/apps
-    - module use $OPT/modulefiles/core
-    - module load module
+    load:
+      - export OPT=/path/to/some/modules
+      - module use $OPT/modulefiles/apps
+      - module use $OPT/modulefiles/core
+      - module load module
+    configure: -DMPIEXEC=$MPIEXEC
   gnu:
     - ...
 ```
 
-Under the `modules` section the different module options for that platform can be added as a list. The set of commands for loading the modules will be translated into a sourceable bash file that lives in the build directory. The purpose of this file is to be sourced ahead of the configure and make steps. The user can also source the file when running tests or rebuilding manually. Users can later translate the generated module file to other shells if needed. When the platform and modules are chosen in the main configuration file passed to `jedi_bundle` the code will look for a matching platform file and associated set of instructions for loading the chosen modules.
+Under the `modules.load` section the different module options for that platform can be added as a list. The set of commands for loading the modules will be translated into a sourceable bash file that lives in the build directory. The purpose of this file is to be sourced ahead of the configure and make steps. The user can also source the file when running tests or rebuilding manually. Users can later translate the generated module file to other shells if needed.
+
+The `modules.configure` section allows for platform specific entries to be added to the `ecbuild` configure step.
+
+When the platform and modules are chosen in the main configuration file passed to `jedi_bundle` the code will look for a matching platform file and associated set of instructions for loading the chosen modules.
 
 
 ## CMakeLists
