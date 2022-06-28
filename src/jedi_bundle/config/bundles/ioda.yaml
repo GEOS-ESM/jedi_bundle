@@ -1,4 +1,4 @@
-required repos:
+required_repos:
   - jedicmake
   - oops
   - ioda

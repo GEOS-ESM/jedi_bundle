@@ -1,0 +1,13 @@
+modules:
+  intel:
+    load:
+      - export JEDI_OPT=/work/noaa/da/jedipara/opt/modules
+      - module use $JEDI_OPT/modulefiles/core
+      - module load jedi/intel-impi
+    configure: -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG="-n"
+  gnu:
+    load:
+      - export JEDI_OPT=/work/noaa/da/jedipara/opt/modules
+      - module use $JEDI_OPT/modulefiles/core
+      - module load jedi/gnu-openmpi
+    configure: -DMPIEXEC_EXECUTABLE=/opt/slurm/bin/srun -DMPIEXEC_NUMPROC_FLAG="-n"

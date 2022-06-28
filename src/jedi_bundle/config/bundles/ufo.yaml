@@ -1,8 +1,8 @@
-optional repos:
+optional_repos:
   - ropp-ufo
   - geos-aero
 
-required repos:
+required_repos:
   - jedicmake
   - oops
   - ioda

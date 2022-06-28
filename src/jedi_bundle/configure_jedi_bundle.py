@@ -27,8 +27,9 @@ def configure_jedi(logger, configure_config):
     path_to_source = config_get(logger, configure_config, 'path_to_source')
     platform = config_get(logger, configure_config, 'platform')
     modules = config_get(logger, configure_config, 'modules')
-    cmake_build_type = config_get(logger, configure_config, 'cmake_build_type')
+    cmake_build_type = config_get(logger, configure_config, 'cmake_build_type', 'release')
     path_to_build = config_get(logger, configure_config, 'path_to_build')
+    custom_configure_options = config_get(logger, configure_config, 'custom_configure_options', '')
 
     # Create build directory
     build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
@@ -40,7 +41,9 @@ def configure_jedi(logger, configure_config):
     platform_dict = load_yaml(logger, platform_pathfile)
 
     # Steps to load the chosen modules
-    module_directives = platform_dict['modules'][modules]
+    modules_dict = platform_dict['modules'][modules]
+    module_directives = config_get(logger, modules_dict, 'load')
+    configure_directives = config_get(logger, modules_dict, 'configure', '')
 
     # Create modules file
     modules_file = os.path.join(build_dir, 'modules')
@@ -54,7 +57,8 @@ def configure_jedi(logger, configure_config):
     remove_file(logger, configure_file)
 
     # ecbuild command
-    ecbuild = f'ecbuild --build={cmake_build_type} -DMPIEXEC=$MPIEXEC {path_to_source}'
+    ecbuild = f'ecbuild --build={cmake_build_type} {configure_directives} ' + \
+              f'{custom_configure_options} {path_to_source}'
     logger.info(f'Running configure with \'{ecbuild}\'')
 
     # Write steps to file

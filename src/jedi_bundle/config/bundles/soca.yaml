@@ -1,7 +1,7 @@
-optional repos:
+optional_repos:
   - crtm
 
-required repos:
+required_repos:
   - jedicmake
   - oops
   - saber

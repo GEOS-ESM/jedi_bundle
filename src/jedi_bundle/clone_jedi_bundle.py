@@ -46,8 +46,8 @@ def clone_jedi(logger, clone_config):
         bundle_dict = load_yaml(logger, bundle_pathfile)
 
         # Repos that need to (can be) be built for this repo
-        req_repos_bun = config_get(logger, bundle_dict, 'required repos')
-        opt_repos_bun = config_get(logger, bundle_dict, 'optional repos', [])
+        req_repos_bun = config_get(logger, bundle_dict, 'required_repos')
+        opt_repos_bun = config_get(logger, bundle_dict, 'optional_repos', [])
 
         # Append complete list removing duplicates
         req_repos_all = list(set(req_repos_bun + req_repos_all))
@@ -82,8 +82,8 @@ def clone_jedi(logger, clone_config):
 
         # Extract repo information
         repo_dict = build_order_dict[repo]
-        repo_url_name = config_get(logger, repo_dict, 'repo url name', repo)
-        default_branch = config_get(logger, repo_dict, 'default branch')
+        repo_url_name = config_get(logger, repo_dict, 'repo_url_name', repo)
+        default_branch = config_get(logger, repo_dict, 'default_branch')
         cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
 
         found, url, branch = get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
