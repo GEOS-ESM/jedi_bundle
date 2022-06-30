@@ -1,6 +1,7 @@
 modules:
   intel:
     load:
+      - module purge
       - export OPT=/discover/swdev/jcsda/modules
       - module use $OPT/modulefiles/apps
       - module use $OPT/modulefiles/core
@@ -11,6 +12,7 @@ modules:
     configure: -DMPIEXEC=$MPIEXEC
   gnu:
     load:
+      - module purge
       - export OPT=/discover/swdev/jcsda/modules
       - module use $OPT/modulefiles/apps
       - module use $OPT/modulefiles/core
