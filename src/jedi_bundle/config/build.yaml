@@ -4,6 +4,7 @@ clone_options:
   github_orgs:
     - JCSDA-internal
     - JCSDA
+    - geos-esm
   bundles:
     - fv3-jedi
     - ioda
