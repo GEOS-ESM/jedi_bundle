@@ -77,6 +77,17 @@ def jedi_bundle():
         internal_config_dict['configure_options']['path_to_build'] = default_paths
         internal_config_dict['clone_options']['path_to_source'] = default_paths
 
+        # Guess the platform
+        platform = 'discover'
+        hostname = os.uname()[1].lower()
+        supported_platforms_yaml = os.listdir(os.path.join(return_config_path(), 'platforms'))
+        for supported_platform_yaml in supported_platforms_yaml:
+            supported_platform = supported_platform_yaml.split('.')[0]
+            if supported_platform in hostname:
+                platform = supported_platform
+                break
+        internal_config_dict['configure_options']['path_to_build'] = platform
+
         config_file = os.path.join(os.getcwd(), 'build.yaml')
         prompt_and_remove_file(logger, config_file)
 
