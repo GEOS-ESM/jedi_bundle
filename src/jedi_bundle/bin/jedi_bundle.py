@@ -86,7 +86,7 @@ def jedi_bundle():
             if supported_platform in hostname:
                 platform = supported_platform
                 break
-        internal_config_dict['configure_options']['path_to_build'] = platform
+        internal_config_dict['configure_options']['platform'] = platform
 
         config_file = os.path.join(os.getcwd(), 'build.yaml')
         prompt_and_remove_file(logger, config_file)
