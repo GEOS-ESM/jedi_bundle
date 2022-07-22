@@ -65,7 +65,14 @@ def jedi_bundle():
         internal_config_file = os.path.join(return_config_path(), 'build.yaml')
         internal_config_dict = load_yaml(logger, internal_config_file)
 
-        default_paths = os.path.join(os.getcwd(), 'jedi_bundle')
+        cwdfilelist = os.listdir(os.getcwd())
+        if not cwdfilelist or cwdfilelist[0] == 'build.yaml':
+            # If directory is empty or contains build.yaml then make the current directory the
+            # default path
+            default_paths = os.getcwd()
+        else:
+            # If directory is not empty then default to a sub directory called jedi_bundle
+            default_paths = os.path.join(os.getcwd(), 'jedi_bundle')
 
         internal_config_dict['configure_options']['path_to_build'] = default_paths
         internal_config_dict['clone_options']['path_to_source'] = default_paths

@@ -1,7 +1,6 @@
 optional_repos:
   - ropp-ufo
   - geos-aero
-  - gsibclim
 
 required_repos:
   - jedicmake
