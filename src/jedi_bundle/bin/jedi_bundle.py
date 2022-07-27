@@ -48,6 +48,9 @@ def jedi_bundle():
     # Prepare the configuration
     # -------------------------
 
+    # Standard config file name
+    config_file_name = 'build.yaml'
+
     # Determine if config file was passed
     tasks = task_and_config
     config_passed = False
@@ -60,13 +63,16 @@ def jedi_bundle():
         if not os.path.exists(config_file):
             logger.abort(f'Configuration file \'{config_file}\' passed in argument list not found.')
 
+        # Config file name
+        config_file_name = os.path.basename(config_file)
+
     # If config not passed, copy to current directory
     if not config_passed:
-        internal_config_file = os.path.join(return_config_path(), 'build.yaml')
+        internal_config_file = os.path.join(return_config_path(), config_file_name)
         internal_config_dict = load_yaml(logger, internal_config_file)
 
         cwdfilelist = os.listdir(os.getcwd())
-        if not cwdfilelist or cwdfilelist[0] == 'build.yaml':
+        if not cwdfilelist or cwdfilelist[0] == config_file_name:
             # If directory is empty or contains build.yaml then make the current directory the
             # default path
             default_paths = os.getcwd()
@@ -88,7 +94,7 @@ def jedi_bundle():
                 break
         internal_config_dict['configure_options']['platform'] = platform
 
-        config_file = os.path.join(os.getcwd(), 'build.yaml')
+        config_file = os.path.join(os.getcwd(), config_file_name)
         prompt_and_remove_file(logger, config_file)
 
         # Write dictionary to user directory
@@ -111,7 +117,7 @@ def jedi_bundle():
     if path_to_source != config_file_path:
         os.makedirs(path_to_source, exist_ok=True)
         os.chmod(path_to_source, mode=0o755)
-        os.rename(config_file, os.path.join(path_to_source, 'build.yaml'))
+        os.rename(config_file, os.path.join(path_to_source, config_file_name))
 
     # Prepare the Tasks
     # -----------------
