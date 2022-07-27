@@ -8,6 +8,10 @@
 - oops:
     default_branch: develop
 
+# Variable changes
+- vader:
+    default_branch: develop
+
 # Background error models
 - saber:
     default_branch: develop
@@ -31,10 +35,6 @@
 - rttov:
     default_branch: develop
 - ufo:
-    default_branch: develop
-
-# Variable changes
-- vader:
     default_branch: develop
 
 # Soca and fv3
