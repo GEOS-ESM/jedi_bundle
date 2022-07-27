@@ -9,8 +9,6 @@
     default_branch: develop
 
 # Background error models
-- gsibclim:
-    default_branch: develop
 - saber:
     default_branch: develop
 

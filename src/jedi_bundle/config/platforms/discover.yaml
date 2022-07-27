@@ -12,8 +12,8 @@ modules:
       - module load jedi-ewok-env/1.0.0
       - module load jedi-fv3-env/1.0.0
       - module load nco/5.0.6
-      - module use /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/intel/2022.0.1
-      - module load NCEPLIBS-sp/v2.3.3
+     # - module use /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/intel/2022.0.1
+     # - module load gsibclim/1.0.0
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.5.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   gnu:
     load:
@@ -28,6 +28,6 @@ modules:
       - module load jedi-ewok-env/1.0.0
       - module load jedi-fv3-env/1.0.0
       - module load nco/5.0.6
-      - module use /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/gnu/10.1.0
-      - module load NCEPLIBS-sp/v2.3.3
+     # - module use /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/gnu/10.1.0
+     # - module load gsibclim/1.0.0
     configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"
