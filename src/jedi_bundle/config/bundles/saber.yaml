@@ -1,0 +1,5 @@
+required_repos:
+  - jedicmake
+  - oops
+  - vader
+  - saber
