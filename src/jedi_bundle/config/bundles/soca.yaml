@@ -12,3 +12,4 @@ required_repos:
   - fms
   - mom6
   - soca
+  - ioda-data

@@ -3,3 +3,4 @@ required_repos:
   - oops
   - vader
   - saber
+  - saber-data
