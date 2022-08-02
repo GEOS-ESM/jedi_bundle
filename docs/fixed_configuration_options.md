@@ -34,6 +34,7 @@ Note that the order in which repos are built is important and additionally it is
     repo_url_name: jedi-cmake
     cmakelists: 'include( jedicmake/cmake/Functions/git_functions.cmake )'
     default_branch: develop
+    recursive: true
 ```
 
 The dictionary key is `jedicmake` which is the project name for the repo. This is referred to by all the other bundle files. The role of the keys within the dictionary are as follows:
@@ -42,7 +43,8 @@ The dictionary key is `jedicmake` which is the project name for the repo. This i
 | ---------------| ---------------- | ----------- |
 |`repo_url_name` | Project name     | Used when the project name and URL differ (case sensitive) |
 |`cmakelists`    | `None`           | Used when lines are needed in the CMakeLists.txt after the repo definition |
-|`default_branch`| Mandatory        | The name of the default branch to clone |
+|`default_branch`| *Mandatory*      | The name of the default branch to clone |
+|`recursive`     | False            | Whether the repo requires a recursive clone |
 
 
 ## Platforms
