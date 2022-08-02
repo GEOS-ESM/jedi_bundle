@@ -5,6 +5,7 @@
 - Installing `jedi_bundle`
 
   - [Installation instructions](installation_instructions.md)
+  - [Git credentials](git_credentials.md)
 
 - Instructions
 
