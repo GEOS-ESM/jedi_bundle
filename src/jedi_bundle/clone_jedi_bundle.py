@@ -73,6 +73,7 @@ def clone_jedi(logger, clone_config):
     url_list = []
     branch_list = []
     cmakelists_list = []
+    recursive_list = []
 
     optional_repos_not_found = []
 
@@ -85,6 +86,7 @@ def clone_jedi(logger, clone_config):
         repo_url_name = config_get(logger, repo_dict, 'repo_url_name', repo)
         default_branch = config_get(logger, repo_dict, 'default_branch')
         cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
+        recursive = config_get(logger, repo_dict, 'recursive', False)
 
         found, url, branch = get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
                                                 user_branch)
@@ -96,6 +98,7 @@ def clone_jedi(logger, clone_config):
             url_list.append(url)
             branch_list.append(branch)
             cmakelists_list.append(cmakelists)
+            recursive_list.append(recursive)
 
         else:
 
@@ -155,12 +158,15 @@ def clone_jedi(logger, clone_config):
         for cmake_header_line in cmake_header_lines:
             output_file_open.write(cmake_header_line + '\n')
 
-        for repo, url, branch, cmake in zip(repo_list, url_list, branch_list, cmakelists_list):
+        for repo, url, branch, cmake, recursive in zip(repo_list, url_list, branch_list,
+                                                       cmakelists_list, recursive_list):
 
             urlq = f'\"{url}\"'
 
             package_line = f'ecbuild_bundle( PROJECT {repo.ljust(repo_len)} GIT ' + \
                            f'{urlq.ljust(url_len)} BRANCH {branch.ljust(branch_len)} UPDATE )'
+            if recursive:
+                package_line = package_line.replace('UPDATE )', 'UPDATE RECURSIVE)')
             output_file_open.write(package_line + '\n')
             if cmake != '':
                 output_file_open.write(cmake + '\n')

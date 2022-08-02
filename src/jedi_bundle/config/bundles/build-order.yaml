@@ -3,6 +3,7 @@
     repo_url_name: jedi-cmake
     default_branch: develop
     cmakelists: 'include( jedicmake/cmake/Functions/git_functions.cmake )'
+    recursive: true
 
 # Oops
 - oops:

@@ -134,7 +134,7 @@ def clone_git_repo(logger, url, branch, target):
     if not os.path.exists(target):
 
         # Command to check if branch exists and pass exit code back
-        git_clone_cmd = ['git', 'clone', '-b', branch, url, target]
+        git_clone_cmd = ['git', 'clone', '--recursive', '-b', branch, url, target]
 
         # Run command
         subprocess_run(logger, git_clone_cmd, True)
