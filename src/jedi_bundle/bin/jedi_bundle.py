@@ -94,6 +94,15 @@ def jedi_bundle():
                 break
         internal_config_dict['configure_options']['platform'] = platform
 
+        # Set the list of bundles
+        bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
+        bundles = []
+        for bundle_yaml in bundles_yaml:
+            if bundle_yaml != 'build-order.yaml':
+                bundles.append(bundle_yaml.split('.')[0])
+        internal_config_dict['clone_options']['bundles'] = bundles
+
+        # Set path to new file and remove if existing
         config_file = os.path.join(os.getcwd(), config_file_name)
         prompt_and_remove_file(logger, config_file)
 

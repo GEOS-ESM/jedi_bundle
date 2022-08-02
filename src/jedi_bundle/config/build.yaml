@@ -8,6 +8,8 @@ clone_options:
   bundles:
     - fv3-jedi
     - ioda
+    - saber
+    - soca
     - ufo
 
 configure_options:
