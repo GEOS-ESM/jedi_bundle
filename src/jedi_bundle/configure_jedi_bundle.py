@@ -36,20 +36,21 @@ def configure_jedi(logger, configure_config):
     os.chmod(path_to_build, 0o755)
 
     # Open platform dictionary
-    platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
-    platform_dict = load_yaml(logger, platform_pathfile)
+    if platform is not None:
+        platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
+        platform_dict = load_yaml(logger, platform_pathfile)
 
-    # Steps to load the chosen modules
-    modules_dict = platform_dict['modules'][modules]
-    module_directives = config_get(logger, modules_dict, 'load')
-    configure_directives = config_get(logger, modules_dict, 'configure', '')
+        # Steps to load the chosen modules
+        modules_dict = platform_dict['modules'][modules]
+        module_directives = config_get(logger, modules_dict, 'load')
+        configure_directives = config_get(logger, modules_dict, 'configure', '')
 
-    # Create modules file
-    modules_file = os.path.join(path_to_build, 'modules')
-    remove_file(logger, modules_file)
-    with open(modules_file, 'a') as modules_file_open:
-        for module_directive in module_directives:
-            modules_file_open.write(module_directive + '\n')
+        # Create modules file
+        modules_file = os.path.join(path_to_build, 'modules')
+        remove_file(logger, modules_file)
+        with open(modules_file, 'a') as modules_file_open:
+            for module_directive in module_directives:
+                modules_file_open.write(module_directive + '\n')
 
     # File to hold configure steps
     configure_file = os.path.join(path_to_build, 'jedi_bundle_configure.sh')
@@ -64,8 +65,9 @@ def configure_jedi(logger, configure_config):
     with open(configure_file, 'a') as configure_file_open:
         configure_file_open.write(f'#!/usr/bin/env bash \n')
         configure_file_open.write(f'\n')
-        configure_file_open.write(f'module purge \n')
-        configure_file_open.write(f'source {modules_file}\n')
+        if platform is not None:
+            configure_file_open.write(f'module purge \n')
+            configure_file_open.write(f'source {modules_file}\n')
         configure_file_open.write(f'\n')
         configure_file_open.write(f'{ecbuild} \n')
 

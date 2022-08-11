@@ -29,7 +29,8 @@ def make_jedi(logger, make_config):
     cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
 
     # Modules file
-    modules_file = os.path.join(path_to_build, 'modules')
+    if modules is not None:
+        modules_file = os.path.join(path_to_build, 'modules')
 
     # File to hold configure steps
     for bundle in bundles:
@@ -47,8 +48,9 @@ def make_jedi(logger, make_config):
         with open(make_file, 'a') as make_file_open:
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
-            make_file_open.write(f'module purge \n')
-            make_file_open.write(f'source {modules_file} \n')
+            if modules is not None:
+                make_file_open.write(f'module purge \n')
+                make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
 

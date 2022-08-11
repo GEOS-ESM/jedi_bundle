@@ -71,6 +71,8 @@ def jedi_bundle():
         internal_config_file = os.path.join(return_config_path(), config_file_name)
         internal_config_dict = load_yaml(logger, internal_config_file)
 
+        internal_config_dict_cnfig = internal_config_dict['configure_options']
+
         cwdfilelist = os.listdir(os.getcwd())
         if not cwdfilelist or cwdfilelist[0] == config_file_name:
             # If directory is empty or contains build.yaml then make the current directory the
@@ -83,15 +85,28 @@ def jedi_bundle():
         internal_config_dict['clone_options']['path_to_source'] = default_paths
 
         # Guess the platform
-        platform = 'discover'
         hostname = os.uname()[1].lower()
         supported_platforms_yaml = os.listdir(os.path.join(return_config_path(), 'platforms'))
+        found_a_platform = False
         for supported_platform_yaml in supported_platforms_yaml:
             supported_platform = supported_platform_yaml.split('.')[0]
             if supported_platform in hostname:
                 platform = supported_platform
+                found_a_platform = True
                 break
-        internal_config_dict['configure_options']['platform'] = platform
+
+        if found_a_platform:
+            # Set found platform in the dictionary
+            internal_config_dict['configure_options']['platform'] = platform
+
+            # Load platform config and set default modules
+            platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
+            platform_dict = load_yaml(logger, platform_pathfile)
+            default_modules = platform_dict['modules']['default_modules']
+            internal_config_dict['configure_options']['modules'] = default_modules
+
+            # Append build with the modules being used
+            build_dir = 'build-' + default_modules
 
         # Set the list of bundles
         bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
@@ -102,9 +117,9 @@ def jedi_bundle():
         internal_config_dict['clone_options']['bundles'] = bundles
 
         # Set the path to the build directory
-        modules = internal_config_dict['configure_options']['modules']
         cmake_build_type = internal_config_dict['configure_options']['cmake_build_type']
-        build_dir = os.path.join(default_paths, f'build-{modules}-{cmake_build_type}')
+        build_dir = build_dir + '-' + cmake_build_type
+        build_dir = os.path.join(default_paths, build_dir)
         internal_config_dict['configure_options']['path_to_build'] = build_dir
 
         # Set path to new file and remove if existing

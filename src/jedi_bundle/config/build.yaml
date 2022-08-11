@@ -1,22 +1,18 @@
 clone_options:
-  path_to_source: &code_path jedi_bundle
+  path_to_source: jedi_bundle
   user_branch: ''
   github_orgs:
     - JCSDA-internal
     - JCSDA
     - GEOS-ESM
   bundles:
-    - fv3-jedi
-    - ioda
-    - saber
-    - soca
-    - ufo
+    - oops
 
 configure_options:
-  platform: discover
-  modules: intel
+  platform: None
+  modules: None
   cmake_build_type: release
-  path_to_build: build-intel-release
+  path_to_build: jedi_bundle/build
   custom_configure_options: ''
 
 make_options:
