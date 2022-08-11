@@ -1,0 +1,41 @@
+name: Build a Bundle Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+
+jobs:
+  buildbundle:
+    name: Build oops bundle
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Setup Python
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    # Update conda
+    - name: Update conda
+      run: conda update -n base -c defaults conda
+
+    # Clone the code repo
+    - name: Clone code repo
+      uses: actions/checkout@v2
+      with:
+        lfs: true
+
+    # Install package
+    - name: Upgrade pip
+      run: $CONDA/bin/pip3 install --upgrade pip
+    - name: Install JEDI bundle and dependencies
+      run: $CONDA/bin/pip3 install --use-deprecated=legacy-resolver -r requirements.txt --user .
+    - name: Put executables in the path
+      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    # Run an application test
+    - name: Run JEDI Bundle application test
+      run: jedi_bundle All test/config/build.yaml
