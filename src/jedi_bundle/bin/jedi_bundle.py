@@ -80,7 +80,7 @@ def jedi_bundle():
         # Tasks
         # -----
         if len(tasks_and_config) == 1:
-            tasks = 'All'
+            tasks = ['All']
         else:
             tasks = tasks_and_config[0:-1]
 
@@ -161,7 +161,7 @@ def jedi_bundle():
         # Tasks
         # -----
         if not tasks_and_config:
-            tasks = 'All'
+            tasks = ['All']
         else:
             tasks = tasks_and_config
 
