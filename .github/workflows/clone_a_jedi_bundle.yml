@@ -1,4 +1,4 @@
-name: Build a Bundle Test
+name: JEDI Bundle Clone Test
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   buildbundle:
-    name: Build oops bundle
+    name: Clone oops bundle
     runs-on: ubuntu-latest
 
     steps:
@@ -38,4 +38,4 @@ jobs:
 
     # Run an application test
     - name: Run JEDI Bundle application test
-      run: jedi_bundle All test/config/build.yaml
+      run: jedi_bundle Clone test/config/build.yaml
