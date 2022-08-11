@@ -1,12 +1,15 @@
-name: YAML Style Checker
+name: YAML Coding Norms
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+      types: [opened, synchronize, reopened]
 
+# This validation is equivalent to running on the command line:
+#   yamllint -d relaxed --no-warnings
+# and is controlled by the .yamllint.yml file
 jobs:
   validate-YAML:
-    name: yamllint
+    name: Check YAML Coding Norms
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
