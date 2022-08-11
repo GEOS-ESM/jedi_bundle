@@ -16,7 +16,7 @@ configure_options:
   platform: discover
   modules: intel
   cmake_build_type: release
-  path_to_build: *code_path
+  path_to_build: build-intel-release
   custom_configure_options: ''
 
 make_options:

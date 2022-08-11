@@ -80,7 +80,6 @@ def jedi_bundle():
             # If directory is not empty then default to a sub directory called jedi_bundle
             default_paths = os.path.join(os.getcwd(), 'jedi_bundle')
 
-        internal_config_dict['configure_options']['path_to_build'] = default_paths
         internal_config_dict['clone_options']['path_to_source'] = default_paths
 
         # Guess the platform
@@ -101,6 +100,12 @@ def jedi_bundle():
             if bundle_yaml != 'build-order.yaml':
                 bundles.append(bundle_yaml.split('.')[0])
         internal_config_dict['clone_options']['bundles'] = bundles
+
+        # Set the path to the build directory
+        modules = internal_config_dict['configure_options']['modules']
+        cmake_build_type = internal_config_dict['configure_options']['cmake_build_type']
+        build_dir = os.path.join(default_paths, f'build-{modules}-{cmake_build_type}')
+        internal_config_dict['configure_options']['path_to_build'] = build_dir
 
         # Set path to new file and remove if existing
         config_file = os.path.join(os.getcwd(), config_file_name)
