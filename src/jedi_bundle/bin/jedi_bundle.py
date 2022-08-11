@@ -84,6 +84,9 @@ def jedi_bundle():
 
         internal_config_dict['clone_options']['path_to_source'] = default_paths
 
+        # Set default build directory
+        build_dir = os.path.join(default_paths, 'build')
+
         # Guess the platform
         hostname = os.uname()[1].lower()
         supported_platforms_yaml = os.listdir(os.path.join(return_config_path(), 'platforms'))
@@ -106,7 +109,7 @@ def jedi_bundle():
             internal_config_dict['configure_options']['modules'] = default_modules
 
             # Append build with the modules being used
-            build_dir = 'build-' + default_modules
+            build_dir = build_dir + '-' + default_modules
 
         # Set the list of bundles
         bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
@@ -119,7 +122,7 @@ def jedi_bundle():
         # Set the path to the build directory
         cmake_build_type = internal_config_dict['configure_options']['cmake_build_type']
         build_dir = build_dir + '-' + cmake_build_type
-        build_dir = os.path.join(default_paths, build_dir)
+
         internal_config_dict['configure_options']['path_to_build'] = build_dir
 
         # Set path to new file and remove if existing
