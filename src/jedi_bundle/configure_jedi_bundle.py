@@ -36,7 +36,7 @@ def configure_jedi(logger, configure_config):
     os.chmod(path_to_build, 0o755)
 
     # Open platform dictionary
-    if platform is not None:
+    if platform != 'none':
         platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
         platform_dict = load_yaml(logger, platform_pathfile)
 

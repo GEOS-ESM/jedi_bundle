@@ -9,8 +9,8 @@ clone_options:
     - oops
 
 configure_options:
-  platform: None
-  modules: None
+  platform: 'none'
+  modules: 'none'
   cmake_build_type: release
   path_to_build: jedi_bundle/build
   custom_configure_options: ''

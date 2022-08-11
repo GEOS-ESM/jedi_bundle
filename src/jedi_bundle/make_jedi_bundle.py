@@ -29,7 +29,7 @@ def make_jedi(logger, make_config):
     cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
 
     # Modules file
-    if modules is not None:
+    if modules != 'none':
         modules_file = os.path.join(path_to_build, 'modules')
 
     # File to hold configure steps
