@@ -4,27 +4,30 @@ The default configuration file is shown below. The configuration is split into s
 
 ``` YAML
 clone_options:
-  path_to_source: &code_path ./
+  path_to_source: jedi_bundle
   user_branch: ''
   github_orgs:
     - JCSDA-internal
     - JCSDA
+    - GEOS-ESM
   bundles:
-    - fv3-jedi
+    - soca
+    - saber
     - ufo
+    - fv3-jedi
+    - oops
     - ioda
+    - vader
 
 configure_options:
-  platform: discover
-  modules: intelclassic
+  platform: 'none'
+  modules: 'none'
   cmake_build_type: release
-  path_to_build: *code_path
-  custom_configure: ''
+  path_to_build: jedi_bundle/build
+  custom_configure_options: ''
 
 make_options:
   cores_to_use_for_make: 6
-
-
 ```
 
 #### Clone options
@@ -39,11 +42,11 @@ make_options:
 
 | YAML Key                  | Description |
 | ------------------------- | ----------- |
-| `platform`                | The compute platform to use. E.g. Discover. Each supported platform has a corresponding configuration files in the `src/config/platforms/` directory.       |
-| `modules`                 | Type of modules to use. These are specific to the platform choice and the directives for loading the modules are specified in the `src/config/platforms/platform.yaml` file.        |
+| `platform`                | The compute platform to use. E.g. Discover or Orion. Each supported platform has a corresponding configuration files in the `src/config/platforms/` directory. Can be kept as `none` if for example working on a closed system that does not use modules.      |
+| `modules`                 | Type of modules to use. These are specific to the platform choice and the directives for loading the modules are specified in the `src/config/platforms/platform.yaml` file. The `platform` and `modules` directive work together.       |
 | `cmake_build_type`        | The `CMAKE_BUILD_TYPE` to use, e.g. release, debug etc. |
 | `path_to_build`           | Path where the build directory will be located. |
-| `custom_configure_options`| User provided options to pass to ecbuild. E.g. `"-DMYOPTION=1"` |
+| `custom_configure_options`| User provided options to pass to ecbuild. E.g. `"-DMYOPTION=1"`. This can be useful if not using `platform` and `modules`. |
 
 #### Make options
 
@@ -52,4 +55,4 @@ make_options:
 | `cores_to_use_for_make` | Number of processors to use in the make step. |
 
 
-**Note that the code does not generally employ defaults for any of the options above. In a sense the defaults are set by always starting from the default YAML file that comes from the source code.**
+**Note that the code does not generally employ defaults for any of the options above. In a sense the defaults are set by always starting from the default YAML file that comes from the source code. When the code runs all arguments are expected to be present in the configuration.**

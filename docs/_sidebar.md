@@ -13,6 +13,10 @@
   - [Dynamic configuration options](dynamic_configuration_options.md)
   - [Fixed configuration options](fixed_configuration_options.md)
 
+- Platform Specific Instructions
+
+  - [Building JEDI code on Discover](building_jedi_code_on_discover.md)
+
 - Miscellaneous
 
   - [Useful links](useful_links.md)

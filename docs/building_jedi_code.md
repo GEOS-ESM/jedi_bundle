@@ -8,7 +8,7 @@ jedi_bundle [Tasks] build.yaml
 
 The first argument is a list describing the tasks that are to be completed. The second argument is optional and points to a YAML configuration describing the options for the build.
 
-The list of possible tasks are `Clone`, `Configure` and `Make`. You can also specify `All`, meaning all three tasks.
+The list of possible tasks are `Clone`, `Configure` and `Make`. You can also specify `All`, meaning all three tasks. Not that the name of the tasks is case insensitive so `clone`, `configure`, `make` and `all` are equally valid.
 
 If no YAML configuration file is passed, the code will use the default configuration. However an opportunity to modify the defaults before cloning and installing any code will be offered. A copy of the configuration will be placed in the current directory and then will also be copied into the directory where the source code will be cloned. If resubmitting certain tasks the user can then point to that configuration file with the `jedi_bundle` call.
 
@@ -20,6 +20,8 @@ The tasks perform the following duties:
 |Configure| Run the CMake (ecbuild) configure step. Also create shortcut modules file for later sourcing with the build.|
 |Make     | Run the parallel make step, i.e. make -j6. |
 
+#### Note:
+Both the `[tasks]` and `build.yaml` are optional but at least one has to be provided due to a limitation with `argparse`. If only `[tasks]` is provided then the internal configuration is used by default. If only the configuration argument is provided `[tasks]` defaults to `[All]`.
 
 ## Basic Examples
 
