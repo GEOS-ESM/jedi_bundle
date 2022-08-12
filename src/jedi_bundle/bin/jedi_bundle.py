@@ -39,12 +39,12 @@ def jedi_bundle():
                              'tasks will be run. If no configuration file is provided then ' +
                              'the internal \ndefault configuration will be used. \n\nThe valid ' +
                              'tasks are \'Clone\', \'Configure\', \'Build\' and \'All\', where ' +
-                             '\'All\' runs all of the above. \nTasks names are case insensitive. '+
+                             '\'All\' runs all of the above. \nTasks names are case insensitive. ' +
                              '\n\nExamples:\n' +
                              '  jedi_bundle All             (All tasks, default config) \n' +
                              '  jedi_bundle All build.yaml  (All tasks, passed config) \n' +
                              '  jedi_bundle all build.yaml  (All tasks, passed config) \n' +
-                             '  jedi_bundle Clone           (Clone task, default config) \n' )
+                             '  jedi_bundle Clone           (Clone task, default config) \n')
 
     # Create the logger
     logger = Logger('JediBundle')
