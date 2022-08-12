@@ -48,7 +48,7 @@ def make_jedi(logger, make_config):
         with open(make_file, 'a') as make_file_open:
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
-            if modules is not None:
+            if modules != 'none':
                 make_file_open.write(f'module purge \n')
                 make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')

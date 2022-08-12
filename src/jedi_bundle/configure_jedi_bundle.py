@@ -36,6 +36,7 @@ def configure_jedi(logger, configure_config):
     os.chmod(path_to_build, 0o755)
 
     # Open platform dictionary
+    platform_configure_directives = ''
     if platform != 'none':
         platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
         platform_dict = load_yaml(logger, platform_pathfile)
@@ -43,7 +44,7 @@ def configure_jedi(logger, configure_config):
         # Steps to load the chosen modules
         modules_dict = platform_dict['modules'][modules]
         module_directives = config_get(logger, modules_dict, 'load')
-        configure_directives = config_get(logger, modules_dict, 'configure', '')
+        platform_configure_directives = config_get(logger, modules_dict, 'configure', '')
 
         # Create modules file
         modules_file = os.path.join(path_to_build, 'modules')
@@ -57,7 +58,7 @@ def configure_jedi(logger, configure_config):
     remove_file(logger, configure_file)
 
     # ecbuild command
-    ecbuild = f'ecbuild --build={cmake_build_type} {configure_directives} ' + \
+    ecbuild = f'ecbuild --build={cmake_build_type} {platform_configure_directives} ' + \
               f'{custom_configure_options} {path_to_source}'
     logger.info(f'Running configure with \'{ecbuild}\'')
 
