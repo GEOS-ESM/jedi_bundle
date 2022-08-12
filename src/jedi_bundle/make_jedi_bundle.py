@@ -28,11 +28,9 @@ def make_jedi(logger, make_config):
     path_to_build = config_get(logger, make_config, 'path_to_build')
     cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
 
-    # Create build directory
-    build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
-
     # Modules file
-    modules_file = os.path.join(build_dir, 'modules')
+    if modules != 'none':
+        modules_file = os.path.join(path_to_build, 'modules')
 
     # File to hold configure steps
     for bundle in bundles:
@@ -41,7 +39,7 @@ def make_jedi(logger, make_config):
         logger.info(f'Building the {bundle} bundle using {cores_to_use_for_make} cores')
         logger.info(f'')
 
-        bundle_dir = os.path.join(build_dir, bundle)
+        bundle_dir = os.path.join(path_to_build, bundle)
 
         make_file = os.path.join(bundle_dir, 'jedi_bundle_make.sh')
         remove_file(logger, make_file)
@@ -50,8 +48,9 @@ def make_jedi(logger, make_config):
         with open(make_file, 'a') as make_file_open:
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
-            make_file_open.write(f'module purge \n')
-            make_file_open.write(f'source {modules_file} \n')
+            if modules != 'none':
+                make_file_open.write(f'module purge \n')
+                make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
 

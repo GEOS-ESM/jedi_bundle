@@ -31,33 +31,44 @@ def jedi_bundle():
 
     # Arguments
     # ---------
-    parser = argparse.ArgumentParser()
-    parser.add_argument('task_and_config', type=str, nargs='+',
-                        help='Task to run followed by configuration ' +
-                        'YAML. Task to run should be one of, or a combination of Clone, ' +
-                        'Configure and Build. If task to run is omitted then all three steps ' +
-                        'will be executed')
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('tasks_and_config', type=str, nargs='+',
+                        help='There are two arguments, a list of tasks to be run followed by a ' +
+                             'YAML configuration file. \nBoth arguments are optional but at ' +
+                             'least one has to be provided. If no tasks are provided \nthen all ' +
+                             'tasks will be run. If no configuration file is provided then ' +
+                             'the internal \ndefault configuration will be used. \n\nThe valid ' +
+                             'tasks are \'Clone\', \'Configure\', \'Build\' and \'All\', where ' +
+                             '\'All\' runs all of the above. \nTasks names are case insensitive. ' +
+                             '\n\nExamples:\n' +
+                             '  jedi_bundle All             (All tasks, default config) \n' +
+                             '  jedi_bundle All build.yaml  (All tasks, passed config) \n' +
+                             '  jedi_bundle all build.yaml  (All tasks, passed config) \n' +
+                             '  jedi_bundle Clone           (Clone task, default config) \n')
 
     # Create the logger
     logger = Logger('JediBundle')
 
-    # Parse inputs
+    # Parse input string
     args = parser.parse_args()
-    task_and_config = args.task_and_config
-
-    # Prepare the configuration
-    # -------------------------
+    tasks_and_config = args.tasks_and_config
 
     # Standard config file name
     config_file_name = 'build.yaml'
 
-    # Determine if config file was passed
-    tasks = task_and_config
-    config_passed = False
-    if '.yaml' in task_and_config[-1]:
-        config_file = task_and_config[-1]
-        tasks = task_and_config[0:-1]
-        config_passed = True
+    # Prepare task and config based on arguments
+    # ------------------------------------------
+    if '.yaml' in ' '.join(tasks_and_config):
+
+        # Prepare the configuration from file
+        # -----------------------------------
+
+        # Checks on config
+        config_file = tasks_and_config[-1]
+        if '.yaml' not in config_file:
+            logger.abort(f'The arguments appear to contain configuration but the final argument ' +
+                         f'{config_file} contains neither .yaml or .yml. Ensure config is passed ' +
+                         f' after the tasks. ')
 
         # Check that file exists
         if not os.path.exists(config_file):
@@ -66,10 +77,21 @@ def jedi_bundle():
         # Config file name
         config_file_name = os.path.basename(config_file)
 
-    # If config not passed, copy to current directory
-    if not config_passed:
+        # Tasks
+        # -----
+        if len(tasks_and_config) == 1:
+            tasks = ['All']
+        else:
+            tasks = tasks_and_config[0:-1]
+
+    else:
+
+        # Prepare the configuration from default
+        # --------------------------------------
         internal_config_file = os.path.join(return_config_path(), config_file_name)
         internal_config_dict = load_yaml(logger, internal_config_file)
+
+        internal_config_dict_cnfig = internal_config_dict['configure_options']
 
         cwdfilelist = os.listdir(os.getcwd())
         if not cwdfilelist or cwdfilelist[0] == config_file_name:
@@ -80,19 +102,34 @@ def jedi_bundle():
             # If directory is not empty then default to a sub directory called jedi_bundle
             default_paths = os.path.join(os.getcwd(), 'jedi_bundle')
 
-        internal_config_dict['configure_options']['path_to_build'] = default_paths
         internal_config_dict['clone_options']['path_to_source'] = default_paths
 
+        # Set default build directory
+        build_dir = os.path.join(default_paths, 'build')
+
         # Guess the platform
-        platform = 'discover'
         hostname = os.uname()[1].lower()
         supported_platforms_yaml = os.listdir(os.path.join(return_config_path(), 'platforms'))
+        found_a_platform = False
         for supported_platform_yaml in supported_platforms_yaml:
             supported_platform = supported_platform_yaml.split('.')[0]
             if supported_platform in hostname:
                 platform = supported_platform
+                found_a_platform = True
                 break
-        internal_config_dict['configure_options']['platform'] = platform
+
+        if found_a_platform:
+            # Set found platform in the dictionary
+            internal_config_dict['configure_options']['platform'] = platform
+
+            # Load platform config and set default modules
+            platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
+            platform_dict = load_yaml(logger, platform_pathfile)
+            default_modules = platform_dict['modules']['default_modules']
+            internal_config_dict['configure_options']['modules'] = default_modules
+
+            # Append build with the modules being used
+            build_dir = build_dir + '-' + default_modules
 
         # Set the list of bundles
         bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
@@ -101,6 +138,12 @@ def jedi_bundle():
             if bundle_yaml != 'build-order.yaml':
                 bundles.append(bundle_yaml.split('.')[0])
         internal_config_dict['clone_options']['bundles'] = bundles
+
+        # Set the path to the build directory
+        cmake_build_type = internal_config_dict['configure_options']['cmake_build_type']
+        build_dir = build_dir + '-' + cmake_build_type
+
+        internal_config_dict['configure_options']['path_to_build'] = build_dir
 
         # Set path to new file and remove if existing
         config_file = os.path.join(os.getcwd(), config_file_name)
@@ -114,6 +157,13 @@ def jedi_bundle():
         logger.input(f'Since no configuration file was provided, the default file will be used. ' +
                      f'This can be edited ', f'at the below location before continuing',
                      f'  {config_file}')
+
+        # Tasks
+        # -----
+        if not tasks_and_config:
+            tasks = ['All']
+        else:
+            tasks = tasks_and_config
 
     # Read the config_file and convert to dictionary
     config_dict = load_yaml(logger, config_file)
@@ -131,8 +181,11 @@ def jedi_bundle():
     # Prepare the Tasks
     # -----------------
 
+    # Convert to lower case
+    tasks = [task.lower() for task in tasks]
+
     # Check that the options are valid
-    valid_tasks = ['Clone', 'Configure', 'Make', 'All']
+    valid_tasks = ['clone', 'configure', 'make', 'all']
     for task in tasks:
         if task not in valid_tasks:
             logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
@@ -144,11 +197,11 @@ def jedi_bundle():
     make_dict = {**configure_dict, **config_dict['make_options']}
 
     # Run the build stages
-    if 'All' in tasks or 'Clone' in tasks:
+    if 'all' in tasks or 'clone' in tasks:
         clone_jedi(logger, clone_dict)
-    if 'All' in tasks or 'Configure' in tasks:
+    if 'all' in tasks or 'configure' in tasks:
         configure_jedi(logger, configure_dict)
-    if 'All' in tasks or 'Make' in tasks:
+    if 'all' in tasks or 'make' in tasks:
         make_jedi(logger, make_dict)
 
 # --------------------------------------------------------------------------------------------------

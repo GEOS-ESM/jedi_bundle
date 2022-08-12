@@ -32,32 +32,33 @@ def configure_jedi(logger, configure_config):
     custom_configure_options = config_get(logger, configure_config, 'custom_configure_options', '')
 
     # Create build directory
-    build_dir = os.path.join(path_to_build, f'build-{modules}-{cmake_build_type}')
-    os.makedirs(build_dir, exist_ok=True)
-    os.chmod(build_dir, 0o755)
+    os.makedirs(path_to_build, exist_ok=True)
+    os.chmod(path_to_build, 0o755)
 
     # Open platform dictionary
-    platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
-    platform_dict = load_yaml(logger, platform_pathfile)
+    platform_configure_directives = ''
+    if platform != 'none':
+        platform_pathfile = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
+        platform_dict = load_yaml(logger, platform_pathfile)
 
-    # Steps to load the chosen modules
-    modules_dict = platform_dict['modules'][modules]
-    module_directives = config_get(logger, modules_dict, 'load')
-    configure_directives = config_get(logger, modules_dict, 'configure', '')
+        # Steps to load the chosen modules
+        modules_dict = platform_dict['modules'][modules]
+        module_directives = config_get(logger, modules_dict, 'load')
+        platform_configure_directives = config_get(logger, modules_dict, 'configure', '')
 
-    # Create modules file
-    modules_file = os.path.join(build_dir, 'modules')
-    remove_file(logger, modules_file)
-    with open(modules_file, 'a') as modules_file_open:
-        for module_directive in module_directives:
-            modules_file_open.write(module_directive + '\n')
+        # Create modules file
+        modules_file = os.path.join(path_to_build, 'modules')
+        remove_file(logger, modules_file)
+        with open(modules_file, 'a') as modules_file_open:
+            for module_directive in module_directives:
+                modules_file_open.write(module_directive + '\n')
 
     # File to hold configure steps
-    configure_file = os.path.join(build_dir, 'jedi_bundle_configure.sh')
+    configure_file = os.path.join(path_to_build, 'jedi_bundle_configure.sh')
     remove_file(logger, configure_file)
 
     # ecbuild command
-    ecbuild = f'ecbuild --build={cmake_build_type} {configure_directives} ' + \
+    ecbuild = f'ecbuild --build={cmake_build_type} {platform_configure_directives} ' + \
               f'{custom_configure_options} {path_to_source}'
     logger.info(f'Running configure with \'{ecbuild}\'')
 
@@ -65,8 +66,9 @@ def configure_jedi(logger, configure_config):
     with open(configure_file, 'a') as configure_file_open:
         configure_file_open.write(f'#!/usr/bin/env bash \n')
         configure_file_open.write(f'\n')
-        configure_file_open.write(f'module purge \n')
-        configure_file_open.write(f'source {modules_file}\n')
+        if platform is not None:
+            configure_file_open.write(f'module purge \n')
+            configure_file_open.write(f'source {modules_file}\n')
         configure_file_open.write(f'\n')
         configure_file_open.write(f'{ecbuild} \n')
 
@@ -78,7 +80,7 @@ def configure_jedi(logger, configure_config):
 
     # Run command
     cwd = os.getcwd()
-    os.chdir(build_dir)
+    os.chdir(path_to_build)
     process = subprocess.run(configure)
     os.chdir(cwd)
 
