@@ -23,11 +23,16 @@ module use -a /discover/nobackup/drholdaw/JediOpt/modulefiles/core/
 module load jedi_bundle
 ```
 
-Create a directory where the source code and build directory will be stored:
+Create a directory where the source code and build directory will be stored e.g.:
 
 ```
 mkdir jedi-work
 cd jedi-work
+```
+
+Execute the code to clone and build the JEDI system:
+
+```
 jedi_bundle all
 ```
 
