@@ -1,0 +1,6 @@
+required_repos:
+  - jedicmake
+  - oops
+  - ioda
+  - iodaconv
+  - ioda-data
