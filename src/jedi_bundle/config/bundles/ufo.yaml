@@ -1,6 +1,7 @@
 optional_repos:
-  #- ropp-ufo
+  - ropp-ufo
   - geos-aero
+  - gsw
 
 required_repos:
   - jedicmake
