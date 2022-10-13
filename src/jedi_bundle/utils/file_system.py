@@ -43,7 +43,7 @@ def prompt_and_remove_file(logger, pathfile):
     if (os.path.exists(pathfile)):
 
         # Prompt
-        logger.input('', f'Attempting to remove existing file: {pathfile}')
+        logger.input('', f'Attempting to overwrite existing file: {pathfile}')
 
         # Remove
         remove_file(logger, pathfile)
