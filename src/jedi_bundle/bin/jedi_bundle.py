@@ -37,8 +37,8 @@ def jedi_bundle():
                              'or two (or more) arguments. \nWhen no argument is provided the code '
                              'will generate the config file build.yaml in the working \ndirectory '
                              'and then exit. When two (or more) arguments are passed the final '
-                             'argument must be the \npath to the configuration file. The proceeding '
-                             'arguments are the choice of task(s) to run.'
+                             'argument must be the \npath to the configuration file. The '
+                             'proceeding arguments are the choice of task(s) to run.'
                              '\n\nThe valid tasks are \'Clone\', \'Configure\', \'Build\' and '
                              '\'All\', where \'All\' runs all of the above. \nTasks names are case '
                              'insensitive. ' +

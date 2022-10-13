@@ -174,7 +174,8 @@ def clone_jedi(logger, clone_config):
                 # Special case for jedicmake'
                 jedi_cmake_lines = [
                   'if(DEFINED ENV{jedi_cmake_ROOT})',
-                  '  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/git_functions.cmake )',
+                  '  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/' +
+                  'git_functions.cmake )',
                   'else()',
                   '  ' + package_line,
                   '  include( jedicmake/cmake/Functions/git_functions.cmake )',
@@ -185,7 +186,6 @@ def clone_jedi(logger, clone_config):
                     output_file_open.write(jedi_cmake_line + '\n')
 
             else:
-
 
                 output_file_open.write(package_line + '\n')
                 if cmake != '':
