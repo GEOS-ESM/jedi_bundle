@@ -165,11 +165,31 @@ def clone_jedi(logger, clone_config):
 
             package_line = f'ecbuild_bundle( PROJECT {repo.ljust(repo_len)} GIT ' + \
                            f'{urlq.ljust(url_len)} BRANCH {branch.ljust(branch_len)} UPDATE )'
+
+            # Append package line with recursive if needed
             if recursive:
                 package_line = package_line.replace('UPDATE )', 'UPDATE RECURSIVE)')
-            output_file_open.write(package_line + '\n')
-            if cmake != '':
-                output_file_open.write(cmake + '\n')
+
+            if repo == 'jedicmake':
+                # Special case for jedicmake'
+                jedi_cmake_lines = [
+                  'if(DEFINED ENV{jedi_cmake_ROOT})',
+                  '  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/' +
+                  'git_functions.cmake )',
+                  'else()',
+                  '  ' + package_line,
+                  '  include( jedicmake/cmake/Functions/git_functions.cmake )',
+                  'endif()',
+                  ''
+                ]
+                for jedi_cmake_line in jedi_cmake_lines:
+                    output_file_open.write(jedi_cmake_line + '\n')
+
+            else:
+
+                output_file_open.write(package_line + '\n')
+                if cmake != '':
+                    output_file_open.write(cmake + '\n')
 
         for cmake_footer_line in cmake_footer_lines:
             output_file_open.write(cmake_footer_line + '\n')

@@ -9,6 +9,8 @@ header:
  - '# Packages'
  - '# --------'
  - 'ecbuild_bundle_initialize()'
+ - ''
 
 footer:
+ - ''
  - 'ecbuild_bundle_finalize()'
