@@ -66,10 +66,14 @@ def repo_is_reachable(logger, url, username, token):
 # --------------------------------------------------------------------------------------------------
 
 
-def repo_has_branch(logger, url, branch):
+def repo_has_branch(logger, url, branch, is_tag = False):
 
     # Command to check if branch exists and pass exit code back
-    git_ls_cmd = ['git', 'ls-remote', '--heads', '--exit-code', url, branch]
+    heads_or_tags = '--heads'
+    if is_tag:
+        heads_or_tags = '--tags'
+
+    git_ls_cmd = ['git', 'ls-remote', heads_or_tags, '--exit-code', url, branch]
 
     # Run command
     process = subprocess.run(git_ls_cmd, stdout=devnull)
@@ -84,7 +88,7 @@ def repo_has_branch(logger, url, branch):
 # --------------------------------------------------------------------------------------------------
 
 
-def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_branch):
+def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag):
 
     # Get GitHub username and token if .git-credentials file available
     username, token = get_github_username_token(logger)
@@ -116,7 +120,7 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_
             # Track first instance of finding the default branch. But do not exit when it's first
             # found so that other organizations can be checked for the user branch.
             if not found_default_branch:
-                if repo_has_branch(logger, github_url, default_branch):
+                if repo_has_branch(logger, github_url, default_branch, is_tag):
                     found_default_branch = True
                     repo_url_found = True
                     repo_url_to_use = github_url
@@ -128,7 +132,7 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_
 # --------------------------------------------------------------------------------------------------
 
 
-def clone_git_repo(logger, url, branch, target):
+def clone_git_repo(logger, url, branch, target, is_tag):
 
     # Check if directory already exists
     if not os.path.exists(target):
@@ -138,6 +142,10 @@ def clone_git_repo(logger, url, branch, target):
 
         # Run command
         subprocess_run(logger, git_clone_cmd, True)
+
+    elif is_tag:
+
+        logger.info(f'Repo {url}, tag already cloned, skipping...')
 
     else:
 
