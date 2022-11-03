@@ -22,6 +22,10 @@ jobs:
     - name: Update conda
       run: conda update -n base -c defaults conda
 
+    # Install pip
+    - name: Install pip
+      run: conda install pip
+
     # Clone the code repo
     - name: Clone code repo
       uses: actions/checkout@v2

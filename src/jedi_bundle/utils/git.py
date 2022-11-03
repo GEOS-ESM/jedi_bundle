@@ -66,7 +66,7 @@ def repo_is_reachable(logger, url, username, token):
 # --------------------------------------------------------------------------------------------------
 
 
-def repo_has_branch(logger, url, branch, is_tag = False):
+def repo_has_branch(logger, url, branch, is_tag=False):
 
     # Command to check if branch exists and pass exit code back
     heads_or_tags = '--heads'

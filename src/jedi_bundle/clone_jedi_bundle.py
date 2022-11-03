@@ -124,8 +124,8 @@ def clone_jedi(logger, clone_config):
         branch_or_tag = 'Branch'
         if is_tag:
             branch_or_tag = 'Tag'
-        logger.info(f'{branch_or_tag.ljust(6)} {branch.ljust(branch_len)} of {repo.ljust(repo_len)} ' +
-                    f'will be cloned from {url.ljust(url_len)}')
+        logger.info(f'{branch_or_tag.ljust(6)} {branch.ljust(branch_len)} of ' +
+                    f'{repo.ljust(repo_len)} will be cloned from {url.ljust(url_len)}')
 
     if optional_repos_not_found:
         logger.info(f' ')
