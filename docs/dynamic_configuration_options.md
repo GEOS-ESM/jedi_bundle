@@ -55,4 +55,4 @@ make_options:
 | `cores_to_use_for_make` | Number of processors to use in the make step. |
 
 
-**Note that the code does not generally employ defaults for any of the options above. In a sense the defaults are set by always starting from the default YAML file that comes from the source code. When the code runs all arguments are expected to be present in the configuration.**
+**Note that the code does not generally employ defaults for any of the options above. In a sense the defaults are set when configuration is generated or created. As such it is worth starting by allowing jedi_bundle to generate the configuration.**

@@ -6,29 +6,29 @@ The jedi_bundle system is passed a configuration file when issuing any build com
 jedi_bundle
 ```
 
-After completion the code will produce `build.yaml`, containing all the configuration options. See the section on [dynamic configuration options](dynamic_configuration_options.md) for a description of all the settings prescribed in `build.yaml`.
+After completion, the code will produce `build.yaml`, containing all the configuration options. See the section on [dynamic configuration options](dynamic_configuration_options.md) for a description of all the settings prescribed in `build.yaml`.
 
-If `jedi_bundle` is being run on a recognized platform `build.yaml` will be populated with platform specific defaults.
+If `jedi_bundle` is being run on a recognized platform, `build.yaml` will be populated with platform specific defaults.
 
 ## Building the code
 
-In order to build the arguments that are passed to `jedi_bundle` are as follows:
+In order to build the JEDI code the arguments that are passed to `jedi_bundle` are as follows:
 
 ``` shell
-jedi_bundle [Tasks] build.yaml
+jedi_bundle [tasks] build.yaml
 ```
 
 The first argument is a list describing the tasks that are to be completed. The second argument points to the YAML configuration describing the options for the build.
 
-The list of possible tasks are `Clone`, `Configure` and `Make`. You can also specify `All`, meaning all three tasks. Not that the name of the tasks is case insensitive so `clone`, `configure`, `make` and `all` are equally valid.
+The list of possible tasks are `clone`, `configure` and `make`. You can also specify `all`, meaning all three tasks. Not that the name of the tasks is case insensitive.
 
 The tasks perform the following duties:
 
 | Task    | Description |
 | --------| ----------- |
-|Clone    | Clone the JEDI repos according the branch name and organisations specified in the configuration. |
-|Configure| Run the CMake (ecbuild) configure step. Also create shortcut modules file for later sourcing with the build.|
-|Make     | Run the parallel make step, i.e. make -j6. |
+|clone    | Clone the JEDI repos according the branch name and organisations specified in the configuration. |
+|configure| Run the CMake (ecbuild) configure step. Also create shortcut modules file for later sourcing with the build.|
+|make     | Run the parallel make step, i.e. make -j6. |
 
 
 ## Basic Examples
@@ -42,12 +42,12 @@ jedi_bundle
 To run **All** tasks :
 
 ``` shell
-jedi_bundle All build.yaml
+jedi_bundle all build.yaml
 ```
 
 To run **Clone** and **Configure**:
 
 ``` shell
-jedi_bundle Clone Configure build.yaml
+jedi_bundle clone configure build.yaml
 ```
 

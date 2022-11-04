@@ -2,7 +2,7 @@
 
 The jedi_bundle package is available through [PyPi](https://pypi.org/project/jedibundle/) and can be installed following the instructions there.
 
-To install from source clone the repo from GitHub:
+To install from source, clone the repo from GitHub:
 
 ``` shell
 git clone https://github.com/geos-esm/jedi_bundle
