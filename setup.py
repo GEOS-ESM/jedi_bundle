@@ -14,9 +14,16 @@
 
 import setuptools
 
+# read the contents of your README file
+from pathlib import Path
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+
 setuptools.setup(
     name='jedibundle',
-    version='1.0.4',
+    version='1.0.5',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='NASA Global Modeling and Assimilation Office',
     description='Tools for installing JEDI code',
     url='https://github.com/geos-esm/jedi_bundle',
