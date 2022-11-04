@@ -16,7 +16,7 @@ import setuptools
 
 setuptools.setup(
     name='jedibundle',
-    version='1.0.2',
+    version='1.0.4',
     author='NASA Global Modeling and Assimilation Office',
     description='Tools for installing JEDI code',
     url='https://github.com/geos-esm/jedi_bundle',
