@@ -1,22 +1,14 @@
 # Building JEDI code on Discover
 
-Load the JEDI spack modules
+Load the JEDI spack Python module
 
 ```
 module purge
 module use /discover/swdev/jcsda/spack-stack/modulefiles
 module load miniconda/3.9.7
-module load ecflow/5.8.4
-module use /discover/swdev/jcsda/spack-stack/spack-stack-v1/envs/skylab-1.0.0-intel-2022.0.1/install/modulefiles/Core
-module load stack-intel/2022.0.1
-module load stack-intel-oneapi-mpi/2021.5.0
-module load stack-python/3.9.7
-module load jedi-ewok-env/1.0.0
-module load jedi-fv3-env/1.0.0
-module load nco/5.0.6
 ```
 
-Load the JEDI bundle module
+Load the latest `jedi_bundle` module
 
 ```
 module use -a /discover/nobackup/drholdaw/JediOpt/modulefiles/core/
@@ -30,19 +22,20 @@ mkdir jedi-work
 cd jedi-work
 ```
 
-Execute the code to clone and build the JEDI system:
+Issue `jedi_bundle` without any arguments to generate the `build.yaml` configuration:
 
 ```
-jedi_bundle all
+jedi_bundle
 ```
 
-At this point the code will provide the opportunity to specify what it will do by modifying the `build.yaml` file that is produced. By default it will build all the bundles that are known about. Instead the `clone_options.bundles` list can be modified to control which bundles are built. For example, if working only with the UFO code the list would be modified to remove all the bundles except `ufo`. If working with `fv3-jedi` and `ufo` code only these two items would remain in the list. The fewer bundles that are included the faster the code will build.
+Before proceeding you may want to edit `build.yaml` to choose different options. It will default to building all bundles and you may wish to only build a specific bundle by modifying `clone_options.bundles`. Choosing `fv3-jedi` and `ufo`, for example, will result in building all the code for the `fv3-jedi` and `ufo` bundles. You may also want to change the modules used to build or change the type of build to use.
 
-To rebuild JEDI after making changes to the source code the following command is used:
+Once `build.yaml` is configured they way you wish, you can issue `jedi_bundle` again with the tasks you want. To clone the code on a login node and then build using a compute node issue:
 
 ```
-cd jedi-work
+jedi_bundle clone configure build.yaml
+salloc --time=1:00:00
 jedi_bundle make build.yaml
 ```
 
-This will just perform the `make -j6` operation to rebuild the code and it will use the `build.yaml` configuration that was already prepared.
+Note that you may wish to perform the make step using more than the default 6 cores. Edit `build.yaml` and change `make_options.cores_to_use_for_make` to a higher number, say 24 and then issue the `jedi_bundle make build.yaml` step again after requising the node(s) with `salloc`.
