@@ -88,7 +88,7 @@ def repo_has_branch(logger, url, branch, is_tag=False):
 # --------------------------------------------------------------------------------------------------
 
 
-def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag):
+def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag_in):
 
     # Get GitHub username and token if .git-credentials file available
     username, token = get_github_username_token(logger)
@@ -115,18 +115,20 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_
             # Check for user branch and return right away if found
             if user_branch != '':
                 if repo_has_branch(logger, github_url, user_branch):
-                    return repo_url_found, github_url, user_branch
+                    is_tag = False
+                    return repo_url_found, github_url, user_branch, is_tag
 
             # Track first instance of finding the default branch. But do not exit when it's first
             # found so that other organizations can be checked for the user branch.
             if not found_default_branch:
-                if repo_has_branch(logger, github_url, default_branch, is_tag):
+                if repo_has_branch(logger, github_url, default_branch, is_tag_in):
                     found_default_branch = True
                     repo_url_found = True
                     repo_url_to_use = github_url
                     repo_branch_to_use = default_branch
+                    is_tag = is_tag_in
 
-    return repo_url_found, repo_url_to_use, repo_branch_to_use
+    return repo_url_found, repo_url_to_use, repo_branch_to_use, is_tag
 
 
 # --------------------------------------------------------------------------------------------------

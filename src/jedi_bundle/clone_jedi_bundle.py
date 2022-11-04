@@ -88,10 +88,10 @@ def clone_jedi(logger, clone_config):
         default_branch = config_get(logger, repo_dict, 'default_branch')
         cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
         recursive = config_get(logger, repo_dict, 'recursive', False)
-        is_tag = config_get(logger, repo_dict, 'tag', False)
+        is_tag_in = config_get(logger, repo_dict, 'tag', False)
 
-        found, url, branch = get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
-                                                user_branch, is_tag)
+        found, url, branch, is_tag = get_url_and_branch(logger, github_orgs, repo_url_name,
+                                                        default_branch, user_branch, is_tag_in)
 
         if found:
 
