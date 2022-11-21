@@ -71,5 +71,3 @@
     default_branch: develop
 - ioda-data:
     default_branch: develop
-- saber-data:
-    default_branch: develop
