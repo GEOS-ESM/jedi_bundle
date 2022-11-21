@@ -100,6 +100,7 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch, user_
     repo_url_found = False
     repo_url_to_use = ''
     repo_branch_to_use = ''
+    is_tag = False
     for github_org in github_orgs:
 
         # Full path of the repo url

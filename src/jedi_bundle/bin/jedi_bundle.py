@@ -22,6 +22,7 @@ from jedi_bundle.config.config import return_config_path
 from jedi_bundle.utils.file_system import prompt_and_remove_file
 from jedi_bundle.utils.logger import Logger, colors
 from jedi_bundle.utils.yaml import load_yaml
+from jedi_bundle.utils.welcome_message import write_welcome_message
 
 
 # --------------------------------------------------------------------------------------------------
@@ -48,6 +49,9 @@ def jedi_bundle():
                              '  jedi_bundle all build.yaml              (All tasks) \n' +
                              '  jedi_bundle Clone build.yaml            (Clone task) \n'
                              '  jedi_bundle Clone Configure build.yaml  (Clone & Configure task)\n')
+
+    # Write the welcome message
+    write_welcome_message()
 
     # Create the logger
     logger = Logger('JediBundle')
