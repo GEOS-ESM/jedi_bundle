@@ -7,3 +7,6 @@
 import os
 
 build_directory = os.path.dirname(__file__)
+
+# Set the version for jedi_bundle
+__version__ = '1.0.6'

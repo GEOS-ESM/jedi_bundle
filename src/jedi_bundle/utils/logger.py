@@ -35,7 +35,8 @@ class Logger:
         self.task_name = task_name
 
         # Set default logging levels
-        self.loggerdict = {'INFO': True,
+        self.loggerdict = {'BLANK': True,
+                           'INFO': True,
                            'TRACE': False,
                            'DEBUG': False, }
 
@@ -53,8 +54,12 @@ class Logger:
 
     def send_message(self, level, message):
 
+        level_show = ''
+        if level != 'BLANK':
+            level_show = level + ' '+self.task_name+': '
+
         if level == 'ABORT' or self.loggerdict[level]:
-            print(level+' '+self.task_name+': '+message)
+            print(level_show+message)
 
     # ----------------------------------------------------------------------------------------------
 
@@ -73,6 +78,12 @@ class Logger:
     def debug(self, message):
 
         self.send_message('DEBUG', f'{message}')
+
+    # ----------------------------------------------------------------------------------------------
+
+    def blank(self, message):
+
+        self.send_message('BLANK', message)
 
     # ----------------------------------------------------------------------------------------------
 
