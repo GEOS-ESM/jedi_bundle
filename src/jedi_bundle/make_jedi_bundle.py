@@ -49,7 +49,6 @@ def make_jedi(logger, make_config):
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
             if modules != 'none':
-                make_file_open.write(f'module purge \n')
                 make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')

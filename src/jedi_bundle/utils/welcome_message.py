@@ -18,18 +18,18 @@ def write_welcome_message():
 
     logger = Logger('')
 
-    jedi_bundle_1 = f"   _          _ _   _                     _ _       "  # noqa
-    jedi_bundle_2 = f"  (_) ___  __| (_) | |__  _   _ _ __   __| | | ___  "  # noqa
-    jedi_bundle_3 = f"  | |/ _ \/ _` | | | '_ \| | | | '_ \ / _` | |/ _ \ "  # noqa
-    jedi_bundle_4 = f"  | |  __/ (_| | | | |_) | |_| | | | | (_| | |  __/ "  # noqa
-    jedi_bundle_5 = f" _/ |\___|\__,_|_| |_.__/ \__,_|_| |_|\__,_|_|\___| "  # noqa
-    jedi_bundle_6 = f"|__/                                                "  # noqa
+    jedi_bundle_1 = f"   _          _ _ _                     _ _      "    # noqa
+    jedi_bundle_2 = f"  (_) ___  __| (_) |__  _   _ _ __   __| | | ___ "    # noqa
+    jedi_bundle_3 = f"  | |/ _ \/ _` | | '_ \| | | | '_ \ / _` | |/ _ \\"   # noqa
+    jedi_bundle_4 = f"  | |  __/ (_| | | |_) | |_| | | | | (_| | |  __/"    # noqa
+    jedi_bundle_5 = f" _/ |\___|\__,_|_|_.__/ \__,_|_| |_|\__,_|_|\___|"    # noqa
+    jedi_bundle_6 = f"|__/     "                                            # noqa
 
     logger.blank("")
-    logger.blank(jedi_bundle_1)
-    logger.blank(jedi_bundle_2 + f"   Jedi Bundle Build System")
-    logger.blank(jedi_bundle_3 + f"   NASA Global Modelling and Assimilation Office")
-    logger.blank(jedi_bundle_4 + f"   Version {__version__}")
-    logger.blank(jedi_bundle_5 + f"   \x1B[4m\x1B[34mhttps://geos-esm.github.io/jedi_bundle\033[0m")
-    logger.blank(jedi_bundle_6)
+    logger.blank(jedi_bundle_1 + f"  ")
+    logger.blank(jedi_bundle_2 + f"  Jedi Bundle Build System")
+    logger.blank(jedi_bundle_3 + f"  Version {__version__}")
+    logger.blank(jedi_bundle_4 + f"  NASA Global Modeling and")
+    logger.blank(jedi_bundle_5 + f"       Assimilation Office")
+    logger.blank(jedi_bundle_6 + f"  \x1B[4m\x1B[34mhttps://geos-esm.github.io/jedi_bundle\033[0m")
     logger.blank("")
