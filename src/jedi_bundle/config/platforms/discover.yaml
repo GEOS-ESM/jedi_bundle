@@ -2,6 +2,7 @@ modules:
   default_modules: intel
   intel:
     load:
+      - source /usr/share/lmod/lmod/init/bash
       - module purge
       - module use /discover/swdev/jcsda/spack-stack/modulefiles
       - module load miniconda/3.9.7
@@ -17,6 +18,7 @@ modules:
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.5.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   gnu:
     load:
+      - source /usr/share/lmod/lmod/init/bash
       - module purge
       - module use /discover/swdev/jcsda/spack-stack/modulefiles
       - module load miniconda/3.9.7
