@@ -4,7 +4,6 @@ clone_options:
   github_orgs:
     - JCSDA-internal
     - JCSDA
-    - GEOS-ESM
   bundles:
     - oops
 

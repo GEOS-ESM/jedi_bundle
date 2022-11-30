@@ -28,6 +28,62 @@ from jedi_bundle.utils.welcome_message import write_welcome_message
 # --------------------------------------------------------------------------------------------------
 
 
+def get_default_config():
+
+    internal_config_file = os.path.join(return_config_path(), 'build.yaml')
+    with open(internal_config_file, 'r') as internal_config_file_opened:
+        internal_config_dict = yaml.safe_load(internal_config_file_opened)
+    return internal_config_dict
+
+
+# --------------------------------------------------------------------------------------------------
+
+
+def get_bundles():
+
+    bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
+    bundles = []
+    for bundle_yaml in bundles_yaml:
+        if bundle_yaml != 'build-order.yaml':
+            bundles.append(bundle_yaml.split('.')[0])
+
+    return bundles
+
+# --------------------------------------------------------------------------------------------------
+
+
+def execute_tasks(tasks, config_dict):
+
+    # Create the logger
+    logger = Logger('JediBundleExecuteTasks')
+
+    # Convert to lower case
+    tasks = [task.lower() for task in tasks]
+
+    # Check that the options are valid
+    valid_tasks = ['clone', 'configure', 'make', 'all']
+    for task in tasks:
+        if task not in valid_tasks:
+            logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
+                            f'configuration is passed as the last argument.')
+
+    # Dictionaries
+    clone_dict = config_dict['clone_options']
+    configure_dict = {**clone_dict, **config_dict['configure_options']}
+    make_dict = {**configure_dict, **config_dict['make_options']}
+
+    # Run the build stages
+    if 'all' in tasks or 'clone' in tasks:
+        clone_jedi(logger, clone_dict)
+    if 'all' in tasks or 'configure' in tasks:
+        configure_jedi(logger, configure_dict)
+    if 'all' in tasks or 'make' in tasks:
+        make_jedi(logger, make_dict)
+
+
+# --------------------------------------------------------------------------------------------------
+
+
 def jedi_bundle():
 
     # Arguments
@@ -65,9 +121,7 @@ def jedi_bundle():
 
         # Prepare the configuration from default
         # --------------------------------------
-        config_file_name = 'build.yaml'
-        internal_config_file = os.path.join(return_config_path(), config_file_name)
-        internal_config_dict = load_yaml(logger, internal_config_file)
+        internal_config_dict = get_default_config()
 
         # Set current directory for source code
         internal_config_dict['clone_options']['path_to_source'] = os.getcwd()
@@ -100,11 +154,7 @@ def jedi_bundle():
             build_dir = build_dir + '-' + default_modules
 
         # Set the list of bundles
-        bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
-        bundles = []
-        for bundle_yaml in bundles_yaml:
-            if bundle_yaml != 'build-order.yaml':
-                bundles.append(bundle_yaml.split('.')[0])
+        bundles = get_bundles()
         internal_config_dict['clone_options']['bundles'] = bundles
 
         # Set the path to the build directory
@@ -114,7 +164,7 @@ def jedi_bundle():
         internal_config_dict['configure_options']['path_to_build'] = build_dir
 
         # Set path to new file and remove if existing
-        config_file = os.path.join(os.getcwd(), config_file_name)
+        config_file = os.path.join(os.getcwd(), 'build.yaml')
         prompt_and_remove_file(logger, config_file)
 
         # Write dictionary to user directory
@@ -140,28 +190,7 @@ def jedi_bundle():
 
         # Execute the tasks
         # -----------------
+        execute_tasks(tasks, config_dict)
 
-        # Convert to lower case
-        tasks = [task.lower() for task in tasks]
-
-        # Check that the options are valid
-        valid_tasks = ['clone', 'configure', 'make', 'all']
-        for task in tasks:
-            if task not in valid_tasks:
-                logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
-                             f'configuration is passed as the last argument.')
-
-        # Dictionaries
-        clone_dict = config_dict['clone_options']
-        configure_dict = {**clone_dict, **config_dict['configure_options']}
-        make_dict = {**configure_dict, **config_dict['make_options']}
-
-        # Run the build stages
-        if 'all' in tasks or 'clone' in tasks:
-            clone_jedi(logger, clone_dict)
-        if 'all' in tasks or 'configure' in tasks:
-            configure_jedi(logger, configure_dict)
-        if 'all' in tasks or 'make' in tasks:
-            make_jedi(logger, make_dict)
 
 # --------------------------------------------------------------------------------------------------
