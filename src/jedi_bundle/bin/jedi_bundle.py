@@ -65,7 +65,7 @@ def execute_tasks(tasks, config_dict):
     for task in tasks:
         if task not in valid_tasks:
             logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
-                            f'configuration is passed as the last argument.')
+                         f'configuration is passed as the last argument.')
 
     # Dictionaries
     clone_dict = config_dict['clone_options']
