@@ -55,7 +55,7 @@ def get_bundles():
 def execute_tasks(tasks, config_dict):
 
     # Create the logger
-    logger = Logger('JediBundleExecuteTasks')
+    logger = Logger('JediBundle')
 
     # Convert to lower case
     tasks = [task.lower() for task in tasks]
@@ -110,7 +110,7 @@ def jedi_bundle():
     write_welcome_message()
 
     # Create the logger
-    logger = Logger('JediBundle')
+    logger = Logger('JediBundleSetup')
 
     # Parse input string
     args = parser.parse_args()
