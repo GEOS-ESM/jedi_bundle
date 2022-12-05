@@ -7,7 +7,6 @@ required_repos:
   - jedicmake
   - oops
   - ioda
-  - crtm
   - ufo
   - ioda-data
   - ufo-data

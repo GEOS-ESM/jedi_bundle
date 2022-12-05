@@ -30,6 +30,7 @@ def make_jedi(logger, make_config):
 
     # Modules file
     if modules != 'none':
+        modules_init = os.path.join(path_to_build, 'modules-init')
         modules_file = os.path.join(path_to_build, 'modules')
 
     # File to hold configure steps
@@ -49,6 +50,7 @@ def make_jedi(logger, make_config):
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
             if modules != 'none':
+                make_file_open.write(f'source {modules_init} \n')
                 make_file_open.write(f'source {modules_file} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
