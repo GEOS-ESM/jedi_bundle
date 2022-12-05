@@ -66,7 +66,7 @@ def configure_jedi(logger, configure_config):
     with open(configure_file, 'a') as configure_file_open:
         configure_file_open.write(f'#!/usr/bin/env bash \n')
         configure_file_open.write(f'\n')
-        if platform is not None:
+        if platform != 'none':
             configure_file_open.write(f'source {modules_file}\n')
         configure_file_open.write(f'\n')
         configure_file_open.write(f'{ecbuild} \n')
