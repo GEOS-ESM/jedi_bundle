@@ -43,8 +43,16 @@ def configure_jedi(logger, configure_config):
 
         # Steps to load the chosen modules
         modules_dict = platform_dict['modules'][modules]
+        module_inits = config_get(logger, modules_dict, 'init', [])
         module_directives = config_get(logger, modules_dict, 'load')
         platform_configure_directives = config_get(logger, modules_dict, 'configure', '')
+
+        # Create modules init file
+        modules_init = os.path.join(path_to_build, 'modules-init')
+        remove_file(logger, modules_init)
+        with open(modules_init, 'a') as modules_init_open:
+            for module_init in module_inits:
+                modules_init_open.write(module_init + '\n')
 
         # Create modules file
         modules_file = os.path.join(path_to_build, 'modules')
@@ -67,6 +75,7 @@ def configure_jedi(logger, configure_config):
         configure_file_open.write(f'#!/usr/bin/env bash \n')
         configure_file_open.write(f'\n')
         if platform != 'none':
+            configure_file_open.write(f'source {modules_init}\n')
             configure_file_open.write(f'source {modules_file}\n')
         configure_file_open.write(f'\n')
         configure_file_open.write(f'{ecbuild} \n')

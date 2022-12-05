@@ -4,7 +4,6 @@ optional_repos:
 
 required_repos:
   - jedicmake
-  - crtm
   - oops
   - saber
   - ioda

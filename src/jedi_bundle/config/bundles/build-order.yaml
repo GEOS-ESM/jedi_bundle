@@ -24,9 +24,6 @@
 - iodaconv:
     repo_url_name: ioda-converters
     default_branch: develop
-- crtm:
-    default_branch: v2.4-jedi
-    tag: True
 - geos-aero:
     default_branch: develop
 - gsw:
