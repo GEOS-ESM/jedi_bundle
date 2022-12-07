@@ -4,6 +4,7 @@ Load the JEDI spack Python module
 
 ```
 module purge
+module load git git-lfs
 module use /discover/swdev/jcsda/spack-stack/modulefiles
 module load miniconda/3.9.7
 ```
