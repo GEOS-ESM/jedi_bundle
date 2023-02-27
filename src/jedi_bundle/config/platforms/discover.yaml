@@ -32,4 +32,5 @@ modules:
       - module load jedi-ewok-env/1.0.0
       - module load jedi-fv3-env/1.0.0
       - module load nco/5.0.6
+      - module load sp/2.3.3
     configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"
