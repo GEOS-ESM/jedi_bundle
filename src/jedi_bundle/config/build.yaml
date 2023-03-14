@@ -6,6 +6,7 @@ clone_options:
     - JCSDA
   bundles:
     - oops
+  extra_repos: []
 
 configure_options:
   platform: 'none'

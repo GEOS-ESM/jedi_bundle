@@ -29,6 +29,7 @@ def clone_jedi(logger, clone_config):
     github_orgs = config_get(logger, clone_config, 'github_orgs')
     bundles = config_get(logger, clone_config, 'bundles')
     path_to_source = config_get(logger, clone_config, 'path_to_source')
+    extra_repos = config_get(logger, clone_config, 'extra_repos')
 
     # Check for needed executables
     # ----------------------------
@@ -53,10 +54,31 @@ def clone_jedi(logger, clone_config):
         req_repos_all = list(set(req_repos_bun + req_repos_all))
         opt_repos_all = list(set(opt_repos_bun + opt_repos_all))
 
-    # Remove repos from build order if not needed
-    # -------------------------------------------
+    # Load build order list of dictionaries
+    # -------------------------------------
     build_order_pathfile = os.path.join(return_config_path(), 'bundles', 'build-order.yaml')
     build_order_dicts = load_yaml(logger, build_order_pathfile)
+
+    # Get list of repos in the build order
+    # ------------------------------------
+    build_order_repos = []
+    for build_order_dict in build_order_dicts:
+        build_order_repos.append(list(build_order_dict.keys())[0])
+
+    # Add extra repos
+    # ---------------
+    req_repos_all = req_repos_all + extra_repos
+
+    # Check that all required, optional and extra repos appear in the build order dictionaries
+    # ----------------------------------------------------------------------------------------
+    repos_all = req_repos_all + opt_repos_all
+    for repo in repos_all:
+        if repo not in build_order_repos:
+            logger.abort(f'Repository \'{repo}\' not found anywhere in the build order. Make ' +
+                         f'sure to add to the build-order.yaml in jedi_bundle.')
+
+    # Remove repos from build order if not needed
+    # -------------------------------------------
     indices_to_remove = []
     for index, build_order_dict in enumerate(build_order_dicts):
         repo = list(build_order_dict.keys())[0]
