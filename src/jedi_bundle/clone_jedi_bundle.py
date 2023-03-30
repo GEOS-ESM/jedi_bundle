@@ -160,8 +160,13 @@ def clone_jedi(logger, clone_config):
     # --------------
     for repo, url, branch, is_tag in zip(repo_list, url_list, branch_list, is_tag_list):
 
-        logger.info(f'Cloning \'{repo}\'.')
-        clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo), is_tag)
+        # Special treatment for jedicmake since it is typically part of spack.
+        if repo == 'jedicmake':
+            logger.info(f'Skipping explicit clone of \'{repo}\' since it\'s usually a module. ' +
+                        f'If it\'s not a module it will be cloned at configure time.')
+        else:
+            logger.info(f'Cloning \'{repo}\'.')
+            clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo), is_tag)
 
     # Create CMakeLists.txt file
     # --------------------------
