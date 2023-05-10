@@ -16,6 +16,7 @@ modules:
       - module load jedi-fv3-env/unified-dev
       - module load jedi-ewok-env/unified-dev
       - module load soca-env/unified-dev
+      - module unload gsibec
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.5.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   gnu:
     init:
@@ -33,4 +34,5 @@ modules:
       - module load jedi-fv3-env/unified-dev
       - module load jedi-ewok-env/unified-dev
       - module load soca-env/unified-dev
+      - module unload gsibec
     configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"
