@@ -65,5 +65,6 @@ def make_jedi(logger, make_config):
         cwd = os.getcwd()
         os.chdir(bundle_dir)
         process = subprocess.run(configure)
+        logger.assert_abort(process.returncode == 0, f'Make for {bundle} bundle failed.')
         os.chdir(cwd)
 # --------------------------------------------------------------------------------------------------
