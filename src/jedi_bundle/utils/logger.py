@@ -94,6 +94,15 @@ class Logger:
 
     # ----------------------------------------------------------------------------------------------
 
+    def assert_abort(self, condition, message):
+
+        if condition:
+            return
+        else:
+            self.abort(message)
+
+    # ----------------------------------------------------------------------------------------------
+
     def input(self, *messages):
 
         # Print messages

@@ -90,6 +90,7 @@ def configure_jedi(logger, configure_config):
     cwd = os.getcwd()
     os.chdir(path_to_build)
     process = subprocess.run(configure)
+    logger.assert_abort(process.returncode == 0, f'Configure failed.')
     os.chdir(cwd)
 
 
