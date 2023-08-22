@@ -10,10 +10,6 @@
 - oops:
     default_branch: develop
 
-# Variable changes
-- vader:
-    default_branch: develop
-
 # Background error models
 - gsibec:
     repo_url_name: GSIbec
@@ -38,6 +34,10 @@
 - rttov:
     default_branch: develop
 - ufo:
+    default_branch: develop
+
+# Variable changes
+- vader:
     default_branch: develop
 
 # Soca and fv3
