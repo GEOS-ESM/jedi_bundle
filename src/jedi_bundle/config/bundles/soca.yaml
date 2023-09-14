@@ -4,6 +4,7 @@ required_repos:
   - saber
   - ioda
   - gsw
+  - vader
   - ufo
   - vader
   - fms
