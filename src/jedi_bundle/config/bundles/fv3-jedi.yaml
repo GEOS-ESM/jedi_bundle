@@ -5,6 +5,7 @@ optional_repos:
 required_repos:
   - jedicmake
   - oops
+  - gsibec
   - saber
   - ioda
   - ufo
