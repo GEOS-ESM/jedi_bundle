@@ -1,3 +1,6 @@
+optional_repos:
+  - crtm
+
 required_repos:
   - jedicmake
   - oops
@@ -8,6 +11,7 @@ required_repos:
   - ufo
   - vader
   - fms
+  - icepack
   - mom6
   - soca
   - ioda-data
