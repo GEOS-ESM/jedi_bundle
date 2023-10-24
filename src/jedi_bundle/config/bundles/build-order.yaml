@@ -19,6 +19,8 @@
     default_branch: develop
 
 # Observation operators
+- ioda-data:
+    default_branch: develop
 - ioda:
     default_branch: develop
 - iodaconv:
@@ -34,6 +36,11 @@
     repo_url_name: ropp-test
 - rttov:
     default_branch: develop
+- crtm:
+    default_branch: v2.4-jedi.2
+    tag: true
+- ufo-data:
+    default_branch: develop
 - ufo:
     default_branch: develop
 
@@ -47,6 +54,9 @@
     default_branch: release-stable
 
 # Soca
+- icepack:
+    repo_url_name: Icepack
+    default_branch: feature/ecbuild-new
 - mom6:
     repo_url_name: MOM6
     default_branch: main-ecbuild
@@ -62,13 +72,7 @@
     default_branch: develop
 - femps:
     default_branch: develop
-- fv3-jedi:
-    default_branch: develop
-
-# Test data
 - fv3-jedi-data:
     default_branch: develop
-- ufo-data:
-    default_branch: develop
-- ioda-data:
+- fv3-jedi:
     default_branch: develop

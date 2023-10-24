@@ -16,9 +16,7 @@ modules:
       - module load jedi-fv3-env/unified-dev
       - module load ewok-env/unified-dev
       - module load soca-env/unified-dev
-      - module unload gsibec
-      - module use -a /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/intel/2022.0.1
-      - module load crtm/v2.4-jedi.2
+      - module unload gsibec crtm
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.5.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   gnu:
     init:
@@ -36,7 +34,5 @@ modules:
       - module load jedi-fv3-env/unified-dev
       - module load ewok-env/unified-dev
       - module load soca-env/unified-dev
-      - module unload gsibec
-      - module use -a /discover/nobackup/drholdaw/JediOpt/modulefiles/compiler/gnu/10.1.0
-      - module load crtm/v2.4-jedi.2
+      - module unload gsibec crtm
     configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"

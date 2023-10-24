@@ -2,6 +2,7 @@ optional_repos:
   - ropp-ufo
   - geos-aero
   - gsw
+  - crtm
 
 required_repos:
   - jedicmake

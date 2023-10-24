@@ -1,3 +1,7 @@
+optional_repos:
+  - crtm
+  - icepack
+
 required_repos:
   - jedicmake
   - oops

@@ -8,6 +8,7 @@ required_repos:
   - gsibec
   - saber
   - ioda
+  - crtm
   - ufo
   - vader
   - fms

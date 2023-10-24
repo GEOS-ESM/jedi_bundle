@@ -67,7 +67,8 @@ def configure_jedi(logger, configure_config):
 
     # ecbuild command
     ecbuild = f'ecbuild --build={cmake_build_type} {platform_configure_directives} ' + \
-              f'{custom_configure_options} {path_to_source}'
+              f'{custom_configure_options} -DENABLE_IODA_DATA=ON -DENABLE_UFO_DATA=ON ' + \
+              f'-DENABLE_FV3_JEDI_DATA=ON {path_to_source}'
     logger.info(f'Running configure with \'{ecbuild}\'')
 
     # Write steps to file
