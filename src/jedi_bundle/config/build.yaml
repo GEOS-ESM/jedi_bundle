@@ -15,6 +15,7 @@ configure_options:
   cmake_build_type: release
   path_to_build: jedi_bundle/build
   custom_configure_options: ''
+  external_modules: false
 
 make_options:
   cores_to_use_for_make: 6

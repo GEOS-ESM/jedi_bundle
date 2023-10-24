@@ -1,3 +1,11 @@
+platform_name: nccs_discover
+is_it_me:
+  - command: 'hostname'
+    contains: discover
+  - command: 'cat /etc/os-release | grep VERSION='
+    contains: '12-'
+crtm_coeffs_path: '/discover/nobackup/drholdaw/SwellStaticFiles/jedi/crtm_coefficients/'
+crtm_coeffs_version: '2.4.0_skylab_3.0'
 modules:
   default_modules: intel
   intel:
