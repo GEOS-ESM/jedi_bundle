@@ -18,7 +18,7 @@ from jedi_bundle.clone_jedi_bundle import clone_jedi
 from jedi_bundle.configure_jedi_bundle import configure_jedi
 from jedi_bundle.make_jedi_bundle import make_jedi
 
-from jedi_bundle.config.config import return_config_path
+from jedi_bundle.config.config import return_config_path, determine_platform
 from jedi_bundle.utils.file_system import prompt_and_remove_file
 from jedi_bundle.utils.logger import Logger, colors
 from jedi_bundle.utils.yaml import load_yaml
@@ -129,29 +129,16 @@ def jedi_bundle():
         # Set default build directory
         build_dir = os.path.join(os.getcwd(), 'build')
 
-        # Guess the platform
-        hostname = os.uname()[1].lower()
-        supported_platforms_yaml = os.listdir(os.path.join(return_config_path(), 'platforms'))
-        found_a_platform = False
-        for supported_platform_yaml in supported_platforms_yaml:
-            supported_platform = supported_platform_yaml.split('.')[0]
-            if supported_platform in hostname:
-                platform = supported_platform
-                found_a_platform = True
-                break
+        # Determine platform
+        platform, modules = determine_platform(logger)
 
-        if found_a_platform:
+        if platform is not None:
             # Set found platform in the dictionary
             internal_config_dict['configure_options']['platform'] = platform
-
-            # Load platform config and set default modules
-            platform_path_file = os.path.join(return_config_path(), 'platforms', platform + '.yaml')
-            platform_dict = load_yaml(logger, platform_path_file)
-            default_modules = platform_dict['modules']['default_modules']
-            internal_config_dict['configure_options']['modules'] = default_modules
+            internal_config_dict['configure_options']['modules'] = modules
 
             # Append build with the modules being used
-            build_dir = build_dir + '-' + default_modules
+            build_dir = build_dir + '-' + modules
 
         # Set the list of bundles
         bundles = get_bundles()

@@ -23,15 +23,10 @@ def make_jedi(logger, make_config):
 
     # Parse the config
     bundles = config_get(logger, make_config, 'bundles')
-    modules = config_get(logger, make_config, 'modules')
     cmake_build_type = config_get(logger, make_config, 'cmake_build_type')
     path_to_build = config_get(logger, make_config, 'path_to_build')
+    external_modules = config_get(logger, make_config, 'external_modules', False)
     cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
-
-    # Modules file
-    if modules != 'none':
-        modules_init = os.path.join(path_to_build, 'modules-init')
-        modules_file = os.path.join(path_to_build, 'modules')
 
     # File to hold configure steps
     for bundle in bundles:
@@ -49,9 +44,11 @@ def make_jedi(logger, make_config):
         with open(make_file, 'a') as make_file_open:
             make_file_open.write(f'#!/usr/bin/env bash \n')
             make_file_open.write(f'\n')
-            if modules != 'none':
+            if not external_modules:
+                modules_init = os.path.join(path_to_build, 'modules-init')
                 make_file_open.write(f'source {modules_init} \n')
-                make_file_open.write(f'source {modules_file} \n')
+                modules_load = os.path.join(path_to_build, 'modules')
+                make_file_open.write(f'source {modules_load} \n')
             make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
 
