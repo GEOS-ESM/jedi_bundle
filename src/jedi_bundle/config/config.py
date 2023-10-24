@@ -47,8 +47,8 @@ def determine_platform(logger):
 
             # Run command_in in shell and get return
             command_out = subprocess.run(is_it_me_command['command'], shell=True,
-                                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                                text=True)
+                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                         text=True)
 
             # If command_out is not in command_out_actual go to next platform
             if is_it_me_command['contains'] not in command_out.stdout:
@@ -81,7 +81,7 @@ def check_platform(platform):
         # Open the dictionary
         possible_config_path = os.path.join(return_config_path(), 'platforms', possible_config)
         with open(possible_config_path, 'r') as possible_config_opened:
-           possible_dict = yaml.safe_load(possible_config_opened)
+            possible_dict = yaml.safe_load(possible_config_opened)
 
         # Append list
         possible_platforms.append(possible_dict['platform_name'])

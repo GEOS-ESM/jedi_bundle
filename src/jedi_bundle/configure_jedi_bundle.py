@@ -73,7 +73,7 @@ def configure_jedi(logger, configure_config):
         os.makedirs(crtm_coefficient_path_source, exist_ok=True)
 
         if not os.path.exists(crtm_coefficient_target):
-            os.symlink(os.path.join(crtm_coefficient_path_platform, crtm_coefficient_version), \
+            os.symlink(os.path.join(crtm_coefficient_path_platform, crtm_coefficient_version),
                        crtm_coefficient_target)
 
     # File to hold configure steps
