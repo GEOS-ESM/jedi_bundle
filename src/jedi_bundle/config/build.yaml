@@ -8,6 +8,7 @@ clone_options:
   bundles:
     - oops
   extra_repos: []
+  crtm_tag_or_branch: v2.4-jedi.2
 
 configure_options:
   platform: 'none'

@@ -38,6 +38,7 @@
     default_branch: develop
 - crtm:
     default_branch: v2.4-jedi.2
+    repo_url_name: crtm
     tag: true
 - ufo-data:
     default_branch: develop
