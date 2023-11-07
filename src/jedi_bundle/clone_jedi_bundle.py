@@ -91,7 +91,7 @@ def clone_jedi(logger, clone_config):
         crtm_tag_major = re.sub(r'[^0-9]', '', crtm_tag_or_branch)[0]
 
         # Switch to V3 repo if major version is 3 or greater
-        if int(crtm_tag_major)  >= 3:
+        if int(crtm_tag_major) >= 3:
             crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
 
     # Pass dictionary back
