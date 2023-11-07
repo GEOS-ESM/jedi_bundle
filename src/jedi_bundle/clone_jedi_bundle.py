@@ -9,6 +9,8 @@
 # --------------------------------------------------------------------------------------------------
 
 
+import copy
+import re
 import os
 
 from jedi_bundle.config.config import return_config_path
@@ -30,6 +32,7 @@ def clone_jedi(logger, clone_config):
     bundles = config_get(logger, clone_config, 'bundles')
     path_to_source = config_get(logger, clone_config, 'path_to_source')
     extra_repos = config_get(logger, clone_config, 'extra_repos')
+    crtm_tag_or_branch = config_get(logger, clone_config, 'crtm_tag_or_branch', 'v2.4-jedi.2')
 
     # Check for needed executables
     # ----------------------------
@@ -58,6 +61,43 @@ def clone_jedi(logger, clone_config):
     # -------------------------------------
     build_order_pathfile = os.path.join(return_config_path(), 'bundles', 'build-order.yaml')
     build_order_dicts = load_yaml(logger, build_order_pathfile)
+
+    # Adjust CRTM version if necessary
+    # --------------------------------
+    crtm_index = None
+    for index, build_order_dict in enumerate(build_order_dicts):
+        if list(build_order_dict.keys())[0] == 'crtm':
+            crtm_dict = copy.copy(build_order_dicts[index])
+            break
+
+    # Set the crtm tag/branch
+    crtm_dict['crtm']['default_branch'] = crtm_tag_or_branch
+
+    # Strip any numbers from crtm version and convert to integer
+    if 'feature' in crtm_tag_or_branch or 'develop' in crtm_tag_or_branch:
+
+        # Not a tag
+        crtm_dict['crtm']['tag'] = False
+
+        # If user wants a branch assume crtm V3
+        crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
+
+    else:
+
+        # Is a tag
+        crtm_dict['crtm']['tag'] = True
+
+        # Determine major version
+        crtm_tag_major = re.sub(r'[^0-9]', '', crtm_tag_or_branch)[0]
+
+        # Switch to V3 repo if major version is 3 or greater
+        if int(crtm_tag_major)  >= 3:
+            crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
+
+    # Pass dictionary back
+    build_order_dicts[index] = crtm_dict
+
+    print(build_order_dicts)
 
     # Get list of repos in the build order
     # ------------------------------------
