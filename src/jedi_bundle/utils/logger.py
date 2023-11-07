@@ -105,11 +105,11 @@ class Logger:
 
     def input(self, *messages):
 
-        # Print messages
+        # Write messages
         for message in messages:
             self.send_message('INFO', f'{colors.warning}{message}{colors.norm}')
 
-        # Print continuation message
+        # Write continuation message
         input(f'INFO {self.task_name}: {colors.warning}Press any key to continue...{colors.norm}\n')
 
     # ----------------------------------------------------------------------------------------------

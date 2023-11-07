@@ -97,8 +97,6 @@ def clone_jedi(logger, clone_config):
     # Pass dictionary back
     build_order_dicts[index] = crtm_dict
 
-    print(build_order_dicts)
-
     # Get list of repos in the build order
     # ------------------------------------
     build_order_repos = []
@@ -173,7 +171,7 @@ def clone_jedi(logger, clone_config):
             else:
                 optional_repos_not_found.append(repo)
 
-    # Print out information about clone
+    # Write out information about clone
     # ---------------------------------
     repo_len = len(max(repo_list, key=len))
     url_len = len(max(url_list, key=len))
