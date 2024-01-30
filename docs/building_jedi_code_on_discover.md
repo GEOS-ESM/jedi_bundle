@@ -1,6 +1,6 @@
 # Building JEDI code on Discover
 
-Load the JEDI spack Python module
+Load the JEDI spack Python module (These modules will load Python version 3.9):
 
 ```
 module purge
@@ -9,10 +9,10 @@ module use /discover/swdev/jcsda/spack-stack/modulefiles
 module load miniconda/3.9.7
 ```
 
-Load the latest `jedi_bundle` module
+Load the latest `jedi_bundle` module:
 
 ```
-module use -a /discover/nobackup/drholdaw/JediOpt/modulefiles/core/
+module use -a /discover/nobackup/projects/gmao/advda/JediOpt/modulefiles/core/
 module load jedi_bundle
 ```
 
