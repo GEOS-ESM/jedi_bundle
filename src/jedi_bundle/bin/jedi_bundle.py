@@ -132,6 +132,9 @@ def jedi_bundle():
         # Determine platform
         platform, modules = determine_platform(logger)
 
+        # Show message about platform
+        logger.info(f'Platform identified as {platform}')
+
         if platform is not None:
             # Set found platform in the dictionary
             internal_config_dict['configure_options']['platform'] = platform
