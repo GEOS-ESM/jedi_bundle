@@ -51,9 +51,6 @@
 
 
 # Soca
-- icepack:
-    repo_url_name: Icepack
-    default_branch: feature/ecbuild-new
 - soca:
     default_branch: develop
 

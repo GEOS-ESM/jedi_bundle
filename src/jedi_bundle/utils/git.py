@@ -128,8 +128,7 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
             # Check for user branch and return right away if found
             if user_branch != '':
                 if repo_has_branch(logger, github_url, user_branch):
-                    is_tag = False
-                    return repo_url_found, github_url, user_branch, is_tag
+                    return repo_url_found, github_url, user_branch, is_tag, is_commit
 
             # Track first instance of finding the default branch. But do not exit when it's first
             # found so that other organizations can be checked for the user branch.
