@@ -70,7 +70,8 @@ def update_hash(logger: Logger, date: dt) -> None:
                 updated_commit = data[0]['sha']
                 pinned_versions[i][repo_name]['branch'] = updated_commit
                 curr_date = data[0]['commit']['author']['date']
-                logger.info(f'{name}/{default_branch}, date: {curr_date}, hash: {updated_commit}, from: {url}')
+                logger.info(f'{name}/{default_branch}, date: {curr_date}, hash: {updated_commit},
+                            from: {url}')
 
     # Update pinned_versions.yaml
     with open(path_to_pinned_versions, 'w') as out:
