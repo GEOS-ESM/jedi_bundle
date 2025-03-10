@@ -45,6 +45,43 @@ modules:
       - module load sp/2.5.0
       - module load esmf python py-pyyaml py-numpy pflogger fargparse zlib-ng cmake
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.10.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
+  intel-oneapi:
+    init:
+      - source /usr/share/lmod/lmod/init/bash
+    load:
+      - module purge
+      - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
+      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
+      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-1.9.0/envs/ue-oneapi-2024.2.0/install/modulefiles/Core
+      - module load stack-oneapi/2024.2.0
+      - module load stack-intel-oneapi-mpi/2021.13
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module load gmao-swell-env/1.0.0
+      - module unload gsibec crtm fms
+      - module load fms/2024.02
+      - module load sp/2.5.0
+    configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2024/mpi/2021.13/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
+  intel-oneapi-geos:
+    init:
+      - source /usr/share/lmod/lmod/init/bash
+    load:
+      - module purge
+      - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
+      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
+      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-1.9.0/envs/ue-oneapi-2024.2.0/install/modulefiles/Core
+      - module load stack-oneapi/2024.2.0
+      - module load stack-intel-oneapi-mpi/2021.13
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module load gmao-swell-env/1.0.0
+      - module unload gsibec crtm fms
+      - module load fms/2024.02
+      - module load sp/2.5.0
+      - module load cmake esmf/8.8.0 gftl gftl-shared pflogger fargparse udunits
+    configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2024/mpi/2021.13/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   gnu:
     init:
       - source /usr/share/lmod/lmod/init/bash
