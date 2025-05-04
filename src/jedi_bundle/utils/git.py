@@ -24,10 +24,7 @@ from jedi_bundle.utils.file_system import devnull, subprocess_run
 def get_github_username_token(logger):
 
     # Extract github username from $HOME/.git-credentials
-    # HOME = /home/user or /Users/user 
-    user = os.getenv('USER')
-    HOME_machine = os.getenv('HOME')
-    git_cred_path = os.path.join(HOME_machine, '.git-credentials')
+    git_cred_path = os.path.join(os.getenv('HOME'), '.git-credentials')
     try:
         with open(git_cred_path) as f:
             git_cred_line = f.readlines()[0].rstrip()
