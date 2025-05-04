@@ -4,29 +4,33 @@ The default configuration file is shown below. The configuration is split into s
 
 ``` YAML
 clone_options:
+  bundles:
+  - soca
+  - iodaconv
+  - da-utils
+  - saber
+  - ufo
+  - fv3-jedi
+  - oops
+  - ioda
+  - vader
+  crtm_tag_or_branch: v2.4.1-jedi.2
+  extra_repos:
+  - gsibec
+  github_orgs:
+  - JCSDA-internal
+  - JCSDA
+  - GEOS-ESM
+  - NOAA-EMC
   path_to_source: jedi_bundle
   user_branch: ''
-  github_orgs:
-    - JCSDA-internal
-    - JCSDA
-    - GEOS-ESM
-  bundles:
-    - soca
-    - saber
-    - ufo
-    - fv3-jedi
-    - oops
-    - ioda
-    - vader
-
 configure_options:
   cmake_build_type: release
   custom_configure_options: ''
   external_modules: false
-  platform: 'none'
-  modules: 'none'
-  path_to_build: jedi_bundle/build
-
+  modules: intel
+  path_to_build: jedi_bundle/build-intel-release
+  platform: nccs_discover_sles15
 make_options:
   cores_to_use_for_make: 6
 ```
@@ -34,10 +38,12 @@ make_options:
 #### Clone options
 | YAML Key                | Description |
 | ------------------------| ----------- |
+|`bundles`                | List of specific bundles that are to be built. Each bundle must have a corresponding YAML configuration file located in the `src/config/bundles` directory. |
+|`crtm_tag_or_branch`     | A GEOS specific tag for default CRTM version. Certain CRTM static files are downloaded preemptively to prevent the need for additional data downloads. Users typically do not need to change this setting unless developing for an upcoming DAS version. |
+|`extra_repos`            | Additional repos that can be built without dependencies. They should have corresponding repo URL and tag information in `build-order.yaml`. |
+|`github_orgs`            | List of GitHub organizations to use and the order in which to search through them for matching branches. |
 |`path_to_source`         | Path where the source code will be cloned. It defaults to the same location as where the build directory will be located. |
 |`user_branch`            | Custom branch to use for cloned repos. For example if picking `feature/work` the code will search all repos in all organizations for a branch called `feature/work`. It will choose the first location it finds the branch. If the branch is not found it will fall back to the default branch and use the first location the default branch is found. If nothing is provided no search will be performed. |
-|`github_orgs`            | List of GitHub organizations to use and the order in which to search through them for matching branches. |
-|`bundles`                | List of specific bundles that are to be built. Each bundle must have a corresponding YAML configuration file located in the `src/config/bundles` directory. |
 
 #### Configure options
 

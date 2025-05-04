@@ -5,10 +5,11 @@ clone_options:
     - JCSDA-internal
     - JCSDA
     - GEOS-ESM
+    - NOAA-EMC
   bundles:
     - oops
   extra_repos: [gsibec]
-  crtm_tag_or_branch: v2.4.1-jedi.1
+  crtm_tag_or_branch: v2.4.1-jedi.2
 
 configure_options:
   platform: 'none'

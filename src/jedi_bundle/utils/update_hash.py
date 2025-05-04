@@ -22,7 +22,8 @@ def update_hash(logger: Logger, date: dt) -> None:
     auth_header = {'Authorization': f'token {token}'}
     urls = [f'https://api.github.com/repos/jcsda-internal/',
             f'https://api.github.com/repos/geos-esm/',
-            f'https://api.github.com/repos/jcsda/']
+            f'https://api.github.com/repos/jcsda/',
+            f'https://api.github.com/repos/noaa-emc/']
 
     # Update each repo commit hash if applicable
     for i in range(len(pinned_versions)):
@@ -69,7 +70,8 @@ def update_hash(logger: Logger, date: dt) -> None:
                 updated_commit = data[0]['sha']
                 pinned_versions[i][repo_name]['branch'] = updated_commit
                 curr_date = data[0]['commit']['author']['date']
-                logger.info(f'{name}/{default_branch}, date: {curr_date}, hash: {updated_commit}')
+                logger.info(f'{name}/{default_branch}, date: {curr_date}, '
+                            f'hash: {updated_commit}, from: {url}')
 
     # Update pinned_versions.yaml
     with open(path_to_pinned_versions, 'w') as out:
