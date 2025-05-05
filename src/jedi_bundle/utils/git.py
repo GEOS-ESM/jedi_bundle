@@ -22,12 +22,11 @@ from jedi_bundle.utils.file_system import devnull, subprocess_run
 
 
 def get_github_username_token(logger):
-
     # Extract github username from $HOME/.git-credentials
     home_dir = os.path.expanduser('~')
     if not home_dir:
-	logger.info('HOME environment variable is not set. Private repos won’t be found.')
-	return '', ''
+        logger.info('HOME environment variable is not set. Private repos won’t be found.')
+        return '', ''
     git_cred_path = os.path.join(home_dir, '.git-credentials')
     try:
         with open(git_cred_path) as f:
