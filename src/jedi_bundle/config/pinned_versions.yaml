@@ -1,21 +1,21 @@
-# Pinned versions for 2025-04-15
+# Pinned versions for 2025-05-22
 - jedicmake:
     branch: 40d521f9a2d796fcbc6234d77abceeffefb8eb7f
     commit: true
 - oops:
-    branch: 72bdde143191a93d2d339d012a21bcfa18533a23
+    branch: c5e6d732110ab3a9cb8b2b13d9ea059febbfb9d0
     commit: true
 - saber:
-    branch: fe3e304f663d2d93a0c9907e4debf3018d5e54fc
+    branch: 3d40cd513414f289decd195fa3b31c15c1c9ceaa
     commit: true
 - ioda:
-    branch: 9328bdf4fd5b8089cc288ad90fb861d8e5964216
+    branch: 6ed76e083c9c5e33daceec146d528b062631b0b1
     commit: true
 - ufo:
-    branch: 0c5b64e703896b63df54fb0e24e32a045555ae41
+    branch: 7ca1792e14942483669c39501477ed3a83a42ea4
     commit: true
 - vader:
-    branch: f4ae2d9a7d5362fc46a6b521afda662705d23d6d
+    branch: c1f90b143e6fb4dc114fb563e362f5752f002dae
     commit: true
 - fv3:
     branch: ab25dc09d955271f34ca6a3fa83af1093c85d9f7
@@ -27,26 +27,26 @@
     branch: 4f12677d345e683bf910b5f76f0df120ad27482d
     commit: true
 - fv3-jedi:
-    branch: 907397c30071a11923b9f98d078c4d291f308a8c
+    branch: 2eea747bdd877627c396d533b5ee176f0347efc0
     commit: true
 - ioda-data:
-    branch: ad9a013693df5bd9078cb74788a60bb289ca29c9
+    branch: ebcb457290e6c9cdca5cef040564e499c66f31a1
     commit: true
 - fv3-jedi-data:
-    branch: e1c444d7e47648dc00921cc322d2df77673ee9c7
+    branch: 290b7ebbe73205eaac2775b158ba839728e96601
     commit: true
 - soca:
-    branch: 5d7966f32e8386a9c6e041bd1ec1609aff113101
+    branch: b9a89f4a2a238ca85bdf59ca9a95673f5af5e791
     commit: true
 - iodaconv:
-    branch: 7f3202e70d3412d09228d2bf623926abd07f81b2
+    branch: 5a445d4988c14e81be8dfc465441dbabbfcf009d
     commit: true
 - gsw:
     branch: 697cbeb7605d70ed3857664c5f54a5c05346e31f
     commit: true
 - ufo-data:
-    branch: 40a73a96f990528967680d1da618866a4db4ecfa
+    branch: da0a3f9ec45e283f4155dd237763707a51d8b3c4
     commit: true
 - da-utils:
-    branch: b0e249c34b0a8ee4e9883744ff23ec13ee534c3b
+    branch: f0da3b714efa06bc723e5e1e75664ab94a29e163
     commit: true
