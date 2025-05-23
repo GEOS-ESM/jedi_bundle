@@ -73,8 +73,9 @@ def update_hash(logger: Logger, date: dt) -> None:
                 logger.info(f'{name}/{default_branch}, date: {curr_date}, '
                             f'hash: {updated_commit}, from: {url}')
 
-    # Update pinned_versions.yaml
+    # Update pinned_versions.yaml and add timestamp at the top of the file
     with open(path_to_pinned_versions, 'w') as out:
+        out.write(f'# Pinned versions for {date.strftime("%Y-%m-%d")}\n')
         yaml.dump(pinned_versions, out)
 
     logger.info(f'pinned_versions.yaml updated at {path_to_pinned_versions}')
