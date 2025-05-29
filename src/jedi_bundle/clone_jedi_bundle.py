@@ -183,7 +183,8 @@ def clone_jedi(logger, clone_config):
             found, url, branch, is_tag, is_commit = url_branch_cache[cache_key]
         else:
             found, url, branch, is_tag, is_commit = get_url_and_branch(
-                logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag_in, is_commit_in
+                logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag_in,
+                is_commit_in
             )
             # Save in cache
             url_branch_cache[cache_key] = (found, url, branch, is_tag, is_commit)
@@ -276,7 +277,8 @@ def clone_jedi(logger, clone_config):
     def clone_worker(repo, url, branch, is_tag, is_commit):
         try:
             logger.info(f'Cloning \'{repo}\'')
-            clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo), is_tag, is_commit)
+            clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo), is_tag,
+                           is_commit)
             return True, repo
         except Exception as e:
             return False, f"Error cloning {repo}: {str(e)}"
@@ -294,14 +296,14 @@ def clone_jedi(logger, clone_config):
     # Handle special cases
     if 'jedicmake' in repo_list:
         logger.info(f'Skipping explicit clone of \'jedicmake\' since it\'s usually a module. ' +
-                   f'If it\'s not a module it will be cloned at configure time.')
+                    f'If it\'s not a module it will be cloned at configure time.')
 
     # Clone fv3 if needed
     if fv3_info:
         logger.info('Cloning fv3')
         clone_git_repo(
             logger, fv3_info['url'], fv3_info['branch'],
-            os.path.join(path_to_source, 'fv3'), 
+            os.path.join(path_to_source, 'fv3'),
             fv3_info['is_tag'], fv3_info['is_commit']
         )
 
