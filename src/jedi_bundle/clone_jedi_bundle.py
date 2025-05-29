@@ -12,6 +12,7 @@
 import copy
 import os
 import re
+import concurrent.futures
 
 from jedi_bundle.config.config import return_config_path
 from jedi_bundle.utils.config import config_get
@@ -35,8 +36,14 @@ def clone_jedi(logger, clone_config):
     crtm_tag_or_branch = config_get(logger, clone_config, 'crtm_tag_or_branch', 'v2.4-jedi.2')
     if 'pinned_versions' in clone_config:
         pinned_versions = config_get(logger, clone_config, 'pinned_versions')
+        # Convert pinned_versions to a dictionary for O(1) lookups
+        pinned_versions_dict = {}
+        for d in pinned_versions:
+            for repo_name, repo_info in d.items():
+                pinned_versions_dict[repo_name] = repo_info
     else:
         pinned_versions = None
+        pinned_versions_dict = {}
 
     # Check for needed executables
     # ----------------------------
@@ -143,6 +150,10 @@ def clone_jedi(logger, clone_config):
 
     optional_repos_not_found = []
 
+    # Cache for URL and branch information
+    url_branch_cache = {}
+
+    logger.info(f'Gathering repository information...')
     for index, build_order_dict in enumerate(build_order_dicts):
 
         repo = list(build_order_dict.keys())[0]
@@ -156,24 +167,28 @@ def clone_jedi(logger, clone_config):
         is_tag_in = config_get(logger, repo_dict, 'tag', False)
         is_commit_in = config_get(logger, repo_dict, 'commit', False)
 
-        # Extract information from pinned_versions if applicable
-        if pinned_versions:
-            for d in pinned_versions:
-                if repo in d:
-                    if 'branch' in d[repo]:
-                        default_branch = d[repo]['branch']
-                    if 'tag' in d[repo]:
-                        is_tag_in = d[repo]['tag']
-                    if 'commit' in d[repo]:
-                        is_commit_in = d[repo]['commit']
-                    break
+        # Extract information from pinned_versions if applicable - use direct dictionary lookup
+        if pinned_versions_dict and repo in pinned_versions_dict:
+            repo_info = pinned_versions_dict[repo]
+            if 'branch' in repo_info:
+                default_branch = repo_info['branch']
+            if 'tag' in repo_info:
+                is_tag_in = repo_info['tag']
+            if 'commit' in repo_info:
+                is_commit_in = repo_info['commit']
 
-        found, url, branch, \
-            is_tag, is_commit = get_url_and_branch(logger, github_orgs, repo_url_name,
-                                                   default_branch, user_branch,
-                                                   is_tag_in, is_commit_in)
+        # Check cache first
+        cache_key = f"{repo_url_name}:{default_branch}:{user_branch}:{is_tag_in}:{is_commit_in}"
+        if cache_key in url_branch_cache:
+            found, url, branch, is_tag, is_commit = url_branch_cache[cache_key]
+        else:
+            found, url, branch, is_tag, is_commit = get_url_and_branch(
+                logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag_in, is_commit_in
+            )
+            # Save in cache
+            url_branch_cache[cache_key] = (found, url, branch, is_tag, is_commit)
+
         if found:
-
             # List for writing CMakeLists.txt
             repo_list.append(repo)
             url_list.append(url)
@@ -182,9 +197,7 @@ def clone_jedi(logger, clone_config):
             recursive_list.append(recursive)
             is_tag_list.append(is_tag)
             is_commit_list.append(is_commit)
-
         else:
-
             if repo in req_repos_all:
                 logger.abort(f'No matching branch for repo \'{repo}\' was found in any ' +
                              f'organisations.')
@@ -217,28 +230,80 @@ def clone_jedi(logger, clone_config):
             logger.info(f' {optional_repo_not_found}')
     logger.info(f'-------------------------')
 
-    # Do the cloning
-    # --------------
-    for repo, url, branch, is_tag, is_commit in zip(repo_list, url_list, branch_list,
-                                                    is_tag_list, is_commit_list):
-
-        # Special treatment for jedicmake since it is typically part of spack.
-        if repo == 'jedicmake':
-            logger.info(f'Skipping explicit clone of \'{repo}\' since it\'s usually a module. ' +
-                        f'If it\'s not a module it will be cloned at configure time.')
-        elif repo == 'fv3':
-            logger.info('Cloning fv3-interface.cmake from the jedi-bundle repo for fv3')
-            found, url_tmp, branch_tmp, \
-                _, _ = get_url_and_branch(logger, github_orgs, 'jedi-bundle',
-                                          'develop', user_branch, False, False)
+    # Special case for fv3 - needs to be handled before parallel cloning
+    fv3_info = None
+    if 'fv3' in repo_list:
+        logger.info('Preparing fv3-interface.cmake from the jedi-bundle repo')
+        found, url_tmp, branch_tmp, _, _ = get_url_and_branch(
+            logger, github_orgs, 'jedi-bundle', 'develop', user_branch, False, False
+        )
+        if found:
             clone_git_file(logger, url_tmp, ['fv3-interface.cmake'], path_to_source, depth=1)
-            logger.info('Cloning fv3.')
-            clone_git_repo(logger, url, branch,
-                           os.path.join(path_to_source, repo), is_tag, is_commit)
-        else:
-            logger.info(f'Cloning \'{repo}\'.')
-            clone_git_repo(logger, url, branch,
-                           os.path.join(path_to_source, repo), is_tag, is_commit)
+        fv3_index = repo_list.index('fv3')
+        fv3_info = {
+            'url': url_list[fv3_index],
+            'branch': branch_list[fv3_index],
+            'is_tag': is_tag_list[fv3_index],
+            'is_commit': is_commit_list[fv3_index],
+        }
+        # Remove fv3 from lists as it will be handled separately
+        repo_list.pop(fv3_index)
+        url_list.pop(fv3_index)
+        branch_list.pop(fv3_index)
+        is_tag_list.pop(fv3_index)
+        is_commit_list.pop(fv3_index)
+
+    # Do the cloning in parallel
+    # --------------------------
+    logger.info(f'Starting parallel cloning of {len(repo_list)} repositories')
+
+    # Filter out jedicmake as it's handled specially
+    clone_repos = []
+    clone_urls = []
+    clone_branches = []
+    clone_is_tags = []
+    clone_is_commits = []
+
+    for i, repo in enumerate(repo_list):
+        if repo != 'jedicmake':
+            clone_repos.append(repo)
+            clone_urls.append(url_list[i])
+            clone_branches.append(branch_list[i])
+            clone_is_tags.append(is_tag_list[i])
+            clone_is_commits.append(is_commit_list[i])
+
+    # Define a worker function for clone operations
+    def clone_worker(repo, url, branch, is_tag, is_commit):
+        try:
+            logger.info(f'Cloning \'{repo}\'')
+            clone_git_repo(logger, url, branch, os.path.join(path_to_source, repo), is_tag, is_commit)
+            return True, repo
+        except Exception as e:
+            return False, f"Error cloning {repo}: {str(e)}"
+
+    # Use ThreadPoolExecutor for parallel cloning
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+        # Submit tasks
+        future_to_repo = {
+            executor.submit(clone_worker, repo, url, branch, is_tag, is_commit): repo
+            for repo, url, branch, is_tag, is_commit in zip(
+                clone_repos, clone_urls, clone_branches, clone_is_tags, clone_is_commits
+            )
+        }
+
+    # Handle special cases
+    if 'jedicmake' in repo_list:
+        logger.info(f'Skipping explicit clone of \'jedicmake\' since it\'s usually a module. ' +
+                   f'If it\'s not a module it will be cloned at configure time.')
+
+    # Clone fv3 if needed
+    if fv3_info:
+        logger.info('Cloning fv3')
+        clone_git_repo(
+            logger, fv3_info['url'], fv3_info['branch'],
+            os.path.join(path_to_source, 'fv3'), 
+            fv3_info['is_tag'], fv3_info['is_commit']
+        )
 
     # Create CMakeLists.txt file
     # --------------------------
