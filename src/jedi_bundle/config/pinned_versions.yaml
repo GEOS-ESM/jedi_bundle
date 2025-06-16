@@ -1,4 +1,4 @@
-# Pinned versions for 2025-05-28
+# Pinned versions for 2025-05-29
 - jedicmake:
     branch: 40d521f9a2d796fcbc6234d77abceeffefb8eb7f
     commit: true
@@ -9,7 +9,7 @@
     branch: 67b1ceeceed2c7b25e686e904b3c5eb43d1b31c0
     commit: true
 - ioda:
-    branch: afbdf71388b0266a0a87c0a8a3482a0f2349749e
+    branch: ed19f125a04c091390e3a77472f11aea0f5abf11
     commit: true
 - ufo:
     branch: 279683bc5fdfa99874ac463a214ee2b149313610
