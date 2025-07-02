@@ -55,9 +55,6 @@
     default_branch: develop
 
 # Fv3-jedi
-- fv3:
-    repo_url_name: GFDL_atmos_cubed_sphere
-    default_branch: release-stable
 - fv3-jedi-lm:
     repo_url_name: fv3-jedi-linearmodel
     default_branch: develop
