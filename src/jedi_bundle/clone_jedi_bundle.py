@@ -226,15 +226,6 @@ def clone_jedi(logger, clone_config):
         if repo == 'jedicmake':
             logger.info(f'Skipping explicit clone of \'{repo}\' since it\'s usually a module. ' +
                         f'If it\'s not a module it will be cloned at configure time.')
-        elif repo == 'fv3':
-            logger.info('Cloning fv3-interface.cmake from the jedi-bundle repo for fv3')
-            found, url_tmp, branch_tmp, \
-                _, _ = get_url_and_branch(logger, github_orgs, 'jedi-bundle',
-                                          'develop', user_branch, False, False)
-            clone_git_file(logger, url_tmp, ['fv3-interface.cmake'], path_to_source, depth=1)
-            logger.info('Cloning fv3.')
-            clone_git_repo(logger, url, branch,
-                           os.path.join(path_to_source, repo), is_tag, is_commit)
         else:
             logger.info(f'Cloning \'{repo}\'.')
             clone_git_repo(logger, url, branch,
@@ -304,12 +295,6 @@ def clone_jedi(logger, clone_config):
                     output_file_open.write(jedi_cmake_line + '\n')
 
             else:
-                # Add include(fv3-interface.cmake) line if repo is fv3
-                if repo == 'fv3':
-                    output_file_open.write(' include(fv3-interface.cmake )\n')
-                    output_file_open.write(f' list( APPEND CMAKE_INSTALL_RPATH '
-                                           '${CMAKE_CURRENT_BINARY_DIR}/fv3 )\n')
-
                 output_file_open.write(package_line + '\n')
                 if cmake != '':
                     output_file_open.write(cmake + '\n')
