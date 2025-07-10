@@ -17,6 +17,7 @@ from jedi_bundle.utils.file_system import check_for_executable
 from jedi_bundle.utils.git import get_url_and_branch, clone_git_repo
 from jedi_bundle.utils.yaml import load_yaml
 
+
 def clone_jedi(logger, clone_config):
     """Clone JEDI repositories and generate CMakeLists.txt file.
 
@@ -306,7 +307,7 @@ def clone_jedi(logger, clone_config):
                 f'{urlq.ljust(url_len)} {branch_or_tag.ljust(6)} '
                 f'{branch.ljust(branch_len)} {update.ljust(6)} '
                 f'{recursive_clone.ljust(9)})'
-            )
+                )
 
             # Special case for jedicmake
             if repo == 'jedicmake':
