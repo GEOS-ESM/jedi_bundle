@@ -330,3 +330,5 @@ def clone_jedi(logger, clone_config):
         # Write footer
         for line in cmake_footer_lines:
             output_file_open.write(f"{line}\n")
+
+# --------------------------------------------------------------------------------------------------
