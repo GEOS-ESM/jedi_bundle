@@ -5,7 +5,6 @@ clone_options:
     - JCSDA-internal
     - JCSDA
     - GEOS-ESM
-    - NOAA-EMC
   bundles:
     - oops
   extra_repos: [gsibec]
