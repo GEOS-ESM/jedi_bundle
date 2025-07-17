@@ -6,25 +6,25 @@
 # This software is licensed under the terms of the Apache Licence Version 2.0
 # which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 
-# --------------------------------------------------------------------------------------------------
-
-
 import copy
 import os
 import re
+import concurrent.futures
 
 from jedi_bundle.config.config import return_config_path
 from jedi_bundle.utils.config import config_get
 from jedi_bundle.utils.file_system import check_for_executable
-from jedi_bundle.utils.git import get_url_and_branch, clone_git_repo, clone_git_file
+from jedi_bundle.utils.git import get_url_and_branch, clone_git_repo
 from jedi_bundle.utils.yaml import load_yaml
 
 
-# --------------------------------------------------------------------------------------------------
-
-
 def clone_jedi(logger, clone_config):
+    """Clone JEDI repositories and generate CMakeLists.txt file.
 
+    Args:
+        logger: Logger object for output
+        clone_config: Configuration dictionary
+    """
     # Parse config
     # ------------
     user_branch = config_get(logger, clone_config, 'user_branch', '')
@@ -33,10 +33,13 @@ def clone_jedi(logger, clone_config):
     path_to_source = config_get(logger, clone_config, 'path_to_source')
     extra_repos = config_get(logger, clone_config, 'extra_repos')
     crtm_tag_or_branch = config_get(logger, clone_config, 'crtm_tag_or_branch', 'v2.4-jedi.2')
+
+    # Convert pinned_versions to a dictionary for efficient lookups
+    pinned_versions_dict = {}
     if 'pinned_versions' in clone_config:
-        pinned_versions = config_get(logger, clone_config, 'pinned_versions')
-    else:
-        pinned_versions = None
+        for item in config_get(logger, clone_config, 'pinned_versions', []):
+            for repo_name, repo_info in item.items():
+                pinned_versions_dict[repo_name] = repo_info
 
     # Check for needed executables
     # ----------------------------
@@ -48,188 +51,219 @@ def clone_jedi(logger, clone_config):
     req_repos_all = []
     opt_repos_all = []
     for bundle in bundles:
-
-        # Get dictionary for the bundle
         bundle_pathfile = os.path.join(return_config_path(), 'bundles', bundle + '.yaml')
         bundle_dict = load_yaml(logger, bundle_pathfile)
 
-        # Repos that need to (can be) be built for this repo
+        # Get required and optional repos for this bundle
         req_repos_bun = config_get(logger, bundle_dict, 'required_repos')
         opt_repos_bun = config_get(logger, bundle_dict, 'optional_repos', [])
 
-        # Append complete list removing duplicates
+        # Add to master lists, removing duplicates
         req_repos_all = list(set(req_repos_bun + req_repos_all))
         opt_repos_all = list(set(opt_repos_bun + opt_repos_all))
 
-    # Load build order list of dictionaries
-    # -------------------------------------
+    # Load build order
+    # ---------------
     build_order_pathfile = os.path.join(return_config_path(), 'bundles', 'build-order.yaml')
     build_order_dicts = load_yaml(logger, build_order_pathfile)
 
     # Adjust CRTM version if necessary
     # --------------------------------
-    crtm_index = None
     for index, build_order_dict in enumerate(build_order_dicts):
         if list(build_order_dict.keys())[0] == 'crtm':
-            crtm_dict = copy.copy(build_order_dicts[index])
+            crtm_dict = copy.copy(build_order_dict)
+            crtm_dict['crtm']['default_branch'] = crtm_tag_or_branch
+
+            # Handle CRTM versioning
+            if 'feature' in crtm_tag_or_branch or 'develop' in crtm_tag_or_branch:
+                crtm_dict['crtm']['tag'] = False
+                crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
+            else:
+                crtm_dict['crtm']['tag'] = True
+                crtm_tag_major = re.sub(r'[^0-9]', '', crtm_tag_or_branch)[0]
+                if int(crtm_tag_major) >= 3:
+                    crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
+
+            build_order_dicts[index] = crtm_dict
             break
-
-    # Set the crtm tag/branch
-    crtm_dict['crtm']['default_branch'] = crtm_tag_or_branch
-
-    # Strip any numbers from crtm version and convert to integer
-    if 'feature' in crtm_tag_or_branch or 'develop' in crtm_tag_or_branch:
-
-        # Not a tag
-        crtm_dict['crtm']['tag'] = False
-
-        # If user wants a branch assume crtm V3
-        crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
-
-    else:
-
-        # Is a tag
-        crtm_dict['crtm']['tag'] = True
-
-        # Determine major version
-        crtm_tag_major = re.sub(r'[^0-9]', '', crtm_tag_or_branch)[0]
-
-        # Switch to V3 repo if major version is 3 or greater
-        if int(crtm_tag_major) >= 3:
-            crtm_dict['crtm']['repo_url_name'] = 'CRTMv3'
-
-    # Pass dictionary back
-    build_order_dicts[index] = crtm_dict
 
     # Get list of repos in the build order
     # ------------------------------------
-    build_order_repos = []
-    for build_order_dict in build_order_dicts:
-        build_order_repos.append(list(build_order_dict.keys())[0])
+    build_order_repos = [list(d.keys())[0] for d in build_order_dicts]
 
-    # Add extra repos
-    # ---------------
-    req_repos_all = req_repos_all + extra_repos
+    # Add extra repos to required list
+    # --------------------------------
+    req_repos_all.extend(extra_repos)
 
-    # Check that all required, optional and extra repos appear in the build order dictionaries
-    # ----------------------------------------------------------------------------------------
-    repos_all = req_repos_all + opt_repos_all
-    for repo in repos_all:
+    # Validate all required/optional repos are in build order
+    # ------------------------------------------------------
+    all_repos = req_repos_all + opt_repos_all
+    for repo in all_repos:
         if repo not in build_order_repos:
-            logger.abort(f'Repository \'{repo}\' not found anywhere in the build order. Make ' +
-                         f'sure to add to the build-order.yaml in jedi_bundle.')
+            logger.abort(f"Repository '{repo}' not found in build order. "
+                         f"Add it to build-order.yaml in jedi_bundle.")
 
-    # Remove repos from build order if not needed
-    # -------------------------------------------
-    indices_to_remove = []
-    for index, build_order_dict in enumerate(build_order_dicts):
-        repo = list(build_order_dict.keys())[0]
-        if repo not in req_repos_all and repo not in opt_repos_all:
-            indices_to_remove.append(index)
+    # Filter build order to only include needed repos
+    # ----------------------------------------------
+    filtered_build_order = [
+        d for d in build_order_dicts
+        if list(d.keys())[0] in req_repos_all or list(d.keys())[0] in opt_repos_all
+    ]
 
-    indices_to_remove.reverse()
-    for index_to_remove in indices_to_remove:
-        del build_order_dicts[index_to_remove]
-
-    # Loop through build order and clone repo
-    # ---------------------------------------
-    repo_list = []
-    url_list = []
-    branch_list = []
-    cmakelists_list = []
-    recursive_list = []
-    is_tag_list = []
-    is_commit_list = []
-
+    # Process repositories to get clone information
+    # --------------------------------------------
+    repositories = []
     optional_repos_not_found = []
+    url_branch_cache = {}  # Cache for URL and branch information
 
-    for index, build_order_dict in enumerate(build_order_dicts):
-
+    logger.info('Gathering repository information...')
+    for build_order_dict in filtered_build_order:
         repo = list(build_order_dict.keys())[0]
+        repo_dict = build_order_dict[repo]
 
         # Extract repo information
-        repo_dict = build_order_dict[repo]
         repo_url_name = config_get(logger, repo_dict, 'repo_url_name', repo)
         cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
         recursive = config_get(logger, repo_dict, 'recursive', False)
         default_branch = config_get(logger, repo_dict, 'default_branch')
-        is_tag_in = config_get(logger, repo_dict, 'tag', False)
-        is_commit_in = config_get(logger, repo_dict, 'commit', False)
+        is_tag = config_get(logger, repo_dict, 'tag', False)
+        is_commit = config_get(logger, repo_dict, 'commit', False)
 
-        # Extract information from pinned_versions if applicable
-        if pinned_versions:
-            for d in pinned_versions:
-                if repo in d:
-                    if 'branch' in d[repo]:
-                        default_branch = d[repo]['branch']
-                    if 'tag' in d[repo]:
-                        is_tag_in = d[repo]['tag']
-                    if 'commit' in d[repo]:
-                        is_commit_in = d[repo]['commit']
-                    break
+        # Apply pinned version overrides if available
+        if repo in pinned_versions_dict:
+            repo_info = pinned_versions_dict[repo]
+            if 'branch' in repo_info:
+                default_branch = repo_info['branch']
+            if 'tag' in repo_info:
+                is_tag = repo_info['tag']
+            if 'commit' in repo_info:
+                is_commit = repo_info['commit']
+                if isinstance(is_commit, str):
+                    default_branch = is_commit
 
-        found, url, branch, \
-            is_tag, is_commit = get_url_and_branch(logger, github_orgs, repo_url_name,
-                                                   default_branch, user_branch,
-                                                   is_tag_in, is_commit_in)
-        if found:
+        # Determine commit parameter for get_url_and_branch
+        commit_param = False
+        if isinstance(is_commit, str):
+            commit_param = is_commit
+        elif is_commit:
+            commit_param = default_branch
 
-            # List for writing CMakeLists.txt
-            repo_list.append(repo)
-            url_list.append(url)
-            branch_list.append(branch)
-            cmakelists_list.append(cmakelists)
-            recursive_list.append(recursive)
-            is_tag_list.append(is_tag)
-            is_commit_list.append(is_commit)
-
+        # Check cache first
+        cache_key = f"{repo_url_name}:{default_branch}:{user_branch}:{is_tag}:{is_commit}"
+        if cache_key in url_branch_cache:
+            found, url, branch, final_is_tag, final_is_commit = url_branch_cache[cache_key]
         else:
+            found, url, branch, final_is_tag, final_is_commit = get_url_and_branch(
+                logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag,
+                commit_param
+            )
 
+            # Ensure branch displays commit hash for string commits
+            if final_is_commit and isinstance(is_commit, str) and not branch:
+                branch = is_commit
+
+            # Ensure url and branch are strings
+            url = url or ''
+            branch = branch or ''
+
+            # Save in cache
+            url_branch_cache[cache_key] = (found, url, branch, final_is_tag, final_is_commit)
+
+        if found:
+            repositories.append({
+                'name': repo,
+                'url': url,
+                'branch': branch,
+                'cmake': cmakelists,
+                'recursive': recursive,
+                'is_tag': final_is_tag,
+                'is_commit': final_is_commit
+            })
+        else:
             if repo in req_repos_all:
-                logger.abort(f'No matching branch for repo \'{repo}\' was found in any ' +
-                             f'organisations.')
+                logger.abort(f"No matching branch for '{repo}' was found in any organizations.")
             else:
                 optional_repos_not_found.append(repo)
 
-    # Write out information about clone
-    # ---------------------------------
-    repo_len = len(max(repo_list, key=len))
-    url_len = len(max(url_list, key=len))
-    branch_len = len(max(branch_list, key=len))
+    # Print clone summary
+    # ------------------
+    if repositories:
+        name_len = max(len(r['name']) for r in repositories)
+        url_len = max(len(r['url']) for r in repositories)
+        branch_len = max(len(r['branch']) for r in repositories)
 
-    logger.info(f'Repository clone summary:')
-    logger.info(f'-------------------------')
+        logger.info('Repository clone summary:')
+        logger.info('-------------------------')
 
-    for repo, url, branch, is_tag, is_commit in zip(repo_list, url_list, branch_list,
-                                                    is_tag_list, is_commit_list):
-        branch_or_tag = 'Branch'
-        if is_tag:
-            branch_or_tag = 'Tag'
-        if is_commit:
-            branch_or_tag = 'Commit'
-        logger.info(f'{branch_or_tag.ljust(6)} {branch.ljust(branch_len)} of ' +
-                    f'{repo.ljust(repo_len)} will be cloned from {url.ljust(url_len)}')
+        for repo_info in repositories:
+            branch_type = (
+                'Tag' if repo_info['is_tag']
+                else 'Commit' if repo_info['is_commit']
+                else 'Branch'
+            )
+            logger.info(f"{branch_type.ljust(6)} {repo_info['branch'].ljust(branch_len)} of "
+                        f"{repo_info['name'].ljust(name_len)} will be cloned from "
+                        f"{repo_info['url'].ljust(url_len)}")
 
-    if optional_repos_not_found:
-        logger.info(f' ')
-        logger.info(f'The following optional repos are not being built:')
-        for optional_repo_not_found in optional_repos_not_found:
-            logger.info(f' {optional_repo_not_found}')
-    logger.info(f'-------------------------')
+        if optional_repos_not_found:
+            logger.info('')
+            logger.info('The following optional repos are not being built:')
+            for repo in optional_repos_not_found:
+                logger.info(f' {repo}')
+        logger.info('-------------------------')
 
-    # Do the cloning
-    # --------------
-    for repo, url, branch, is_tag, is_commit in zip(repo_list, url_list, branch_list,
-                                                    is_tag_list, is_commit_list):
+    # Clone repositories in parallel
+    # -----------------------------
+    if repositories:
+        logger.info(f"Starting parallel cloning of {len(repositories)} repositories")
 
-        # Special treatment for jedicmake since it is typically part of spack.
-        if repo == 'jedicmake':
-            logger.info(f'Skipping explicit clone of \'{repo}\' since it\'s usually a module. ' +
-                        f'If it\'s not a module it will be cloned at configure time.')
-        else:
-            logger.info(f'Cloning \'{repo}\'.')
-            clone_git_repo(logger, url, branch,
-                           os.path.join(path_to_source, repo), is_tag, is_commit)
+        # Filter out jedicmake as it's handled specially
+        clone_repos = [r for r in repositories if r['name'] != 'jedicmake']
+
+        # Define worker function for clone operations
+        def clone_worker(repo_info):
+            try:
+                repo_name = repo_info['name']
+                url = repo_info['url']
+                branch = repo_info['branch']
+                is_tag = repo_info['is_tag']
+                is_commit = repo_info['is_commit']
+
+                logger.info(f"Cloning '{repo_name}'")
+                if url:
+                    clone_git_repo(
+                        logger, url, branch,
+                        os.path.join(path_to_source, repo_name),
+                        is_tag, is_commit
+                    )
+                else:
+                    logger.info(f"Skipping clone for {repo_name} because URL is empty")
+                return True, repo_name
+            except Exception as e:
+                return False, f"Error cloning {repo_name}: {str(e)}"
+
+        # Use ThreadPoolExecutor for parallel cloning
+        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+            # Submit tasks
+            future_to_repo = {
+                executor.submit(clone_worker, repo_info): repo_info['name']
+                for repo_info in clone_repos
+            }
+
+            # Process results as they complete
+            for future in concurrent.futures.as_completed(future_to_repo):
+                repo_name = future_to_repo[future]
+                try:
+                    success, result = future.result()
+                    if not success:
+                        logger.error(result)
+                except Exception as e:
+                    logger.error(f"Exception occurred while cloning {repo_name}: {str(e)}")
+
+    # Log special case info
+    if any(r['name'] == 'jedicmake' for r in repositories):
+        logger.info("Skipping explicit clone of 'jedicmake' since it's usually a module. "
+                    "If it's not a module it will be cloned at configure time.")
 
     # Create CMakeLists.txt file
     # --------------------------
@@ -241,66 +275,61 @@ def clone_jedi(logger, clone_config):
 
     output_file = os.path.join(path_to_source, 'CMakeLists.txt')
 
-    # Max length of lists
-    repo_len = len(max(repo_list, key=len))
-    url_len = len(max(url_list, key=len))+2  # Plus 2 because of the quotes
-    branch_len = len(max(branch_list, key=len))
+    # Calculate max lengths for formatting
+    name_len = max(len(r['name']) for r in repositories) if repositories else 10
+    url_len = max(len(r['url']) for r in repositories) if repositories else 0
+    url_len += 2  # Add quotes
+    branch_len = max(len(r['branch']) for r in repositories) if repositories else 0
 
     with open(output_file, 'w') as output_file_open:
-        for cmake_header_line in cmake_header_lines:
-            output_file_open.write(cmake_header_line + '\n')
+        # Write header
+        for line in cmake_header_lines:
+            output_file_open.write(f"{line}\n")
 
-        for repo, url, branch, cmake, recursive, \
-            is_tag, is_commit in zip(repo_list, url_list, branch_list, cmakelists_list,
-                                     recursive_list, is_tag_list, is_commit_list):
-            urlq = f'\"{url}\"'
+        # Write packages in order from build-order.yaml
+        for repo_info in repositories:
+            repo = repo_info['name']
+            url = repo_info['url']
+            branch = repo_info['branch']
+            cmake = repo_info['cmake']
+            recursive = repo_info['recursive']
+            is_tag = repo_info['is_tag']
+            is_commit = repo_info['is_commit']
 
-            # Default cloning options
-            branch_or_tag = 'BRANCH'
-            update = 'UPDATE'
-            recursive_clone = ''
+            # Format repository entry
+            urlq = f'"{url}"'
+            branch_or_tag = 'TAG' if is_tag else 'BRANCH'
+            update = '' if (is_tag or is_commit) else 'UPDATE'
+            recursive_clone = 'RECURSIVE' if recursive else ''
 
-            # If cloning a tag then turn off update and specify tag
-            if is_tag:
-                branch_or_tag = 'TAG'
-                update = ''
+            package_line = (
+                f'ecbuild_bundle( PROJECT {repo.ljust(name_len)} GIT '
+                f'{urlq.ljust(url_len)} {branch_or_tag.ljust(6)} '
+                f'{branch.ljust(branch_len)} {update.ljust(6)} '
+                f'{recursive_clone.ljust(9)})'
+                )
 
-            # if commit, proceed as you would with branch but turn off update
-            if is_commit:
-                branch_or_tag = 'BRANCH'
-                update = ''
-
-            # Add recursive if needed
-            if recursive:
-                recursive_clone = 'RECURSIVE'
-
-            package_line = f'ecbuild_bundle( PROJECT {repo.ljust(repo_len)} GIT ' + \
-                           f'{urlq.ljust(url_len)} {branch_or_tag.ljust(6)} ' + \
-                           f'{branch.ljust(branch_len)} {update.ljust(6)} ' + \
-                           f'{recursive_clone.ljust(9)})'
-
+            # Special case for jedicmake
             if repo == 'jedicmake':
-                # Special case for jedicmake'
                 jedi_cmake_lines = [
-                  'if(DEFINED ENV{jedi_cmake_ROOT})',
-                  '  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/Functions/' +
-                  'git_functions.cmake )',
-                  'else()',
-                  '  ' + package_line,
-                  '  include( jedicmake/cmake/Functions/git_functions.cmake )',
-                  'endif()',
-                  ''
+                    'if(DEFINED ENV{jedi_cmake_ROOT})',
+                    '  include( $ENV{jedi_cmake_ROOT}/share/jedicmake/'
+                    'Functions/git_functions.cmake )',
+                    'else()',
+                    f'  {package_line}',
+                    '  include( jedicmake/cmake/Functions/git_functions.cmake )',
+                    'endif()',
+                    ''
                 ]
-                for jedi_cmake_line in jedi_cmake_lines:
-                    output_file_open.write(jedi_cmake_line + '\n')
-
+                for line in jedi_cmake_lines:
+                    output_file_open.write(f"{line}\n")
             else:
-                output_file_open.write(package_line + '\n')
-                if cmake != '':
-                    output_file_open.write(cmake + '\n')
+                output_file_open.write(f"{package_line}\n")
+                if cmake:
+                    output_file_open.write(f"{cmake}\n")
 
-        for cmake_footer_line in cmake_footer_lines:
-            output_file_open.write(cmake_footer_line + '\n')
-
+        # Write footer
+        for line in cmake_footer_lines:
+            output_file_open.write(f"{line}\n")
 
 # --------------------------------------------------------------------------------------------------
