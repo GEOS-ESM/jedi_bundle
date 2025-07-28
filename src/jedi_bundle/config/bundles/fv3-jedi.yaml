@@ -12,7 +12,6 @@ required_repos:
   - ufo
   - vader
   - fv3-jedi-lm
-  - femps
   - fv3-jedi
   - ioda-data
   - fv3-jedi-data

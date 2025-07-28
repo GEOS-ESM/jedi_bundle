@@ -20,9 +20,6 @@
 - fv3-jedi-lm:
     branch: 5994c385a01236bb9def57dd37b73bec8b5df487
     commit: true
-- femps:
-    branch: 4f12677d345e683bf910b5f76f0df120ad27482d
-    commit: true
 - fv3-jedi:
     branch: 9f0277034a50438574aaf9a123c9a8cb6cc9a9e8
     commit: true
