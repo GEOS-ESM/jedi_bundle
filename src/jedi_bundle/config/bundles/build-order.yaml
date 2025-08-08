@@ -62,4 +62,8 @@
 - fv3-jedi:
     default_branch: develop
 
+# jedi-model-data
+- jedi-model-data:
+    default_branch: develop
+
 # Other external packages
