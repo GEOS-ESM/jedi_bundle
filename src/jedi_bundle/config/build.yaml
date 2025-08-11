@@ -9,6 +9,7 @@ clone_options:
     - oops
   extra_repos: [gsibec]
   crtm_tag_or_branch: v2.4.1-jedi.2
+  download_lfs_data: true
 
 configure_options:
   platform: 'none'

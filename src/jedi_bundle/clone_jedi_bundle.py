@@ -33,6 +33,7 @@ def clone_jedi(logger, clone_config):
     path_to_source = config_get(logger, clone_config, 'path_to_source')
     extra_repos = config_get(logger, clone_config, 'extra_repos')
     crtm_tag_or_branch = config_get(logger, clone_config, 'crtm_tag_or_branch', 'v2.4-jedi.2')
+    download_lfs_data = config_get(logger, clone_config, 'download_lfs_data', True)
 
     # Convert pinned_versions to a dictionary for efficient lookups
     pinned_versions_dict = {}
@@ -228,6 +229,12 @@ def clone_jedi(logger, clone_config):
                 branch = repo_info['branch']
                 is_tag = repo_info['is_tag']
                 is_commit = repo_info['is_commit']
+
+                # Don't download certain repositories requiring git-lfs if specified
+                if not download_lfs_data and repo_name in ['jedi-model-data']:
+                    logger.info((f"Skipping clone of '{repo_name}' since 'download_lfs_data' is "
+                                 f"set as 'false'."))
+                    return True, repo_name
 
                 logger.info(f"Cloning '{repo_name}'")
                 if url:
