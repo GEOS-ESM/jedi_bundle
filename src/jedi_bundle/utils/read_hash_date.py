@@ -13,6 +13,7 @@ import os
 
 # --------------------------------------------------------------------------------------------------
 
+
 def read_hash_date(pinned_config_file: str):
     # Try to read the comment in pinned_versions.yaml specifying the date
     date = 'NA'
