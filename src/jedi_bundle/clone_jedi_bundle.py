@@ -330,7 +330,7 @@ def clone_jedi(logger, clone_config):
                 line = package_line.rstrip(')') + 'RECURSIVE )'
                 output_file_open.write(f"# {line}\n")
             elif repo in ('geos-aero', 'crtm'):
-                output_file_open.write(f"# {line}\n")
+                output_file_open.write(f"# {package_line}\n")
             else:
                 output_file_open.write(f"{package_line}\n")
                 if cmake:
