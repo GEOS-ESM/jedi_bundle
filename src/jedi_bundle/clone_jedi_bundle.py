@@ -327,7 +327,7 @@ def clone_jedi(logger, clone_config):
                 line = 'ecbuild_bundle( PROJECT gsibec   GIT "https://github.com/metdyn/GSIbec.git"   BRANCH  feature/ygyu/mac_30June2025 UPDATE)'
                 output_file_open.write(f"{line}\n")
             elif repo == 'soca':
-                line = f'{package_line} RECURSIVE'
+                line = package_line.rstrip(')') + 'RECURSIVE )'
                 output_file_open.write(f"{line}\n")
             else:
                 output_file_open.write(f"{package_line}\n")
