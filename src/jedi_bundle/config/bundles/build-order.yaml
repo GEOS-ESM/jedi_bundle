@@ -52,6 +52,7 @@
 # Soca
 - soca:
     default_branch: develop
+    recursive: true
 
 # Fv3-jedi
 - fv3-jedi-lm:
