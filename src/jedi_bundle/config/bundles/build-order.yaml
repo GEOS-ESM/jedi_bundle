@@ -52,12 +52,11 @@
 # Soca
 - soca:
     default_branch: develop
+    recursive: true
 
 # Fv3-jedi
 - fv3-jedi-lm:
     repo_url_name: fv3-jedi-linearmodel
-    default_branch: develop
-- femps:
     default_branch: develop
 - fv3-jedi-data:
     default_branch: develop
@@ -65,3 +64,7 @@
     default_branch: develop
 
 # Other external packages
+- da-utils:
+    repo_url_name: DA-utils
+    default_branch: develop
+
