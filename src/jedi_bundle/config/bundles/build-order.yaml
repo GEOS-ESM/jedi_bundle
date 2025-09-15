@@ -52,6 +52,7 @@
 # Soca
 - soca:
     default_branch: develop
+    recursive: true
 
 # Fv3-jedi
 - fv3-jedi-lm:
@@ -67,3 +68,7 @@
     default_branch: develop
 
 # Other external packages
+- da-utils:
+    repo_url_name: DA-utils
+    default_branch: develop
+
