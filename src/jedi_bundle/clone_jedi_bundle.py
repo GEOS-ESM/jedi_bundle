@@ -70,6 +70,7 @@ def clone_jedi(logger, clone_config):
     # Adjust CRTM version if necessary
     # --------------------------------
     for index, build_order_dict in enumerate(build_order_dicts):
+        print(f'index, build_order_dict = {index}, {build_order_dict}')
         if list(build_order_dict.keys())[0] == 'crtm':
             crtm_dict = copy.copy(build_order_dict)
             crtm_dict['crtm']['default_branch'] = crtm_tag_or_branch
@@ -86,6 +87,7 @@ def clone_jedi(logger, clone_config):
 
             build_order_dicts[index] = crtm_dict
             break
+
 
     # Get list of repos in the build order
     # ------------------------------------
@@ -120,7 +122,8 @@ def clone_jedi(logger, clone_config):
     for build_order_dict in filtered_build_order:
         repo = list(build_order_dict.keys())[0]
         repo_dict = build_order_dict[repo]
-
+        print(f'repo repo_dict =  {repo}  {repo_dict}')
+        
         # Extract repo information
         repo_url_name = config_get(logger, repo_dict, 'repo_url_name', repo)
         cmakelists = config_get(logger, repo_dict, 'cmakelists', '')
@@ -150,6 +153,10 @@ def clone_jedi(logger, clone_config):
 
         # Check cache first
         cache_key = f"{repo_url_name}:{default_branch}:{user_branch}:{is_tag}:{is_commit}"
+        print(f'cache_key = {cache_key}')
+        print(f'url_branch_cache = {url_branch_cache}')
+
+
         if cache_key in url_branch_cache:
             found, url, branch, final_is_tag, final_is_commit = url_branch_cache[cache_key]
         else:
@@ -157,7 +164,10 @@ def clone_jedi(logger, clone_config):
                 logger, github_orgs, repo_url_name, default_branch, user_branch, is_tag,
                 commit_param
             )
+            print('logger, github_orgs, repo_url_name, default_branch, user_branch')
+            print(logger, github_orgs, repo_url_name, default_branch, user_branch)
 
+            
             # Ensure branch displays commit hash for string commits
             if final_is_commit and isinstance(is_commit, str) and not branch:
                 branch = is_commit
@@ -168,7 +178,8 @@ def clone_jedi(logger, clone_config):
 
             # Save in cache
             url_branch_cache[cache_key] = (found, url, branch, final_is_tag, final_is_commit)
-
+        exit()
+        
         if found:
             repositories.append({
                 'name': repo,
@@ -184,6 +195,10 @@ def clone_jedi(logger, clone_config):
                 logger.abort(f"No matching branch for '{repo}' was found in any organizations.")
             else:
                 optional_repos_not_found.append(repo)
+
+    print('repositories')
+    print(repositories)
+    exit()
 
     # Print clone summary
     # ------------------
@@ -242,23 +257,25 @@ def clone_jedi(logger, clone_config):
             except Exception as e:
                 return False, f"Error cloning {repo_name}: {str(e)}"
 
-        # Use ThreadPoolExecutor for parallel cloning
-        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
-            # Submit tasks
-            future_to_repo = {
-                executor.submit(clone_worker, repo_info): repo_info['name']
-                for repo_info in clone_repos
-            }
+## ygyu            
+##        # Use ThreadPoolExecutor for parallel cloning
+##        with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+##            # Submit tasks
+##            future_to_repo = {
+##                executor.submit(clone_worker, repo_info): repo_info['name']
+##                for repo_info in clone_repos
+##            }
+##
+##            # Process results as they complete
+##            for future in concurrent.futures.as_completed(future_to_repo):
+##                repo_name = future_to_repo[future]
+##                try:
+##                    success, result = future.result()
+##                    if not success:
+##                        logger.error(result)
+##                except Exception as e:
+##                    logger.error(f"Exception occurred while cloning {repo_name}: {str(e)}")
 
-            # Process results as they complete
-            for future in concurrent.futures.as_completed(future_to_repo):
-                repo_name = future_to_repo[future]
-                try:
-                    success, result = future.result()
-                    if not success:
-                        logger.error(result)
-                except Exception as e:
-                    logger.error(f"Exception occurred while cloning {repo_name}: {str(e)}")
 
     # Log special case info
     if any(r['name'] == 'jedicmake' for r in repositories):

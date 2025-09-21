@@ -40,6 +40,8 @@ def update_hash(logger: Logger, date: dt) -> None:
                         if 'repo_url_name' in repo_info_dict[repo_name]:
                             repo_alias = repo_info_dict[repo_name]['repo_url_name']
                         default_branch = repo_info_dict[repo_name]['default_branch']
+                        print( "repo_info_dict, repo_name, repo_alias, default_branch",
+                               repo_info_dict, repo_name, repo_alias, default_branch )
                         break
 
                 # Find commit history for default branch

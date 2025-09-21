@@ -43,9 +43,13 @@ def get_bundles():
 
     bundles_yaml = os.listdir(os.path.join(return_config_path(), 'bundles'))
     bundles = []
+    print(  bundles_yaml )
+
     for bundle_yaml in bundles_yaml:
         if bundle_yaml != 'build-order.yaml':
             bundles.append(bundle_yaml.split('.')[0])
+
+    print('bundles=', bundles)
 
     return bundles
 
@@ -121,6 +125,8 @@ def jedi_bundle():
     tasks_and_config = args.tasks_and_config
     pinned_versions = args.pinned_versions
 
+    print(f'pinned_versions = {pinned_versions}')
+    
     # If there are no arguments create build.yaml and exit
     if tasks_and_config == []:
 
@@ -128,6 +134,8 @@ def jedi_bundle():
         # --------------------------------------
         internal_config_dict = get_default_config()
 
+        print(f'internal_config_dict = {internal_config_dict}')
+    
         # Set current directory for source code
         internal_config_dict['clone_options']['path_to_source'] = os.getcwd()
 
@@ -150,11 +158,16 @@ def jedi_bundle():
 
         # Set the list of bundles
         bundles = get_bundles()
+        
         internal_config_dict['clone_options']['bundles'] = bundles
 
         # Set the path to the build directory
         cmake_build_type = internal_config_dict['configure_options']['cmake_build_type']
         build_dir = build_dir + '-' + cmake_build_type
+
+
+        print (build_dir)
+
 
         internal_config_dict['configure_options']['path_to_build'] = build_dir
 
@@ -174,8 +187,6 @@ def jedi_bundle():
 
         # Tell user to update the file
         logger.info(f'Configuration file generated and written to {config_file}')
-
-        exit(0)
 
     else:
 

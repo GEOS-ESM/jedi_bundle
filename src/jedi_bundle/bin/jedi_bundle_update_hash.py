@@ -28,6 +28,8 @@ def jedi_bundle_update_hash():
     # Convert date to datetime object
     dt_object = datetime.combine(date.fromisoformat(input_date), time(0, 0, tzinfo=timezone.utc))
 
+    print(f'dt_object =  {dt_object}')
+
     # Call update hashes
     update_hash(logger, dt_object)
 
