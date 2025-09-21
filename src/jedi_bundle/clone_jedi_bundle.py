@@ -329,8 +329,13 @@ def clone_jedi(logger, clone_config):
             elif repo == 'soca':
                 line = package_line.rstrip(')') + 'RECURSIVE )'
                 output_file_open.write(f"# {line}\n")
-            elif repo in ('geos-aero', 'crtm'):
+#            elif repo in ('geos-aero', 'crtm'):
+            elif repo in ('geos-aero'):
                 output_file_open.write(f"# {package_line}\n")
+            elif repo in ('crtm'):
+                line = 'ecbuild_bundle( PROJECT crtm   GIT "https://github.com/jcsda/CRTMv3.git"   BRANCH  develop UPDATE)'
+#                line = 'ecbuild_bundle( PROJECT crtm     GIT "https://github.com/JCSDA-internal/crtm.git"          TAG    v2.4.1-jedi.2 )'
+                output_file_open.write(f"{line}\n")
             else:
                 output_file_open.write(f"{package_line}\n")
                 if cmake:
