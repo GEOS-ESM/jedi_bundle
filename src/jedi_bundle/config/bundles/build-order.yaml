@@ -58,6 +58,8 @@
 - fv3-jedi-lm:
     repo_url_name: fv3-jedi-linearmodel
     default_branch: develop
+- femps:
+    default_branch: develop
 - fv3-jedi-data:
     default_branch: develop
 - fv3-jedi:
