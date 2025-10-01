@@ -23,7 +23,6 @@ from jedi_bundle.utils.file_system import prompt_and_remove_file
 from jedi_bundle.utils.logger import Logger, colors
 from jedi_bundle.utils.yaml import load_yaml
 from jedi_bundle.utils.welcome_message import write_welcome_message
-from jedi_bundle.utils.read_hash_date import read_hash_date
 
 
 # --------------------------------------------------------------------------------------------------
@@ -163,7 +162,6 @@ def jedi_bundle():
         if pinned_versions:
             pinned_config_file = os.path.join(return_config_path(), 'pinned_versions.yaml')
             pinned_versions_dict = load_yaml(logger, pinned_config_file)
-            internal_config_dict['pinned_versions_date'] = read_hash_date(pinned_config_file)
             internal_config_dict['pinned_versions'] = pinned_versions_dict
 
         # Set path to new file and remove if existing
