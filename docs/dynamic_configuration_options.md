@@ -44,6 +44,7 @@ make_options:
 |`github_orgs`            | List of GitHub organizations to use and the order in which to search through them for matching branches. |
 |`path_to_source`         | Path where the source code will be cloned. It defaults to the same location as where the build directory will be located. |
 |`user_branch`            | Custom branch to use for cloned repos. For example if picking `feature/work` the code will search all repos in all organizations for a branch called `feature/work`. It will choose the first location it finds the branch. If the branch is not found it will fall back to the default branch and use the first location the default branch is found. If nothing is provided no search will be performed. |
+|`download_lfs_data`      | Option whether or not to download data within the `jedi-model-data` repository. If set to `False`, the repository will need to be made available by the user. |
 
 #### Configure options
 

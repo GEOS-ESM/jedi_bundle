@@ -3,3 +3,4 @@ required_repos:
   - oops
   - vader
   - saber
+  - jedi-model-data
