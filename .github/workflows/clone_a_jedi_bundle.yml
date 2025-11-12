@@ -9,31 +9,32 @@ jobs:
   buildbundle:
     name: Clone oops bundle
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11]
     steps:
+      # Setup Python
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    # Setup Python
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.9
+      # Clone the code repo
+      - name: Clone code repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-    # Clone the code repo
-    - name: Clone code repo
-      uses: actions/checkout@v4
-      with:
-        lfs: true
+      # Install package
+      - name: Install JEDI bundle and dependencies
+        run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
+      - name: Put executables in the path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    # Install package
-    - name: Install JEDI bundle and dependencies
-      run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
-    - name: Put executables in the path
-      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      # Run an application test
+      - name: Run JEDI Bundle application test
+        run: jedi_bundle Clone src/jedi_bundle/config/build.yaml
 
-    # Run an application test
-    - name: Run JEDI Bundle application test
-      run: jedi_bundle Clone src/jedi_bundle/config/build.yaml
-
-    # Confirm existence of expected file
-    - name: Check
-      run: ls -l jedi_bundle/oops/CMakeLists.txt
+      # Confirm existence of expected file
+      - name: Check
+        run: ls -l jedi_bundle/oops/CMakeLists.txt
