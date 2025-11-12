@@ -3,7 +3,6 @@ clone_options:
   user_branch: ''
   github_orgs:
     - JCSDA-internal
-    - JCSDA
     - GEOS-ESM
     - NOAA-EMC
   bundles:
@@ -21,4 +20,4 @@ configure_options:
   external_modules: false
 
 make_options:
-  cores_to_use_for_make: 6
+  cores_to_use_for_make: 24
