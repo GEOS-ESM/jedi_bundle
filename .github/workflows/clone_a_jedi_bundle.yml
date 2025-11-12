@@ -21,9 +21,19 @@ jobs:
 
       # Clone the code repo
       - name: Clone code repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           lfs: true
+
+      # Configure git to access private repos
+      - name: Configure git credentials for private JEDI repos
+        run: |
+          mkdir -p "${HOME}"
+
+          cat <<'EOF' > "${HOME}/.git-credentials"
+          https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com
+          EOF
+          git config --global credential.helper "store --file=${HOME}/.git-credentials"
 
       # Install package
       - name: Install JEDI bundle and dependencies
