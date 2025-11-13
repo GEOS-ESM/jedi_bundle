@@ -29,11 +29,8 @@ jobs:
       - name: Configure git credentials for private JEDI repos
         run: |
           mkdir -p "${HOME}"
-
-          cat <<'EOF' > "${HOME}/.git-credentials"
-          https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com
-          EOF
-          git config --global credential.helper "store --file=${HOME}/.git-credentials"
+          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\nhttps:${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}\n" > "${HOME}/.git-credentials"
+          git config --global credential.helper "store"
 
       # Install package
       - name: Install JEDI bundle and dependencies
