@@ -36,6 +36,14 @@ jobs:
           ls -l "${HOME}"
           sed 's/\(https:\/\/\).*\(:\).*\(@github.com\)/\1USER\2***\3/' "${HOME}/.git-credentials" || echo "no creds"
 
+      - name: Debug PAT access to JCSDA-internal/jedi-cmake via API
+        run: |
+          echo "Checking repo visibility via API..."
+          curl -s -I \
+            -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
+            https://api.github.com/repos/JCSDA-internal/jedi-cmake \
+            | grep -i '^Status\|^X-RateLimit-Remaining\|^X-GitHub-Request-Id'
+
       - name: Direct PAT test (debug only)
         run: |
           git ls-remote "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/JCSDA-internal/jedi-cmake.git"
