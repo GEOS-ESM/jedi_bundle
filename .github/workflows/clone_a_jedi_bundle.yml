@@ -36,6 +36,14 @@ jobs:
           ls -l "${HOME}"
           sed 's/\(https:\/\/\).*\(:\).*\(@github.com\)/\1USER\2***\3/' "${HOME}/.git-credentials" || echo "no creds"
 
+      - name: Debug PAT scopes against GitHub API
+        run: |
+          echo "Querying GitHub API for token scopes..."
+          curl -s -I \
+            -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
+            https://api.github.com/user \
+            | grep -i '^X-OAuth-Scopes\|^X-Accepted-OAuth-Scopes\|^Status'
+
       - name: Direct PAT test (debug only)
         run: |
           git ls-remote "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/JCSDA-internal/jedi-cmake.git"
