@@ -25,11 +25,16 @@ jobs:
           lfs: true
 
       # Configure git to access private repos
+      # - name: Configure git credentials for private JEDI repos
+      #   run: |
+      #     mkdir -p "${HOME}"
+      #     printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
+      #     git config --global credential.helper "store"
+      
+      # Configure git to access private repos
       - name: Configure git credentials for private JEDI repos
         run: |
-          mkdir -p "${HOME}"
-          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
-          git config --global credential.helper "store"
+          git config --global url."https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com/".insteadOf "https://github.com/"
 
       # Install package
       - name: Install JEDI bundle and dependencies
