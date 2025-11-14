@@ -31,6 +31,10 @@ jobs:
           printf "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
           git config --global credential.helper "store --file=${HOME}/.git-credentials"
 
+      - name: Debug PAT prefix
+        run: |
+          echo "PAT prefix: $(echo "${{ secrets.JEDI_GH_PAT }}" | cut -c1-6)"
+
       - name: Debug git-credentials presence
         run: |
           ls -l "${HOME}"
