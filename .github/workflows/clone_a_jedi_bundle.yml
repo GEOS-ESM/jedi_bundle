@@ -6,6 +6,7 @@ on:
 
 jobs:
   buildbundle:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     name: Clone oops bundle
     runs-on: ubuntu-latest
     strategy:
@@ -30,6 +31,11 @@ jobs:
           mkdir -p "${HOME}"
           printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\nhttps:${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}\n" > "${HOME}/.git-credentials"
           git config --global credential.helper "store"
+
+      - name: Debug git-credentials presence
+        run: |
+          ls -l "${HOME}"
+          sed 's/\(https:\/\/\).*\(:\).*\(@github.com\)/\1USER\2***\3/' "${HOME}/.git-credentials" || echo "no creds"
 
       # Test credentials
       - name: Test git credentials
