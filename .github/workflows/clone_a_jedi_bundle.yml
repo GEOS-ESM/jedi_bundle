@@ -25,17 +25,10 @@ jobs:
         with:
           lfs: true
 
-      ## Configure git to access private repos
-      #- name: Configure git credentials for private JEDI repos
-        #run: |
-          #mkdir -p "${HOME}"
-          #printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\nhttps:${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}\n" > "${HOME}/.git-credentials"
-          #git config --global credential.helper "store"
-
       - name: Configure git credentials for private JEDI repos
         run: |
           mkdir -p "${HOME}"
-          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
+          printf "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
           git config --global credential.helper "store --file=${HOME}/.git-credentials"
 
       - name: Debug git-credentials presence
@@ -45,7 +38,7 @@ jobs:
 
       - name: Direct PAT test (debug only)
         run: |
-          git ls-remote "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com/JCSDA-internal/jedi-cmake.git"
+          git ls-remote "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/JCSDA-internal/jedi-cmake.git"
 
       # Test credentials
       - name: Test git credentials
