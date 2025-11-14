@@ -34,14 +34,14 @@ jobs:
       # Install package
       - name: Install JEDI bundle and dependencies
         run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
-      
+
       - name: Put executables in the path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
         # Test credentials
       - name: Test git credentials
         run: |
-          git ls-remote https://github.com/YOUR-ORG/jedicmake.git
+          git ls-remote https://github.com/JCSDA-internal/jedi-cmake.git
 
       # Run an application test
       - name: Run JEDI Bundle application test
