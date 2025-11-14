@@ -25,36 +25,11 @@ jobs:
         with:
           lfs: true
 
-      - name: Configure git credentials for private JEDI repos
+      - name: Configure git to use PAT for GitHub
         run: |
-          mkdir -p "${HOME}"
-          printf "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
-          git config --global credential.helper "store --file=${HOME}/.git-credentials"
+          git config --global url."https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Debug git-credentials presence
-        run: |
-          ls -l "${HOME}"
-          sed 's/\(https:\/\/\).*\(:\).*\(@github.com\)/\1USER\2***\3/' "${HOME}/.git-credentials" || echo "no creds"
-
-      - name: Debug PAT scopes and repo access
-        run: |
-          echo "Token scopes for /user:"
-          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:x-oauth-scopes}\nX-Accepted-OAuth-Scopes: %{header:x-accepted-oauth-scopes}\n' \
-            -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
-            https://api.github.com/user
-
-          echo
-          echo "Access to JCSDA-internal/jedi-cmake:"
-          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:x-oauth-scopes}\nX-Accepted-OAuth-Scopes: %{header:x-accepted-oauth-scopes}\n' \
-            -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
-            https://api.github.com/repos/JCSDA-internal/jedi-cmake
-
-      - name: Direct PAT test (debug only)
-        run: |
-          git ls-remote "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/JCSDA-internal/jedi-cmake.git"
-
-      # Test credentials
-      - name: Test git credentials
+      - name: Direct test via git
         run: |
           git ls-remote https://github.com/JCSDA-internal/jedi-cmake.git
 
