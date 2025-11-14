@@ -4,7 +4,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-
 jobs:
   buildbundle:
     name: Clone oops bundle
@@ -29,14 +28,20 @@ jobs:
       - name: Configure git credentials for private JEDI repos
         run: |
           mkdir -p "${HOME}"
-          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\nhttps:${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}\n" > "${HOME}/.git-credentials"
+          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
           git config --global credential.helper "store"
 
       # Install package
       - name: Install JEDI bundle and dependencies
         run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
+      
       - name: Put executables in the path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+        # Test credentials
+      - name: Test git credentials
+        run: |
+          git ls-remote https://github.com/YOUR-ORG/jedicmake.git
 
       # Run an application test
       - name: Run JEDI Bundle application test
