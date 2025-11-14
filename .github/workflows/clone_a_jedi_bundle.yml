@@ -39,13 +39,13 @@ jobs:
       - name: Debug PAT scopes and repo access
         run: |
           echo "Token scopes for /user:"
-          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:X-OAuth-Scopes}\nX-Accepted-OAuth-Scopes: %{header:X-Accepted-OAuth-Scopes}\n' \
+          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:x-oauth-scopes}\nX-Accepted-OAuth-Scopes: %{header:x-accepted-oauth-scopes}\n' \
             -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
             https://api.github.com/user
 
           echo
           echo "Access to JCSDA-internal/jedi-cmake:"
-          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:X-OAuth-Scopes}\nX-Accepted-OAuth-Scopes: %{header:X-Accepted-OAuth-Scopes}\n' \
+          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:x-oauth-scopes}\nX-Accepted-OAuth-Scopes: %{header:x-accepted-oauth-scopes}\n' \
             -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
             https://api.github.com/repos/JCSDA-internal/jedi-cmake
 
