@@ -36,13 +36,18 @@ jobs:
           ls -l "${HOME}"
           sed 's/\(https:\/\/\).*\(:\).*\(@github.com\)/\1USER\2***\3/' "${HOME}/.git-credentials" || echo "no creds"
 
-      - name: Debug PAT access to JCSDA-internal/jedi-cmake via API
+      - name: Debug PAT scopes and repo access
         run: |
-          echo "Checking repo visibility via API..."
-          curl -s -I \
+          echo "Token scopes for /user:"
+          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:X-OAuth-Scopes}\nX-Accepted-OAuth-Scopes: %{header:X-Accepted-OAuth-Scopes}\n' \
             -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
-            https://api.github.com/repos/JCSDA-internal/jedi-cmake \
-            | grep -i '^Status\|^X-RateLimit-Remaining\|^X-GitHub-Request-Id'
+            https://api.github.com/user
+
+          echo
+          echo "Access to JCSDA-internal/jedi-cmake:"
+          curl -s -o /dev/null -w 'HTTP: %{http_code}\nX-OAuth-Scopes: %{header:X-OAuth-Scopes}\nX-Accepted-OAuth-Scopes: %{header:X-Accepted-OAuth-Scopes}\n' \
+            -H "Authorization: token ${{ secrets.JEDI_GH_PAT }}" \
+            https://api.github.com/repos/JCSDA-internal/jedi-cmake
 
       - name: Direct PAT test (debug only)
         run: |
