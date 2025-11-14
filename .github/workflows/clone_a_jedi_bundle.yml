@@ -25,16 +25,16 @@ jobs:
           lfs: true
 
       # Configure git to access private repos
-      # - name: Configure git credentials for private JEDI repos
-      #   run: |
-      #     mkdir -p "${HOME}"
-      #     printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\n" > "${HOME}/.git-credentials"
-      #     git config --global credential.helper "store"
-      
-      # Configure git to access private repos
       - name: Configure git credentials for private JEDI repos
         run: |
-          git config --global url."https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com/".insteadOf "https://github.com/"
+          mkdir -p "${HOME}"
+          printf "https://${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}@github.com\nhttps:${{ secrets.JEDI_GH_USER }}:${{ secrets.JEDI_GH_PAT }}\n" > "${HOME}/.git-credentials"
+          git config --global credential.helper "store"
+
+      # Test credentials
+      - name: Test git credentials
+        run: |
+          git ls-remote https://github.com/JCSDA-internal/jedi-cmake.git
 
       # Install package
       - name: Install JEDI bundle and dependencies
@@ -43,11 +43,6 @@ jobs:
       - name: Put executables in the path
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-        # Test credentials
-      - name: Test git credentials
-        run: |
-          git ls-remote https://github.com/JCSDA-internal/jedi-cmake.git
-
       # Run an application test
       - name: Run JEDI Bundle application test
         run: jedi_bundle Clone src/jedi_bundle/config/build.yaml
@@ -55,3 +50,4 @@ jobs:
       # Confirm existence of expected file
       - name: Check
         run: ls -l jedi_bundle/oops/CMakeLists.txt
+
