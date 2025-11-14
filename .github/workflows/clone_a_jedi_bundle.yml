@@ -25,9 +25,10 @@ jobs:
         with:
           lfs: true
 
-      - name: Configure git to use PAT for GitHub
+      - name: Set github url and credentials
         run: |
-          git config --global url."https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com/".insteadOf "https://github.com/"
+          git config --global credential.helper store
+          echo "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com" > ~/.git-credentials
 
       - name: Direct test via git
         run: |
