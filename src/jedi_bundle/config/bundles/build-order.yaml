@@ -66,7 +66,6 @@
     default_branch: develop
 
 # Other external packages
-#- da-utils:
-#    repo_url_name: DA-utils
-#    default_branch: develop
-
+- da-utils:
+    repo_url_name: DA-utils
+    default_branch: develop
