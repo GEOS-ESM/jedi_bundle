@@ -65,6 +65,10 @@
 - fv3-jedi:
     default_branch: develop
 
+# jedi-model-data
+- jedi-model-data:
+    default_branch: develop
+
 # Other external packages
 - da-utils:
     repo_url_name: DA-utils
