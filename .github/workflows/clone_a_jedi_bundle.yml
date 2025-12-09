@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           lfs: true
-          
+
       # Install package
       - name: Install JEDI bundle and dependencies
         run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt .
