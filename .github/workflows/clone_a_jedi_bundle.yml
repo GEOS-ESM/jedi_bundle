@@ -24,22 +24,10 @@ jobs:
         uses: actions/checkout@v5
         with:
           lfs: true
-
-      - name: Set github url and credentials
-        run: |
-          git config --global credential.helper store
-          echo "https://x-access-token:${{ secrets.JEDI_GH_PAT }}@github.com" > ~/.git-credentials
-
-      - name: Direct test via git
-        run: |
-          git ls-remote https://github.com/JCSDA-internal/jedi-cmake.git
-
+          
       # Install package
       - name: Install JEDI bundle and dependencies
-        run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
-
-      - name: Put executables in the path
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+        run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt .
 
       # Run an application test
       - name: Run JEDI Bundle application test
@@ -48,4 +36,3 @@ jobs:
       # Confirm existence of expected file
       - name: Check
         run: ls -l jedi_bundle/oops/CMakeLists.txt
-
