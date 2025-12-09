@@ -2,9 +2,9 @@ clone_options:
   path_to_source: jedi_bundle
   user_branch: ''
   github_orgs:
+    - JCSDA
     - JCSDA-internal
     - GEOS-ESM
-    - NOAA-EMC
   bundles:
     - oops
   extra_repos: [gsibec]
