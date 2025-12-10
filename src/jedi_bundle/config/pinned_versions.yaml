@@ -41,6 +41,3 @@
 - ufo-data:
     branch: f341ea01b05ada9514b3bf7ec8045f9066ce2ed5
     commit: true
-- da-utils:
-    branch: 6292c36b47d1f328cfe4eaf04fb54a400b12e8e9
-    commit: true

@@ -1,0 +1,74 @@
+platform_name: nas_pleiades
+is_it_me:
+  - command: 'hostname'
+    contains: pfe
+crtm_coeffs_path: '/nobackup/dardag/SwellStaticFiles/jedi/crtm_coefficients/'
+crtm_coeffs_version: '2.4.1_skylab_4.0'
+modules:
+  default_modules: intel-oneapi
+  intel-oneapi:
+    init:
+      - source /usr/share/modules/init/bash
+    load:
+      - module purge
+      - module use /nobackup/gmao_SIteam/modulefiles
+      - module use /nobackup/gmao_SIteam/spack-stack/spack-stack-1.9.3/envs/ue-oneapi-2024.2.0/install/modulefiles/Core
+      - module load stack-oneapi/2024.2.0
+      - module load stack-mpt/2.30
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module unload -f gsibec crtm
+      - module load gmao-swell-env/1.0.0
+      - module load sp/2.5.0
+    configure: -DMPIEXEC_EXECUTABLE="/nasa/hpe/mpt/2.30_rhel810/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
+  intel-oneapi-geos:
+    init:
+      - source /usr/share/modules/init/bash
+    load:
+      - module purge
+      - module use /nobackup/gmao_SIteam/modulefiles
+      - module use /nobackup/gmao_SIteam/spack-stack/spack-stack-1.9.3/envs/ue-oneapi-2024.2.0/install/modulefiles/Core
+      - module load stack-oneapi/2024.2.0
+      - module load stack-mpt/2.30
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module load gmao-swell-env/1.0.0
+      - module unload -f gsibec crtm
+      - module load sp/2.5.0
+      - module load cmake esmf/8.8.0 gftl gftl-shared pflogger fargparse udunits
+    configure: -DMPIEXEC_EXECUTABLE="/nasa/hpe/mpt/2.30_rhel810/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
+  gnu:
+    init:
+      - source /usr/share/modules/init/bash
+    load:
+      - module purge
+      - module use /nobackup/gmao_SIteam/modulefiles
+      - module use /nobackup/gmao_SIteam/spack-stack/spack-stack-1.9.3/envs/ue-gcc-12.3.0/install/modulefiles/Core
+      - module load stack-gcc/12.3.0
+      - module load stack-openmpi/4.1.8
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module load gmao-swell-env/1.0.0
+      - module unload -f gsibec crtm
+      - module load sp/2.5.0
+    configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"
+  gnu-geos:
+    init:
+      - source /usr/share/modules/init/bash
+    load:
+      - module purge
+      - module use /nobackup/gmao_SIteam/modulefiles
+      - module use /nobackup/gmao_SIteam/spack-stack/spack-stack-1.9.3/envs/ue-gcc-12.3.0/install/modulefiles/Core
+      - module load stack-gcc/12.3.0
+      - module load stack-openmpi/4.1.8
+      - module load stack-python/3.11.7
+      - module load jedi-fv3-env
+      - module load soca-env
+      - module load gmao-swell-env/1.0.0
+      - module unload -f gsibec crtm
+      - module load sp/2.5.0
+      - module load esmf python py-pyyaml py-numpy pflogger fargparse zlib-ng cmake
+    configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"

@@ -2,10 +2,9 @@ clone_options:
   path_to_source: jedi_bundle
   user_branch: ''
   github_orgs:
-    - JCSDA-internal
     - JCSDA
+    - JCSDA-internal
     - GEOS-ESM
-    - NOAA-EMC
   bundles:
     - oops
   extra_repos: [gsibec]
@@ -21,4 +20,4 @@ configure_options:
   external_modules: false
 
 make_options:
-  cores_to_use_for_make: 6
+  cores_to_use_for_make: 24
