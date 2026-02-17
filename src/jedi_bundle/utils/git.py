@@ -71,17 +71,25 @@ def repo_is_reachable(logger, url, username, token):
 
 def repo_has_branch(
     logger: Logger,
-    url: str,
+    org_url_name: str,
     branch: str,
+    username: str,
+    token: str,
     is_tag: bool = False,
     is_commit: bool = False
 ) -> bool:
 
     if is_commit:
+
+        # Consult the github api
+        url = os.path.join('https://api.github.com/repos', org_url_name)
         commit_url = url + '/commits/' + branch
-        r = requests.get(commit_url)
+
+        auth_header = {'Authorization': f'Bearer {token}'}
+        r = requests.get(commit_url, headers=auth_header)
         if r.ok:
             logger.info(f'Found commit at {commit_url}')
+
         return r.ok
 
     # Command to check if branch exists and pass exit code back
@@ -89,12 +97,19 @@ def repo_has_branch(
     if is_tag:
         heads_or_tags = '--tags'
 
+    url = os.path.join('https://github.com', org_url_name)
+
     git_ls_cmd = ['git', 'ls-remote', heads_or_tags, '--exit-code', url, branch]
 
     # Run command
     process = subprocess.run(git_ls_cmd, stdout=devnull)
 
-    return process.returncode == 0
+    found = process.returncode == 0
+
+    if found:
+        logger.info(f'Found commit at {url}')
+
+    return found
 
 
 # --------------------------------------------------------------------------------------------------
@@ -121,6 +136,8 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
         github_url = os.path.join('https://github.com', github_org, repo_url_name)
         github_api_url = os.path.join('https://api.github.com/repos', github_org, repo_url_name)
 
+        org_url_name = os.path.join(github_org, repo_url_name)
+
         # Check it the repo url is reachable
         if repo_is_reachable(logger, github_api_url, username, token):
 
@@ -129,13 +146,14 @@ def get_url_and_branch(logger, github_orgs, repo_url_name, default_branch,
 
             # Check for user branch and return right away if found
             if user_branch != '':
-                if repo_has_branch(logger, github_url, user_branch):
+                if repo_has_branch(logger, org_url_name, user_branch, username, token):
                     return repo_url_found, github_url, user_branch, is_tag, is_commit
 
             # Track first instance of finding the default branch. But do not exit when it's first
             # found so that other organizations can be checked for the user branch.
             if not found_default_branch:
-                if repo_has_branch(logger, github_url, default_branch, is_tag_in, is_commit_in):
+                if repo_has_branch(logger, org_url_name, default_branch, username, token,
+                                   is_tag_in, is_commit_in):
                     found_default_branch = True
                     repo_url_found = True
                     repo_url_to_use = github_url
