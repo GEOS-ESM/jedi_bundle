@@ -1,5 +1,6 @@
 required_repos:
   - jedicmake
   - oops
+  - bufr-query
   - ioda
   - ioda-data

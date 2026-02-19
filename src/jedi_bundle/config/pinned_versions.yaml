@@ -1,43 +1,43 @@
-# Pinned versions for 2026-01-15
+# Pinned versions for 2026-02-15
 - jedicmake:
     branch: 40d521f9a2d796fcbc6234d77abceeffefb8eb7f
     commit: true
 - oops:
-    branch: 9d8957614b1b7fe5a13b15509a6e4d012cfe9163
+    branch: cbbd6ea293983729064c132a87ddff1abf1f92cf
     commit: true
 - saber:
-    branch: 9794b4a56dc17ea68e50d9b4a01fdb974e018299
+    branch: 4a58e6ef73ec26463d5bc630565af4a496bcd585
     commit: true
 - ioda:
-    branch: 0f02aadc22341fdb4dbb8e5eed13c4889e8ce487
+    branch: 6eab1649977a81129d5b3f0803571b747f286f09
     commit: true
 - ufo:
-    branch: 0562e7008be2dcfb625fe5a330e83721c11bbdd8
+    branch: 7544ca8ff806a6370a04239830b8ca1dabac1bbb
     commit: true
 - vader:
-    branch: 5c5970db95d7ad1191737e84c0b0f16e1f704110
+    branch: b6dab37d5de091472291ba05cc4c3a81b50f48c4
     commit: true
 - fv3-jedi-lm:
     branch: 4f44b1a4671706abd43f8f1d5e369e0edb46955d
     commit: true
 - fv3-jedi:
-    branch: 41a2c7860b7a8d22dabe3705cbb4e345541227a3
+    branch: c7d53f173ea8c915f69fcdf24ed468543aae804c
     commit: true
 - ioda-data:
-    branch: 2fdc67a163a8029b878581dbed9be463b97f4588
+    branch: c652e6a18c7a8b0fe0c4dd21b6c524657d6a15fb
     commit: true
 - fv3-jedi-data:
     branch: 60d1ceddb0bcda654ddc6cb8e8ebf945d7a4942f
     commit: true
 - soca:
-    branch: 733ac0177ad0b45e04586f2ead5aa67137da332c
+    branch: fdf94f21f59399360cf40a52f631ddfce9bf1e2c
     commit: true
 - iodaconv:
-    branch: bcc116bb8ff3d8d258a58087e62a370e1c9bae41
+    branch: 58ecb09dd47ac0dacf3b14b93f8e5f8adf48b32c
     commit: true
 - gsw:
     branch: 697cbeb7605d70ed3857664c5f54a5c05346e31f
     commit: true
 - ufo-data:
-    branch: dc0c1bdd756398835866ed56715f311dbfbf968a
+    branch: 7f295bd99b9a8ead0c91a66b5481bc18507747f7
     commit: true
