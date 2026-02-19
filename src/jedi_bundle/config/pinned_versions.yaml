@@ -8,6 +8,9 @@
 - saber:
     branch: 9794b4a56dc17ea68e50d9b4a01fdb974e018299
     commit: true
+- bufr-query:
+    branch: 563d7b3c4b5ce6cc679ee45547edd1f0bd4615ef
+    commit: true
 - ioda:
     branch: 0f02aadc22341fdb4dbb8e5eed13c4889e8ce487
     commit: true

@@ -26,6 +26,8 @@
     default_branch: develop
 
 # Observation operators
+- bufr-query:
+    default_branch: develop
 - ioda-data:
     default_branch: develop
 - ioda:
