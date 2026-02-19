@@ -4,7 +4,7 @@
 
 ``` bash
 module purge
-source /discover/nobackup/projects/gmao/advda/swell/jedi_modules/spackstack_1.9_intel_bundle
+source /discover/nobackup/projects/gmao/advda/swell/jedi_modules/spackstack_1.9_intel
 ```
 
 2) Load the SLES15 `jedi_bundle` module:
