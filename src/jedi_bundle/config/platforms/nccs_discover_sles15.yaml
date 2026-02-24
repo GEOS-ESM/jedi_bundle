@@ -25,6 +25,7 @@ modules:
       - module unload gsibec bufr-query crtm fms
       - module load fms/2024.02
       - module load ip/5.1.0
+      - module load py-wxflow
     configure: -DMPIEXEC_EXECUTABLE="/usr/local/intel/oneapi/2021/mpi/2021.10.0/bin/mpirun" -DMPIEXEC_NUMPROC_FLAG="-np"
   intel-geos:
     init:
