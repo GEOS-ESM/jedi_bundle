@@ -85,7 +85,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-2.0.0/envs/ue-gcc-13.4.0/install/modulefiles/Core
+      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-2.0.0/envs/ue-gcc-13.4.0/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
       - module load soca-env
@@ -101,7 +101,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-2.0.0/envs/ue-gcc-13.4.0/install/modulefiles/Core
+      - module use /gpfsm/dswdev/jcsda/spack-stack/scu17/spack-stack-2.0.0/envs/ue-gcc-13.4.0/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
       - module load soca-env
