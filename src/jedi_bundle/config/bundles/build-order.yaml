@@ -25,6 +25,12 @@
 - saber:
     default_branch: develop
 
+# BUFR-query
+- bufr-query:
+    repo_url_name: bufr-query
+    default_branch: v0.0.5
+    tag: true
+
 # Observation operators
 - ioda-data:
     default_branch: develop
