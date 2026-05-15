@@ -94,6 +94,10 @@ def configure_jedi(logger, configure_config):
             configure_file_open.write(f'source {modules_init}\n')
             configure_file_open.write(f'source {modules_file}\n')
         configure_file_open.write(f'\n')
+        configure_file_open.write(f'export ENABLE_FV3_JEDI_DATA=1\n')
+        configure_file_open.write(f'export ENABLE_IODA_DATA=1\n')
+        configure_file_open.write(f'export ENABLE_UFO_DATA=1\n')
+        configure_file_open.write(f'\n')
         configure_file_open.write(f'{ecbuild} \n')
 
     # Make file executable
