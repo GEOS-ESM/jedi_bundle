@@ -20,7 +20,7 @@
 # Background error models
 - gsibec:
     repo_url_name: GSIbec
-    default_branch: 1.4.2
+    default_branch: 1.4.3
     tag: true
 - saber:
     default_branch: develop
