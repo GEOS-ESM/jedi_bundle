@@ -62,7 +62,7 @@ def execute_tasks(tasks, config_dict):
     tasks = [task.lower() for task in tasks]
 
     # Check that the options are valid
-    valid_tasks = ['clone', 'configure', 'make', 'all']
+    valid_tasks = ['clone', 'configure', 'make', 'test', 'all']
     for task in tasks:
         if task not in valid_tasks:
             logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +

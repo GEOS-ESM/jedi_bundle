@@ -20,7 +20,7 @@ from jedi_bundle.utils.config import config_get
 def test_jedi(logger: Logger, config: dict) -> None:
 
     bundles = config_get(logger, config, 'bundles')
-    test_bundles = config_get(logger, config, 'test_bundles')
+    test_bundles = config_get(logger, config, 'ctest_bundles')
     path_to_build = config_get(logger, config, 'path_to_build')
 
     # Output directory to store output from tasks
@@ -38,7 +38,7 @@ def test_jedi(logger: Logger, config: dict) -> None:
         logger.info(f'Running ctests for {bundle}')
         logger.info('')
 
-        output_file = output_file / f'{bundle}.txt'
+        output_file = output_dir / f'{bundle}.txt'
 
         bundle_dir = Path(path_to_build) / bundle
 

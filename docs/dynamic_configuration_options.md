@@ -67,6 +67,6 @@ make_options:
 
 | YAML Key                | Description |
 | ------------------------| ----------- |
-| `test_bundles` | Select bundles to run ctests on during the `test` step. |
+| `ctest_bundles` | Select bundles to run ctests on during the `test` step. |
 
 **Note that the code does not generally employ defaults for any of the options above. In a sense the defaults are set when configuration is generated or created. As such it is worth starting by allowing jedi_bundle to generate the configuration.**
