@@ -1,0 +1,17 @@
+name: Update the jedi_bundle Module on Discover
+
+on:
+  push:
+    branches:
+      - develop
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell:
+      bash
+
+jobs:
+  update-module-discover:
+    uses: GEOS-ESM/CI-workflows/.github/workflows/jedi_bundle_update_discover.yml@main
