@@ -22,3 +22,8 @@ configure_options:
 
 make_options:
   cores_to_use_for_make: 24
+
+test_options:
+  ctest_bundles:
+    - fv3-jedi
+    - soca
