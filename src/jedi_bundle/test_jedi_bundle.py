@@ -17,6 +17,7 @@ from jedi_bundle.utils.config import config_get
 
 # --------------------------------------------------------------------------------------------------
 
+
 def test_jedi(logger: Logger, config: dict) -> None:
 
     bundles = config_get(logger, config, 'bundles')
