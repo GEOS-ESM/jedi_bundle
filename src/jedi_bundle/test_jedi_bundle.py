@@ -17,6 +17,12 @@ from jedi_bundle.utils.config import config_get
 
 # --------------------------------------------------------------------------------------------------
 
+special_directives = {
+    'fv3-jedi': ['-L', 'tier2']
+}
+
+# --------------------------------------------------------------------------------------------------
+
 
 def test_jedi(logger: Logger, config: dict) -> None:
 
@@ -43,8 +49,14 @@ def test_jedi(logger: Logger, config: dict) -> None:
 
         bundle_dir = Path(path_to_build) / bundle
 
+        ctest_command = ['ctest', '--output-on-failure']
+
+        if bundle in special_directives:
+            ctest_command.extend(special_directives[bundle])
+
         # Run ctests
         with open(output_file, 'w') as open_file:
-            subprocess.run(['ctest', '-V'], cwd=bundle_dir, stdout=open_file)
+            subprocess.run(ctest_command,
+                           cwd=bundle_dir, stdout=open_file)
 
 # --------------------------------------------------------------------------------------------------
