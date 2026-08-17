@@ -21,4 +21,4 @@ configure_options:
   external_modules: false
 
 make_options:
-  cores_to_use_for_make: 24
+  cores_to_use_for_make: 32
