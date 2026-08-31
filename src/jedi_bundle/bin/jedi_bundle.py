@@ -17,6 +17,7 @@ import yaml
 from jedi_bundle.clone_jedi_bundle import clone_jedi
 from jedi_bundle.configure_jedi_bundle import configure_jedi
 from jedi_bundle.make_jedi_bundle import make_jedi
+from jedi_bundle.test_jedi_bundle import test_jedi
 
 from jedi_bundle.config.config import return_config_path, determine_platform
 from jedi_bundle.utils.file_system import prompt_and_remove_file
@@ -61,7 +62,7 @@ def execute_tasks(tasks, config_dict):
     tasks = [task.lower() for task in tasks]
 
     # Check that the options are valid
-    valid_tasks = ['clone', 'configure', 'make', 'all']
+    valid_tasks = ['clone', 'configure', 'make', 'test', 'all']
     for task in tasks:
         if task not in valid_tasks:
             logger.abort(f'Task \'{task}\' not in the valid tasks {valid_tasks}. Ensure the ' +
@@ -71,6 +72,7 @@ def execute_tasks(tasks, config_dict):
     clone_dict = config_dict['clone_options']
     configure_dict = {**clone_dict, **config_dict['configure_options']}
     make_dict = {**configure_dict, **config_dict['make_options']}
+    test_dict = {**make_dict, **config_dict['test_options']}
 
     # Run the build stages
     if 'all' in tasks or 'clone' in tasks:
@@ -81,6 +83,8 @@ def execute_tasks(tasks, config_dict):
         configure_jedi(logger, configure_dict)
     if 'all' in tasks or 'make' in tasks:
         make_jedi(logger, make_dict)
+    if 'all' in tasks or 'test' in tasks:
+        test_jedi(logger, test_dict)
 
 
 # --------------------------------------------------------------------------------------------------
