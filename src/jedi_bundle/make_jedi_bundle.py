@@ -47,7 +47,7 @@ def make_jedi(logger, make_config):
     configure = [f'./jedi_bundle_make.sh']
 
     # Run command
-    process = subprocess.run(configure, cwd = path_to_build)
+    process = subprocess.run(configure, cwd=path_to_build)
     logger.assert_abort(process.returncode == 0, f'Make has failed.')
 
 # --------------------------------------------------------------------------------------------------
