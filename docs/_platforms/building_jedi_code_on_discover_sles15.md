@@ -4,14 +4,14 @@
 
 ``` bash
 module purge
-source /discover/nobackup/projects/gmao/advda/swell/jedi_modules/spackstack_1.9_intel_bundle
+source /discover/nobackup/projects/gmao/advda/swell/jedi_modules/spackstack_2.0_intel
 ```
 
 2) Load the SLES15 `jedi_bundle` module:
 
 ``` bash
 module use -a /discover/nobackup/projects/gmao/advda/JediOpt/modulefiles/core/
-module load jedi_bundle/sles15_skylab9
+module load jedi_bundle/sles15_spack_2.0
 ```
 
 3) Create a directory where the source code and build directory will be stored e.g.:
