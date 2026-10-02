@@ -2,9 +2,6 @@
 - jedicmake:
     branch: 40d521f9a2d796fcbc6234d77abceeffefb8eb7f
     commit: true
-- oops:
-    branch: a2f772119b7a5b86d99cd2ae3620c09a17d29ae9
-    commit: true
 - saber:
     branch: 0480bda4f1bdc0a67e2ab486bb73b1d9fb888872
     commit: true
