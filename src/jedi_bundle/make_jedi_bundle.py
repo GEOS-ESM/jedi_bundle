@@ -28,40 +28,26 @@ def make_jedi(logger, make_config):
     external_modules = config_get(logger, make_config, 'external_modules', False)
     cores_to_use_for_make = config_get(logger, make_config, 'cores_to_use_for_make')
 
-    # File to hold configure steps
-    for bundle in bundles:
+    make_file = os.path.join(path_to_build, 'jedi_bundle_make.sh')
 
-        logger.info(f'')
-        logger.info(f'Building the {bundle} bundle using {cores_to_use_for_make} cores')
-        logger.info(f'')
+    with open(make_file, 'w') as make_file_open:
+        make_file_open.write(f'#!/usr/bin/env bash \n\n')
+        if not external_modules:
+            modules_init = os.path.join(path_to_build, 'modules-init')
+            make_file_open.write(f'source {modules_init} \n')
+            modules_load = os.path.join(path_to_build, 'modules')
+            make_file_open.write(f'source {modules_load} \n\n')
 
-        bundle_dir = os.path.join(path_to_build, bundle)
-
-        make_file = os.path.join(bundle_dir, 'jedi_bundle_make.sh')
-        remove_file(logger, make_file)
-
-        # Write steps to file
-        with open(make_file, 'a') as make_file_open:
-            make_file_open.write(f'#!/usr/bin/env bash \n')
-            make_file_open.write(f'\n')
-            if not external_modules:
-                modules_init = os.path.join(path_to_build, 'modules-init')
-                make_file_open.write(f'source {modules_init} \n')
-                modules_load = os.path.join(path_to_build, 'modules')
-                make_file_open.write(f'source {modules_load} \n')
-            make_file_open.write(f'\n')
             make_file_open.write(f'make -j{cores_to_use_for_make} \n')
 
-        # Make file executable
-        os.chmod(make_file, 0o755)
+    # Make file executable
+    os.chmod(make_file, 0o755)
 
-        # Configure command
-        configure = [f'./jedi_bundle_make.sh']
+    # Configure command
+    configure = [f'./jedi_bundle_make.sh']
 
-        # Run command
-        cwd = os.getcwd()
-        os.chdir(bundle_dir)
-        process = subprocess.run(configure)
-        logger.assert_abort(process.returncode == 0, f'Make for {bundle} bundle failed.')
-        os.chdir(cwd)
+    # Run command
+    process = subprocess.run(configure, cwd=path_to_build)
+    logger.assert_abort(process.returncode == 0, f'Make has failed.')
+
 # --------------------------------------------------------------------------------------------------
