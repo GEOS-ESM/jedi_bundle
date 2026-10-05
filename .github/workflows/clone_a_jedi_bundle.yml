@@ -27,7 +27,7 @@ jobs:
 
       # Install package
       - name: Install JEDI bundle and dependencies
-        run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt .
+        run: python -m pip install --use-deprecated=legacy-resolver .
 
       # Run an application test
       - name: Run JEDI Bundle application test
