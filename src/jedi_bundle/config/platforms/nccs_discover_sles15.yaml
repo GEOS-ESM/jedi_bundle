@@ -15,7 +15,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
       - module load jedi-fv3-env
@@ -33,7 +33,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
       - module load jedi-fv3-env
@@ -53,7 +53,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
       - module load jedi-fv3-env
@@ -71,7 +71,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
       - module load jedi-fv3-env
@@ -90,7 +90,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
       - module load soca-env
@@ -99,7 +99,6 @@ modules:
       - module load fms/2024.03-geos-constants
       - module load ip/5.4.0
       - module load libyaml/0.2.5
-      - module unload py-netcdf4/1.7.2
     configure: -DMPIEXEC_EXECUTABLE="/usr/bin/srun" -DMPIEXEC_NUMPROC_FLAG="-n"
   gnu-geos:
     init:
@@ -108,7 +107,7 @@ modules:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
       - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
-      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0/modules/Core
+      - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
       - module load soca-env
