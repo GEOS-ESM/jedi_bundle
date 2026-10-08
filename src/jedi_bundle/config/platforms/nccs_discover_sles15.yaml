@@ -14,7 +14,6 @@ modules:
     load:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
@@ -32,7 +31,6 @@ modules:
     load:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
@@ -52,7 +50,6 @@ modules:
     load:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
@@ -70,7 +67,6 @@ modules:
     load:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-intel-oneapi-compilers/2024.2.0
       - module load stack-intel-oneapi-mpi/2021.13
@@ -89,7 +85,6 @@ modules:
     load:
       - module purge
       - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
@@ -105,8 +100,6 @@ modules:
       - source /usr/share/lmod/lmod/init/bash
     load:
       - module purge
-      - module use /discover/swdev/gmao_SIteam/modulefiles-SLES15
-      - module use /discover/swdev/jcsda/spack-stack/scu17/modulefiles
       - module use -a /discover/nobackup/projects/gmao/SIteam/spack-stack/spack-stack-siteam/envs/ue-oneapi-2024.2.0-20261008-swelltest/modules/Core
       - module load stack-gcc/13.4.0
       - module load jedi-fv3-env
