@@ -28,7 +28,7 @@ jobs:
         lfs: true
 
     - name: Install JEDI bundle and dependencies
-      run: python -m pip install --use-deprecated=legacy-resolver -r requirements.txt --user .
+      run: python -m pip install --use-deprecated=legacy-resolver --user .
     - name: Put executables in the path
       run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
